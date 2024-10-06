@@ -10,9 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="13.0.1" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.8" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.8">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.8" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
@@ -23,15 +30,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Data\Utils\" />
-    <Folder Include="Data\Mappings\" />
-    <Folder Include="Data\Interfaces\" />
-    <Folder Include="Data\Implementations\" />
-    <Folder Include="Domain\Enums\" />
-    <Folder Include="Domain\Models\" />
+    <Folder Include="Migrations\" />
     <Folder Include="Services\Implementations\" />
     <Folder Include="Services\Mappers\" />
-    <Folder Include="Services\ViewModels\" />
     <Folder Include="Services\SearchModels\" />
     <Folder Include="Services\Interfaces\" />
   </ItemGroup>

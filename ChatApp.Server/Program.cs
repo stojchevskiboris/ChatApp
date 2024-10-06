@@ -1,18 +1,38 @@
+using ChatApp.Server.Data;
+using ChatApp.Server.Data.Implementations;
+using ChatApp.Server.Data.Interfaces;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// --- Configuration Section ---
+builder.Services.AddDbContext<ChatAppDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb")));
 
+
+// --- AutoMapper Configuration ---
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// --- Repository Registration ---
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// --- Controllers Registration ---
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// --- Swagger Configuration ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+// test if the db is created and valid
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ChatAppDbContext>();
+    dbContext.Database.Migrate(); // Apply any pending migrations
+}
 
-app.UseDefaultFiles();
-app.UseStaticFiles();
 
-// Configure the HTTP request pipeline.
+// --- Middleware Configuration --- 
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -20,11 +40,11 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseStaticFiles();
+app.UseDefaultFiles();
 app.UseAuthorization();
-
 app.MapControllers();
-
 app.MapFallbackToFile("/index.html");
 
+// --- Run the Application ---
 app.Run();
