@@ -6,7 +6,7 @@ namespace ChatApp.Server.Domain.Models
     {
         public int Id { get; set; }
 
-        public Message Message { get; set; }
+        public Message? Message { get; set; }
 
         [Required]
         [MaxLength(2048)]

@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApp.Server.Migrations
 {
     [DbContext(typeof(ChatAppDbContext))]
-    [Migration("20241006182446_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20241006211817_init")]
+    partial class init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -107,7 +107,7 @@ namespace ChatApp.Server.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("MessageId")
+                    b.Property<int?>("MessageId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -288,9 +288,7 @@ namespace ChatApp.Server.Migrations
                 {
                     b.HasOne("ChatApp.Server.Domain.Models.Message", "Message")
                         .WithMany()
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MessageId");
 
                     b.Navigation("Message");
                 });

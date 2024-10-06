@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace ChatApp.Server.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class init : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -56,7 +56,7 @@ namespace ChatApp.Server.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    MessageId = table.Column<int>(type: "int", nullable: false),
+                    MessageId = table.Column<int>(type: "int", nullable: true),
                     Url = table.Column<string>(type: "nvarchar(2048)", maxLength: 2048, nullable: false),
                     FileType = table.Column<string>(type: "nvarchar(255)", maxLength: 255, nullable: false),
                     FileSize = table.Column<int>(type: "int", nullable: false),
@@ -241,8 +241,7 @@ namespace ChatApp.Server.Migrations
                 table: "Media",
                 column: "MessageId",
                 principalTable: "Messages",
-                principalColumn: "Id",
-                onDelete: ReferentialAction.Cascade);
+                principalColumn: "Id");
         }
 
         /// <inheritdoc />

@@ -104,7 +104,7 @@ namespace ChatApp.Server.Migrations
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("MessageId")
+                    b.Property<int?>("MessageId")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("ModifiedAt")
@@ -285,9 +285,7 @@ namespace ChatApp.Server.Migrations
                 {
                     b.HasOne("ChatApp.Server.Domain.Models.Message", "Message")
                         .WithMany()
-                        .HasForeignKey("MessageId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("MessageId");
 
                     b.Navigation("Message");
                 });

@@ -11,6 +11,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="13.0.1" />
+    <PackageReference Include="FluentValidation.AspNetCore" Version="11.3.0" />
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.10.0" />
     <PackageReference Include="Microsoft.AspNetCore.SpaProxy">
       <Version>8.*-*</Version>
     </PackageReference>
@@ -31,10 +33,7 @@
 
   <ItemGroup>
     <Folder Include="Migrations\" />
-    <Folder Include="Services\Implementations\" />
-    <Folder Include="Services\Mappers\" />
     <Folder Include="Services\SearchModels\" />
-    <Folder Include="Services\Interfaces\" />
   </ItemGroup>
 
 </Project>

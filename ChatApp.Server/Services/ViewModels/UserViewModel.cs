@@ -18,7 +18,7 @@ namespace ChatApp.Server.Services.ViewModels
 
         public string Phone { get; set; }
 
-        public Media ProfilePicture { get; set; }
+        public Media? ProfilePicture { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

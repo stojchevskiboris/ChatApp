@@ -1,6 +1,8 @@
 using ChatApp.Server.Data;
 using ChatApp.Server.Data.Implementations;
 using ChatApp.Server.Data.Interfaces;
+using ChatApp.Server.Services.Implementations;
+using ChatApp.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +17,9 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // --- Repository Registration ---
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+// --- Service Registration ---
+builder.Services.AddScoped<IUserService, UserService>();
 
 // --- Controllers Registration ---
 builder.Services.AddControllers();
