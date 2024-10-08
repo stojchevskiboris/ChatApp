@@ -1,25 +1,21 @@
+using ChatApp.Server.Configs;
 using ChatApp.Server.Data;
-using ChatApp.Server.Data.Implementations;
-using ChatApp.Server.Data.Interfaces;
-using ChatApp.Server.Services.Implementations;
-using ChatApp.Server.Services.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb")));
-
+    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb2")));
 
 // --- AutoMapper Configuration ---
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // --- Repository Registration ---
-builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.ConfigureRepositories();
 
 // --- Service Registration ---
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.ConfigureServices();
 
 // --- Controllers Registration ---
 builder.Services.AddControllers();
@@ -29,13 +25,11 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
-// test if the db is created and valid
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ChatAppDbContext>();
-    dbContext.Database.Migrate(); // Apply any pending migrations
+    dbContext.Database.Migrate(); // dotnet ef database update
 }
-
 
 // --- Middleware Configuration --- 
 if (app.Environment.IsDevelopment())

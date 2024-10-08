@@ -26,7 +26,8 @@ namespace ChatApp.Server.Controllers
         [HttpPost]
         public UserViewModel Create(UserViewModel model)
         {
-            return _userService.CreateUser(model);
+            var newUser = _userService.CreateUser(model);
+            return newUser;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace ChatApp.Server.Services.Implementations
             if(_userRepository.GetAll().Where(x => x.Email == model.Email).Any())
             {
                 throw new CustomException("There is already registered user with the provided Email");
-            }            
+            }
 
             User user = new User();
             user.FirstName = model.FirstName;

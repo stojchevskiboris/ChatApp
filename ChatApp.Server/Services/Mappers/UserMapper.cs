@@ -12,6 +12,7 @@ namespace ChatApp.Server.Services.Mappers
 
             return new UserViewModel
             {
+                Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,

@@ -3,7 +3,7 @@ using System.Reflection;
 
 namespace ChatApp.Server.Common.Helpers
 {
-    public static class Helper
+    public static class PropertyHelper
     {
         public static object GetPropertyValue(object obj, string propertyName)
         {
