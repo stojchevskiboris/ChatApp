@@ -8,7 +8,8 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel GetUserById(int id);
         UserViewModel GetUserByEmail(string email);
         UserViewModel CreateUser(UserViewModel model);
-        bool UpdateUser(UserViewModel user);
+        UserViewModel UpdateUser(UserViewModel user);
         bool DeleteUser(int id);
+        bool ChangePassword(PasswordViewModel user);
     }
 }

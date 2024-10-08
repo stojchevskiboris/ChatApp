@@ -5,7 +5,6 @@ using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels;
-using System.Linq;
 
 namespace ChatApp.Server.Services.Implementations
 {
@@ -18,9 +17,34 @@ namespace ChatApp.Server.Services.Implementations
             _userRepository = userRepository;
         }
 
+        public List<UserViewModel> GetAllUsers()
+        {
+            return _userRepository.GetAll()
+                .ToList()
+                .MapToViewModelList();
+        }
+
+        public UserViewModel GetUserById(int id)
+        {
+            var user = GetUserDomainById(id);
+
+            return user.MapToViewModel();
+        }
+
+        public UserViewModel GetUserByEmail(string email)
+        {
+            var user = _userRepository.GetByEmail(email.Trim());
+            if (user == null)
+            {
+                throw new CustomException($"No user found with email: {email}");
+            }
+
+            return user.MapToViewModel();
+        }
+
         public UserViewModel CreateUser(UserViewModel model)
         {
-            if(_userRepository.GetAll().Where(x => x.Email == model.Email).Any())
+            if (_userRepository.GetAll().Where(x => x.Email == model.Email).Any())
             {
                 throw new CustomException("There is already registered user with the provided Email");
             }
@@ -39,31 +63,86 @@ namespace ChatApp.Server.Services.Implementations
             return newUser.MapToViewModel();
         }
 
+        public UserViewModel UpdateUser(UserViewModel model)
+        {
+            var user = GetUserDomainById(model.Id);
+
+            user.FirstName = model.FirstName;
+            user.LastName = model.LastName;
+            user.Email = model.Email;
+            user.Phone = model.Phone;
+            user.DateOfBirth = model.DateOfBirth;
+            user.ModifiedAt = DateTime.Now;
+
+            _userRepository.Update(user);
+
+            return user.MapToViewModel();
+        }
+
         public bool DeleteUser(int id)
         {
-            throw new NotImplementedException();
+            var user = GetUserDomainById(id);
+            _userRepository.Delete(id);
+
+            user = _userRepository.Get(id);
+            if (user == null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
-        public List<UserViewModel> GetAllUsers()
+        public bool ChangePassword(PasswordViewModel model)
         {
-            return _userRepository.GetAll()
-                .ToList()
-                .MapToViewModelList();
+            if (model == null)
+            {
+                throw new CustomException("Invalid parameters");
+            }
+
+            if(string.IsNullOrEmpty(model.OldPassword) 
+                || string.IsNullOrEmpty(model.NewPassword) 
+                || string.IsNullOrEmpty(model.ConfirmPassword))
+            {
+                throw new CustomException("Invalid parameters");
+            }
+
+            if(model.NewPassword != model.ConfirmPassword)
+            {
+                throw new CustomException("Passwords do not match!");
+            }
+
+            if (!PasswordHelper.CheckPasswordStrength(model.NewPassword))
+            {
+                throw new CustomException("Passwords must contain at least 8 characters!");
+            }
+
+            var user = GetUserDomainById(model.UserId);
+
+            var hashedOldPassword = user.Password;
+            var hashedNewPassword = PasswordHelper.HashPassword(model.NewPassword);
+            
+            if(hashedOldPassword == hashedNewPassword)
+            {
+                throw new CustomException("New password cannot be same as old password!");
+            }
+
+            user.Password = hashedNewPassword;
+            _userRepository.Update(user);
+
+            return true;
         }
 
-        public UserViewModel GetUserByEmail(string email)
-        {
-            throw new NotImplementedException();
-        }
 
-        public UserViewModel GetUserById(int id)
+        private User GetUserDomainById(int id)
         {
-            throw new NotImplementedException();
-        }
+            var user = _userRepository.Get(id);
+            if (user == null)
+            {
+                throw new CustomException($"No user found with id: {id}");
+            }
 
-        public bool UpdateUser(UserViewModel user)
-        {
-            throw new NotImplementedException();
+            return user;
         }
     }
 }

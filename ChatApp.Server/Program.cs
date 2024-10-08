@@ -9,7 +9,7 @@ builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("devDb2")));
 
 // --- AutoMapper Configuration ---
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // --- Repository Registration ---
 builder.Services.ConfigureRepositories();

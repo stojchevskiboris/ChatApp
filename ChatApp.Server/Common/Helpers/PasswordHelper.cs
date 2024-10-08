@@ -38,5 +38,31 @@ namespace ChatApp.Server.Common.Helpers
                 return salt;
             }
         }
+
+        public static bool CheckPasswordStrength(string password)
+        {
+            // Minimum length requirement
+            if (password.Length < 8)
+                return false;
+
+            // Check for at least one uppercase letter
+            //if (!password.Any(char.IsUpper))
+            //    return false;
+
+            // Check for at least one lowercase letter
+            //if (!password.Any(char.IsLower))
+            //    return false;
+
+            // Check for at least one digit
+            //if (!password.Any(char.IsDigit))
+            //    return false;
+
+            // Check for at least one special character (non-alphanumeric)
+            //if (!password.Any(ch => !char.IsLetterOrDigit(ch)))
+            //    return false;
+
+            // If all checks pass, the password is strong
+            return true;
+        }
     }
 }
