@@ -24,6 +24,9 @@ namespace ChatApp.Server.Domain.Models
         [Required]
         public bool HasMedia { get; set; }
 
+        [Required]
+        public bool IsSeen { get; set; }
+
         //[ForeignKey("ParentMessageId")]
         public Message? ParentMessage { get; set; }
 
