@@ -17,6 +17,9 @@ builder.Services.ConfigureRepositories();
 // --- Service Registration ---
 builder.Services.ConfigureServices();
 
+// --- Validators Registration ---
+builder.Services.ConfigureValidators();
+
 // --- Controllers Registration ---
 builder.Services.AddControllers();
 
