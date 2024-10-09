@@ -14,6 +14,8 @@ namespace ChatApp.Server.Services.ViewModels
 
         public bool HasMedia { get; set; }
 
+        public bool IsSeen { get; set; }
+
         public Message ParentMessage { get; set; }
 
         public DateTime CreatedAt { get; set; }

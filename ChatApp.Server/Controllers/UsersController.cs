@@ -1,7 +1,6 @@
 ﻿using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.Server.Controllers
