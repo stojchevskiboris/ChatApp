@@ -8,11 +8,11 @@ namespace ChatApp.Server.Services.ViewModels
 
         public string Name { get; set; }
 
-        public User CreatedByUser { get; set; }
+        public UserViewModel? CreatedByUser { get; set; }
 
-        public Media ProfilePicture { get; set; }
+        //public Media? ProfilePicture { get; set; }
 
-        List<User> GroupUsers { get; set; }
+        List<UserViewModel> GroupUsers { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
