@@ -16,6 +16,40 @@ namespace ChatApp.Server.Controllers
             _groupService = groupService;
         }
 
-        // ToDo: implement api calls
+        [HttpGet("GetAllGroups")]
+        public List<GroupViewModel> GetAllGroups()
+        {
+            var result = _groupService.GetAllGroups();
+            return result;
+        }
+
+        [HttpPost("GetGroupById")]
+        public GroupViewModel GetGroupById(int id)
+        {
+            if (id == 0)
+            {
+                throw new CustomException("Invalid parameters");
+            }
+            return _groupService.GetGroupById(id);
+        }
+
+        [HttpPost("CreateGroup")]
+        public GroupViewModel CreateGroup(GroupViewModel model)
+        {
+            var newGroup = _groupService.CreateGroup(model);
+            return newGroup;
+        }
+
+        [HttpPost("UpdateGroup")]
+        public GroupViewModel UpdateGroup(GroupViewModel model)
+        {
+            return _groupService.UpdateGroup(model);
+        }
+
+        [HttpPost("DeleteGroup")]
+        public bool DeleteGroup(int groupId)
+        {
+            return _groupService.DeleteGroup(groupId);
+        }
     }
 }

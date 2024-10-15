@@ -1,7 +1,6 @@
 ﻿using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Data.Utils;
 using ChatApp.Server.Domain.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Server.Data.Implementations
 {

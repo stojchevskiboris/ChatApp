@@ -13,14 +13,16 @@ namespace ChatApp.Server.Configs
         {
             // --- Repository Registration ---
             services.AddScoped<IUserRepository, UserRepository>();
-            // Add other repositories here
+            services.AddScoped<IGroupRepository, GroupRepository>();
+            services.AddScoped<IGroupUserRepository, GroupUserRepository>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)
         {
             // --- Service Registration ---
             services.AddScoped<IUserService, UserService>();
-            // Add other services here
+            services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IGroupUserService, GroupUserService>();
         }
 
         public static void ConfigureValidators(this IServiceCollection services)

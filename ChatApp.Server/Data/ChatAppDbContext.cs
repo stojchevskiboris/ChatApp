@@ -38,6 +38,18 @@ namespace ChatApp.Server.Data
                 .HasOne(c => c.User)
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<GroupUser>()
+                .Navigation(gu => gu.User)
+                .AutoInclude();
+
+            modelBuilder.Entity<GroupUser>()
+                .Navigation(gu => gu.Group)
+                .AutoInclude();
+
+            modelBuilder.Entity<Group>()
+                .Navigation(gu => gu.CreatedByUser)
+                .AutoInclude();
         }
     }
 }

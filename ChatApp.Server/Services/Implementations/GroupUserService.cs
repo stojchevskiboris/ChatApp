@@ -34,6 +34,13 @@ namespace ChatApp.Server.Services.Implementations
                 throw new CustomException("Nonexisting group");
             }
 
+            var existingGroupUser = _groupUserRepository.GetAll()
+                .Where(x => x.User.Id == model.UserId && x.Group.Id == model.GroupId).Any();
+            if (existingGroupUser)
+            {
+                throw new CustomException("User already existing in group");
+            }
+
             var groupUser = new GroupUser()
             {
                 User = user,
@@ -50,7 +57,8 @@ namespace ChatApp.Server.Services.Implementations
         public bool DeleteUsersByGroupId(int groupId)
         {
             var group = _groupRepository.Get(groupId);
-            if (group == null) {
+            if (group == null)
+            {
                 throw new CustomException("Nonexisting group");
             }
 
@@ -81,11 +89,26 @@ namespace ChatApp.Server.Services.Implementations
             return false;
         }
 
-        public List<GroupUserViewModel> GetGroupUsers(int groupId)
+        public List<GroupUserViewModel> GetAllGroupUsers()
+        {
+            return _groupUserRepository
+                .GetAllGroupUsers()
+                .ToList()
+                .MapToViewModelList();
+        }
+
+        public List<GroupUserViewModel> GetGroupUsersByGroupId(int groupId)
         {
             return _groupUserRepository
                 .GetByGroupId(groupId)
                 .MapToViewModelList();
+        }
+
+        public GroupUserViewModel GetGroupUserById(int id)
+        {
+            var groupUser = GetGroupUserDomainById(id);
+
+            return groupUser.MapToViewModel();
         }
 
         private GroupUser GetGroupUserDomainById(int id)

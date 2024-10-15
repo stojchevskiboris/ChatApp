@@ -14,9 +14,21 @@ namespace ChatApp.Server.Data.Implementations
             _context = context;
         }
 
+        public List<GroupUser> GetAllGroupUsers()
+        {
+            return _context.GroupUsers
+                //.Include(gu => gu.User)  // Eager load the User entity
+                //.Include(gu => gu.Group) // Eager load the Group entity
+                .ToList();
+        }
+
         public List<GroupUser> GetByGroupId(int groupId)
         {
-            return _context.GroupUsers.Where(x => x.Group.Id == groupId).ToList();
+            return _context.GroupUsers
+                //.Include(gu => gu.User)  // Eager load the User entity
+                //.Include(gu => gu.Group) // Eager load the Group entity
+                .Where(gu => gu.Group.Id == groupId)
+                .ToList();
         }
     }
 }

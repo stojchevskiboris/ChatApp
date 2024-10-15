@@ -6,7 +6,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb2")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb")));
 
 // --- AutoMapper Configuration ---
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());

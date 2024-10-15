@@ -94,7 +94,7 @@ namespace ChatApp.Server.Services.Implementations
 
             _groupRepository.Delete(id);
             group = _groupRepository.Get(id);
-            if (group != null)
+            if (group == null)
             {
                 return true;
             }

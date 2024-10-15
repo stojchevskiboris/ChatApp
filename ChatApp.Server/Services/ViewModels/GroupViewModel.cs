@@ -1,6 +1,4 @@
-﻿using ChatApp.Server.Domain.Models;
-
-namespace ChatApp.Server.Services.ViewModels
+﻿namespace ChatApp.Server.Services.ViewModels
 {
     public class GroupViewModel
     {

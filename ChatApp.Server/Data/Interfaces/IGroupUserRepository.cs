@@ -5,6 +5,7 @@ namespace ChatApp.Server.Data.Interfaces
 {
     public interface IGroupUserRepository : IRepository<GroupUser>
     {
+        public List<GroupUser> GetAllGroupUsers();
         public List<GroupUser> GetByGroupId(int groupId);
     }
 }
