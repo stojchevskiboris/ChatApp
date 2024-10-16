@@ -1,6 +1,8 @@
 using ChatApp.Server.Configs;
 using ChatApp.Server.Data;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,13 @@ builder.Services.ConfigureValidators();
 // --- Controllers Registration ---
 builder.Services.AddControllers();
 
+// --- Serilog Configuration ---
+builder.Host.UseSerilog((context, configuration) =>
+    configuration.ReadFrom.Configuration(context.Configuration)
+    .Enrich.FromLogContext() // Enrich logs with additional context data
+        .WriteTo.Console() // Log to the console
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));;
+
 // --- Swagger Configuration ---
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -41,9 +50,24 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseExceptionHandler(errorApp =>
+{
+    errorApp.Run(async context =>
+    {
+        var exceptionHandlerPathFeature = context.Features.Get<IExceptionHandlerPathFeature>();
+        if (exceptionHandlerPathFeature?.Error != null)
+        {
+            Log.Error(exceptionHandlerPathFeature.Error, "Unhandled exception occurred.");
+        }
+        context.Response.StatusCode = 500; // Internal Server Error
+        await context.Response.WriteAsync("An unexpected fault happened. Try again later.");
+    });
+});
+
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseDefaultFiles();
+app.UseSerilogRequestLogging();
 app.UseAuthorization();
 app.MapControllers();
 app.MapFallbackToFile("/index.html");

@@ -10,15 +10,18 @@ namespace ChatApp.Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService)
+        public UsersController(IUserService userService, ILogger<UsersController> logger)
         {
             _userService = userService;
+            _logger = logger;
         }
 
         [HttpGet("GetAllUsers")]
         public List<UserViewModel> GetAllUsers()
         {
+            _logger.LogInformation("Getting all users.");
             var result = _userService.GetAllUsers();
             return result;
         }
