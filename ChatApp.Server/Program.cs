@@ -26,6 +26,9 @@ builder.Services.ConfigureServices();
 // --- Validators Registration ---
 builder.Services.ConfigureValidators();
 
+// --- Cors Configuration  ---
+builder.Services.ConfigureCors();
+
 // --- Swagger Dev Authorization ---
 builder.Services.ConfigureSwaggerAuth();
 
@@ -75,6 +78,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseDefaultFiles();
 app.UseSerilogRequestLogging();
+app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();

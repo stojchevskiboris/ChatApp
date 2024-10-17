@@ -32,6 +32,24 @@ namespace ChatApp.Server.Configs
             services.AddValidatorsFromAssemblyContaining<UserValidator>();
         }
 
+        public static void ConfigureCors(this IServiceCollection services)
+        {
+            // --- Cross-origin resource sharing ---
+            var AllowAngularApp = "AllowAngularApp";
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: AllowAngularApp,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost:4200",
+                                                          "https://localhost:4200")
+                                      .AllowAnyHeader()
+                                      .AllowAnyMethod();
+                                  });
+            });
+        }
+
         public static void ConfigureSwaggerAuth(this IServiceCollection services)
         {
             services.AddSwaggerGen(swagger =>
