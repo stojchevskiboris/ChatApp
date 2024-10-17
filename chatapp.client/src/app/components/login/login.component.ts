@@ -31,8 +31,8 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.authService.login(this.username, this.password).subscribe({
-      next: () => {
-        this.router.navigate(['/']);
+      next: (r) => {
+        this.router.navigate(['/home']);
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 400) {

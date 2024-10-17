@@ -1,31 +1,41 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { DataService } from './data.service';
+import { UserViewModel } from '../models/user-view-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private apiUrl = 'https://localhost:7078/api'; // Replace with your backend API URL
+  private authEndpoint = '/Users/Authenticate';
+  currentUser: UserViewModel;
+  token: string = '';
 
-  constructor(private http: HttpClient) {}
+  constructor(private dataService: DataService) {}
 
   login(username: string, password: string): Observable<any> {
-    return this.http
-      .post<any>(`${this.apiUrl}/Users/Authenticate`, { username, password })
+    return this.dataService
+      .post<any>(this.authEndpoint, { username, password })
       .pipe(
-        tap((response) => {
-          localStorage.setItem('token', response.token); // Save the token in localStorage
+        tap((response:any) => {
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('userId', response.id);
+          this.token = response.token;
         })
       );
   }
 
   logout() {
-    localStorage.removeItem('token'); // Clear the token
+    localStorage.removeItem('token');
+    localStorage.removeItem('userId');
   }
 
   getToken(): string | null {
     return localStorage.getItem('token');
+  }
+
+  getUserId(): string {
+    return localStorage.getItem('userId');
   }
 }

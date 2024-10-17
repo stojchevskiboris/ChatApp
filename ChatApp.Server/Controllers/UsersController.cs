@@ -30,13 +30,13 @@ namespace ChatApp.Server.Controllers
 
         [HttpPost("GetUserById")]
         [Authorize]
-        public UserViewModel GetUserById(int id)
+        public UserViewModel GetUserById(RequestIdModel model)
         {
-            if (id == 0)
+            if (model.Id == 0)
             {
                 throw new CustomException("Invalid parameters");
             }
-            return _userService.GetUserById(id);
+            return _userService.GetUserById(model.Id);
         }
 
         [HttpPost("GetUserByEmail")]
