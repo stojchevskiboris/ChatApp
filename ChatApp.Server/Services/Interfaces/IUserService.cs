@@ -1,9 +1,11 @@
-﻿using ChatApp.Server.Services.ViewModels;
+﻿using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.ViewModels;
 
 namespace ChatApp.Server.Services.Interfaces
 {
     public interface IUserService
     {
+        #region UserServices
         List<UserViewModel> GetAllUsers();
         UserViewModel GetUserById(int id);
         UserViewModel GetUserByEmail(string email);
@@ -11,5 +13,10 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel UpdateUser(UserViewModel user);
         bool DeleteUser(int id);
         bool ChangePassword(PasswordViewModel user);
+        #endregion
+
+        #region AuthenticationServices
+        AuthenticateResponse Authenticate(AuthenticateRequest model);
+        #endregion
     }
 }

@@ -1,4 +1,6 @@
 using ChatApp.Server.Configs;
+using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Configs.Authentication.Models;
 using ChatApp.Server.Data;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.EntityFrameworkCore;
@@ -8,7 +10,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb2")));
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
 
 // --- AutoMapper Configuration ---
 //builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
@@ -21,6 +25,9 @@ builder.Services.ConfigureServices();
 
 // --- Validators Registration ---
 builder.Services.ConfigureValidators();
+
+// --- Swagger Dev Authorization ---
+builder.Services.ConfigureSwaggerAuth();
 
 // --- Controllers Registration ---
 builder.Services.AddControllers();
@@ -69,6 +76,7 @@ app.UseStaticFiles();
 app.UseDefaultFiles();
 app.UseSerilogRequestLogging();
 app.UseAuthorization();
+app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();
 app.MapFallbackToFile("/index.html");
 

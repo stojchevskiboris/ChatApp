@@ -1,4 +1,5 @@
 ﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpGet("GetAllUsers")]
+        [Authorize]
         public List<UserViewModel> GetAllUsers()
         {
             _logger.LogInformation("Getting all users.");
@@ -27,6 +29,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("GetUserById")]
+        [Authorize]
         public UserViewModel GetUserById(int id)
         {
             if (id == 0)
@@ -37,6 +40,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("GetUserByEmail")]
+        [Authorize]
         public UserViewModel GetUserByEmail(string email)
         {
             if (string.IsNullOrEmpty(email))
@@ -54,21 +58,35 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("DeleteUser")]
+        [Authorize]
         public bool DeleteUser(int userId)
         {
             return _userService.DeleteUser(userId);
         }
 
         [HttpPost("UpdateUser")]
+        [Authorize]
         public UserViewModel UpdateUser(UserViewModel model)
         {
             return _userService.UpdateUser(model);
         }
 
         [HttpPost("ChangePassword")]
+        [Authorize]
         public bool ChangePassword(PasswordViewModel model)
         {
             return _userService.ChangePassword(model);
+        }
+
+        [HttpPost("Authenticate")]
+        public IActionResult Authenticate(AuthenticateRequest model)
+        {
+            var response = _userService.Authenticate(model);
+
+            if (response == null)
+                return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(response);
         }
     }
 }
