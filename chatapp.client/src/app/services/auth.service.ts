@@ -11,7 +11,7 @@ import { UserRegisterModel } from '../models/user-register-model';
 export class AuthService {
   private authEndpoint = '/Users/Authenticate';
   private registerEndpoint = '/Users/CreateUser';
-  currentUser: UserViewModel;
+  currentUser: string = '';
   token: string = '';
 
   constructor(private dataService: DataService) { }
@@ -31,16 +31,18 @@ export class AuthService {
       .post<any>(this.authEndpoint, { username, password })
       .pipe(
         tap((response: any) => {
+          this.currentUser = JSON.stringify(response);
+          this.token = response.token;
+
           localStorage.setItem('token', response.token);
           localStorage.setItem('userId', response.id);
-          this.token = response.token;
+          localStorage.setItem('currentUser', this.currentUser);
         })
       );
   }
 
   logout() {
-    localStorage.removeItem('token');
-    localStorage.removeItem('userId');
+    localStorage.clear();
   }
 
   getToken(): string | null {
@@ -49,5 +51,9 @@ export class AuthService {
 
   getUserId(): string {
     return localStorage.getItem('userId');
+  }
+
+  getCurrentUser(): string {
+    return localStorage.getItem('currentUser');
   }
 }

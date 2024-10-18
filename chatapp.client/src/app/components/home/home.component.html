@@ -9,6 +9,7 @@
       <p><strong>Phone:</strong> {{ currentUser.phone }}</p>
       <p><strong>Created At:</strong> {{ currentUser.createdAt | date:'short' }}</p>
       <p><strong>Modified At:</strong> {{ currentUser.modifiedAt | date:'short' }}</p>
+      <button (click)="logout()">Logout</button>
     </div>
   
     <div *ngIf="!currentUser">

@@ -3,6 +3,7 @@ import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { AuthService } from '../../services/auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -12,6 +13,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 export class HomeComponent implements OnInit {
 
   constructor(
+    private router: Router,
     private userService: UserService,
     private authService: AuthService
   ) { }
@@ -30,4 +32,9 @@ export class HomeComponent implements OnInit {
     })
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+    this.currentUser = new UserViewModel();
+  }
 }
