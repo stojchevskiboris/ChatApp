@@ -51,7 +51,7 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
-        public UserViewModel CreateUser(UserViewModel model)
+        public UserViewModel CreateUser(UserRegisterModel model)
         {
             if (_userRepository.GetAll().Where(x => x.Email == model.Email).Any())
             {
@@ -64,7 +64,7 @@ namespace ChatApp.Server.Services.Implementations
             user.Email = model.Email;
             user.Phone = model.Phone;
             user.Password = PasswordHelper.HashPassword(model.Password);
-            user.DateOfBirth = model.DateOfBirth;
+            user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
             user.CreatedAt = DateTime.Now;
             user.ModifiedAt = DateTime.Now;
 
