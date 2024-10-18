@@ -1,7 +1,4 @@
-﻿using System.ComponentModel;
-using System.Reflection;
-
-namespace ChatApp.Server.Common.Helpers
+﻿namespace ChatApp.Server.Common.Helpers
 {
     public static class PropertyHelper
     {
