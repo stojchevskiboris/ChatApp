@@ -11,7 +11,8 @@ import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { HomeComponent } from './components/home/home.component';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
-
+import { MaterialModule } from './shared/angular-material/material.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +23,9 @@ import { DataService } from './services/data.service';
     BrowserModule,
     FormsModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    MaterialModule,
+    BrowserAnimationsModule
   ],
   providers: [
     DataService,

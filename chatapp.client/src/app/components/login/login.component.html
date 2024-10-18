@@ -7,7 +7,7 @@
             <input type="email" placeholder="Email" id="usernameNew" [(ngModel)]="usernameNew" name="usernameNew" required/>
             <input type="passwordNew" placeholder="Password" id="passwordNew" [(ngModel)]="passwordNew" name="passwordNew" required/>
             <input type="confirmPasswordNew" placeholder="Confirm password" id="confirmPasswordNew" [(ngModel)]="confirmPasswordNew" name="confirmPasswordNew" required/>
-            <input type="date" placeholder="Date of Birth" id="dateOfBirthNew" [(ngModel)]="dateOfBirthNew" name="dateOfBirthNew" required/>
+            <input type="date" placeholder="Date of Birth" id="dateOfBirthNew" [(ngModel)]="dateOfBirthNew" name="dateOfBirthNew" required/>              
             <input type="text" placeholder="Phone number" id="phoneNumberNew" [(ngModel)]="phoneNumberNew" name="phoneNumberNew" required/>
             <button (click)="register()">Sign Up</button>
             <div *ngIf="errorMessage"class="error-message">
