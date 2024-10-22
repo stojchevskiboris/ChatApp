@@ -12,12 +12,27 @@ import { HomeComponent } from './components/home/home.component';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
 import { MaterialModule } from './shared/angular-material/material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AccountOverviewComponent } from './components/account-overview/account-overview.component';
+import { MessagesContactsComponent } from './components/messages-contacts/messages-contacts.component';
+import { ChatComponent } from './components/chat/chat.component';
+import { ChatSettingsComponent } from './components/chat-settings/chat-settings.component';
+import { AccountSettingsComponent } from './components/account-settings/account-settings.component';
+import { LeftPaneComponent } from './components/left-pane/left-pane.component';
+import { HeaderComponent } from './components/header/header.component'
+import { MatIconModule } from '@angular/material/icon';
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    HomeComponent
+    HomeComponent,
+    AccountOverviewComponent,
+    MessagesContactsComponent,
+    ChatComponent,
+    ChatSettingsComponent,
+    AccountSettingsComponent,
+    LeftPaneComponent,
+    HeaderComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +40,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
     HttpClientModule,
     AppRoutingModule,
     MaterialModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    MatIconModule,
   ],
   providers: [
     DataService,
@@ -36,6 +52,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
       useClass: AuthInterceptor,
       multi: true
     }
+  ],
+  exports: [
+    MaterialModule,
   ],
   bootstrap: [AppComponent]
 })

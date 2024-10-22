@@ -1,19 +1,35 @@
-<div class="user-details">
-    <h2>User Details</h2>
-  
-    <div *ngIf="currentUser">
-      <p><strong>First Name:</strong> {{ currentUser.firstName }}</p>
-      <p><strong>Last Name:</strong> {{ currentUser.lastName }}</p>
-      <p><strong>Email:</strong> {{ currentUser.email }}</p>
-      <p><strong>Date of Birth:</strong> {{ currentUser.dateOfBirth | date:'dd.MM.yyyy' }}</p>
-      <p><strong>Phone:</strong> {{ currentUser.phone }}</p>
-      <p><strong>Created At:</strong> {{ currentUser.createdAt | date:'short' }}</p>
-      <p><strong>Modified At:</strong> {{ currentUser.modifiedAt | date:'short' }}</p>
-      <button (click)="logout()">Logout</button>
+<div class="row app100">
+
+  <!-- <app-header></app-header> -->
+
+  <div class="row">
+
+    <div class="col-sm-4">
+      <app-left-pane></app-left-pane>
     </div>
-  
-    <div *ngIf="!currentUser">
-      <p>No user details available.</p>
+
+    <div class="col-sm-8">
+      <div class="row">
+
+        <div class="col-sm-8" *ngIf="isChatSelected; else selectChatTemplate">
+          <app-chat></app-chat>
+        </div>
+
+        <div class="col-sm-4" *ngIf="isChatSelected">
+          <app-chat-settings></app-chat-settings>
+        </div>
+
+        <div class="col-sm-12">
+          <ng-template #selectChatTemplate>
+            <div>
+              <p>Your messages</p>
+              <p>Send a message to start a chat.</p>
+              <button mat-flat-button color="primary">Basic</button>
+            </div>
+          </ng-template>
+        </div>
+
+      </div>
     </div>
   </div>
-  
+</div>

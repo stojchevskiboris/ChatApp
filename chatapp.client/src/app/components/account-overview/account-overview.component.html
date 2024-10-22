@@ -1,0 +1,17 @@
+<div class="row">
+
+    <div class="col-3">
+        <div [attr.data-initials]="userInitials"></div>
+    </div>
+
+    <div class="col-6">
+        <p>
+            {{currentUser.firstName}} {{currentUser.lastName}}
+        </p>
+    </div>
+
+    <button mat-mini-fab color="basic">
+        <mat-icon>settings</mat-icon>
+    </button>
+
+</div>
