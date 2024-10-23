@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
+import { DataService } from './services/data.service';
+import { LoadingService } from './services/loading.service';
 
 
 @Component({
@@ -9,9 +11,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private http: HttpClient) {}
+  constructor(private loadingService: LoadingService) {}
+
+  loading: boolean = false;
 
   ngOnInit() {
+    this.loadingService.getLoading().subscribe(isLoading => {
+      this.loading = isLoading;
+    });
   }
 
   title = 'chatapp.client';

@@ -21,6 +21,8 @@ import { AccountSettingsComponent } from './components/account-settings/account-
 import { LeftPaneComponent } from './components/left-pane/left-pane.component';
 import { HeaderComponent } from './components/header/header.component'
 import { MatIconModule } from '@angular/material/icon';
+import { LoadingInterceptor } from './interceptors/loading.interceptor';
+import { LoadingService } from './services/loading.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,13 +47,19 @@ import { MatIconModule } from '@angular/material/icon';
   ],
   providers: [
     DataService,
+    LoadingService,
     AuthService,
     UserService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: LoadingInterceptor,
+      multi: true
+    },
   ],
   exports: [
     MaterialModule,
