@@ -10,24 +10,28 @@
 
     <mat-tab-group class="tabs-padding-0">
         <mat-tab label="Messages">
+        <ng-scrollbar>
             <mat-selection-list>
                 <mat-list-item *ngFor="let message of messagesList">
                     <div class="d-flex align-items-center">
                         <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
                         <div>
                             <span matListItemTitle>{{ message.name }}</span>
-                            <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.recentMessage }}</span>
+                            <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{
+                                message.recentMessage }}</span>
                             <span matListItemLine>
-                              <span [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.lastMessageSentAt | chatDate }}</span>
+                                <span [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.lastMessageSentAt |
+                                    chatDate }}</span>
                             </span>
                         </div>
                     </div>
                 </mat-list-item>
             </mat-selection-list>
-            <br>
+        </ng-scrollbar>
         </mat-tab>
 
         <mat-tab label="Contacts">
+            <ng-scrollbar>
             <mat-selection-list>
                 <mat-list-item *ngFor="let contact of contactsList" class="contacts-list">
                     <mat-card class="contact-card bg-none">
@@ -35,8 +39,7 @@
                             <div mat-card-avatar class="example-header-image"></div>
                             <mat-card-title>{{contact.name}}</mat-card-title>
                             <mat-card-subtitle class="d-flex align-items-center mt-1">
-                                <ng-container
-                                    *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
+                                <ng-container *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
                                     <mat-icon class="active-icon">circle</mat-icon>
                                     Active now
                                 </ng-container>
@@ -48,6 +51,7 @@
                     </mat-card>
                 </mat-list-item>
             </mat-selection-list>
+        </ng-scrollbar>
         </mat-tab>
     </mat-tab-group>
 

@@ -18,7 +18,7 @@ export class HomeComponent implements OnInit {
     private authService: AuthService
   ) { }
 
-  isChatSelected: boolean = false;
+  isChatSelected: boolean = true;
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
 

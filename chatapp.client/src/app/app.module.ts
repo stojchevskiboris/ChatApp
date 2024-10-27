@@ -23,6 +23,8 @@ import { HeaderComponent } from './components/header/header.component'
 import { MatIconModule } from '@angular/material/icon';
 import { ChatDatePipe } from './shared/pipes/chat-date.pipe';
 import { LastActivePipe } from './shared/pipes/last-active.pipe';
+import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 @NgModule({
   declarations: [
     AppComponent,
@@ -46,6 +48,7 @@ import { LastActivePipe } from './shared/pipes/last-active.pipe';
     MaterialModule,
     BrowserAnimationsModule,
     MatIconModule,
+    NgScrollbarModule
   ],
   providers: [
     DataService,
@@ -55,7 +58,17 @@ import { LastActivePipe } from './shared/pipes/last-active.pipe';
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,
       multi: true
-    }
+    },
+    provideScrollbarOptions({
+      orientation: 'auto',
+      position: 'native',
+      visibility: 'visible',
+      appearance: 'native',
+      buttons: false,
+      trackClass: 'scrollbar-track',
+      thumbClass: 'scrollbar-thumb',
+    }),
+    provideAnimationsAsync()
   ],
   exports: [
     MaterialModule,

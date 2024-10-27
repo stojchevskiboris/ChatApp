@@ -81,7 +81,7 @@ html {
 
 .mat-mdc-tab-body-content {
   height: 600px !important;
-  overflow-y: scroll;
+  overflow: hidden !important;
 }
 
 .mat-mdc-card-header {
@@ -108,4 +108,29 @@ html {
 .seen {
   font-weight: normal !important;
   color: inherit !important;
+}
+
+.scrollbar-track {
+  color: rgba(255, 255, 255, 0);
+}
+
+.scrollbar-thumb {
+  background-color: #c1c1c1 !important;
+  border-radius: 10px  !important;
+}
+
+.scrollbar-thumb:hover {
+  background-color: #787878;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.custom-container{
+  margin: 2px !important;
+}
+
+.mat-mdc-text-field-wrapper{
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
 }
