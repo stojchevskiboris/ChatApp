@@ -21,7 +21,8 @@ import { AccountSettingsComponent } from './components/account-settings/account-
 import { LeftPaneComponent } from './components/left-pane/left-pane.component';
 import { HeaderComponent } from './components/header/header.component'
 import { MatIconModule } from '@angular/material/icon';
-import { DatePipe } from './shared/pipes/date.pipe';
+import { ChatDatePipe } from './shared/pipes/chat-date.pipe';
+import { LastActivePipe } from './shared/pipes/last-active.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -34,7 +35,8 @@ import { DatePipe } from './shared/pipes/date.pipe';
     AccountSettingsComponent,
     LeftPaneComponent,
     HeaderComponent,
-    DatePipe
+    ChatDatePipe,
+    LastActivePipe
   ],
   imports: [
     BrowserModule,

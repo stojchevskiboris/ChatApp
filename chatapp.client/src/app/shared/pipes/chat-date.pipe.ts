@@ -3,7 +3,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 @Pipe({
   name: 'chatDate'
 })
-export class DatePipe implements PipeTransform {
+export class ChatDatePipe implements PipeTransform {
 
   transform(value: Date | any): string | null {
     if (!value || isNaN(new Date(value as any).getTime())) {

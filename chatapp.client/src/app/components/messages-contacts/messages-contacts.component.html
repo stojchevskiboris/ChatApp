@@ -36,12 +36,12 @@
                             <mat-card-title>{{contact.name}}</mat-card-title>
                             <mat-card-subtitle class="d-flex align-items-center mt-1">
                                 <ng-container
-                                    *ngIf="contact.lastActive === null || contact.lastActive < 5; else lastActiveTemplate">
+                                    *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
                                     <mat-icon class="active-icon">circle</mat-icon>
                                     Active now
                                 </ng-container>
                                 <ng-template #lastActiveTemplate>
-                                    {{ contact.lastActive }}m ago
+                                    {{ contact.lastActive | lastActive }}
                                 </ng-template>
                             </mat-card-subtitle>
                         </mat-card-header>

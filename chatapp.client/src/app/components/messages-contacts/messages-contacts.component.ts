@@ -18,18 +18,30 @@ export class MessagesContactsComponent implements OnInit {
     this.testData();
   }
 
+  isLessThan5min(date: any): boolean {
+    if (!date || isNaN(new Date(date).getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastActiveDate = new Date(date);
+    const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
+
+    return diffInMinutes < 5;
+  }
+
   testData() {
     const names = [
-      'Alice Foden', 'Bob Maguire', 'Charlie Scott', 'Diana Frank', 
-      'Edward Snowden', 'Fiona Isaac', 'Grace Foden', 'Chris Allen', 
+      'Alice Foden', 'Bob Maguire', 'Charlie Scott', 'Diana Frank',
+      'Edward Snowden', 'Fiona Isaac', 'Grace Foden', 'Chris Allen',
       'Bryan Green', 'George Allen'
     ];
 
     const messages = [
-      'Just checking in!', 'Can we reschedule our meeting?', 
-      'Don’t forget to send the report.', 'Looking forward to our next chat.', 
-      'Do you have time to talk?', 'I found that article you might like.', 
-      'Let’s catch up soon!', 'How was your weekend?', 
+      'Just checking in!', 'Can we reschedule our meeting?',
+      'Don’t forget to send the report.', 'Looking forward to our next chat.',
+      'Do you have time to talk?', 'I found that article you might like.',
+      'Let’s catch up soon!', 'How was your weekend?',
       'Happy to help with your project.', 'Are you free for lunch tomorrow?'
     ];
 
@@ -87,7 +99,6 @@ export class MessagesContactsComponent implements OnInit {
     for (let i = 6; i < 10; i++) {
       const randomName = names[Math.floor(Math.random() * names.length)];
       const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-      const randomMinutesAgo = Math.floor(Math.random() * 1440); // Random time within a day
 
       this.messagesList.push({
         name: randomName,
@@ -97,11 +108,36 @@ export class MessagesContactsComponent implements OnInit {
       });
     }
 
-    for (var i = 0; i < 10; i++) {
-      this.contactsList.push({
-        name: 'Contact ' + (i + 1),
-        lastActive: i * 5
-      });
-    }
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getTime() - 3 * 60 * 1000) // 3 minutes ago
+    });
+
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
+    });
+
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
+    });
+
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    });
+
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+    });
+
+    this.contactsList.push({
+      name: names[Math.floor(Math.random() * names.length)],
+      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    });
+
+
   }
 }
