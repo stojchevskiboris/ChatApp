@@ -1,31 +1,111 @@
 @font-face {
-    font-family: 'Material Icons';
-    font-style: normal;
-    font-weight: 400;
-    src: url('assets/material/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2') format('woff2');
-  }
-  
-  .material-icons {
-    font-family: 'Material Icons';
-    font-weight: normal;
-    font-style: normal;
-    font-size: 24px;
-    line-height: 1;
-    letter-spacing: normal;
-    text-transform: none;
-    display: inline-block;
-    white-space: nowrap;
-    word-wrap: normal;
-    direction: ltr;
-    -webkit-font-feature-settings: 'liga';
-    -webkit-font-smoothing: antialiased;
-  }
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: 400;
+  src: url('assets/material/flUhRq6tzZclQEJ-Vdg-IuiaDsNc.woff2') format('woff2');
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  white-space: nowrap;
+  word-wrap: normal;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
 
 /* You can add global styles to this file, and also import other style files */
-.app100{
+/* .app100{
     margin: 2px;
     padding-top: 10px;
     height: 100dvh !important;
-    background: rgb(218, 218, 218);
     align-content: flex-start;
+} */
+body,
+html {
+  margin: 2px !important;
+  padding-top: 10px;
+  height: 100%;
+  margin: 0;
+}
+
+.mat-icon-small {
+  font-size: 48px !important;
+  width: 48px;
+  height: 48px;
+
+}
+
+.w30px {
+  width: 30px !important;
+}
+
+.h30px {
+  height: 30px !important;
+}
+
+.w-50px {
+  width: 50px !important;
+}
+
+.h-50px {
+  height: 50px !important;
+}
+
+.tabs-padding-0 .mat-mdc-tab {
+  padding: 0 !important;
+}
+
+.card-tab {
+  padding: 10px;
+  border: 1px solid #c4c6d0 !important;
+  border-radius: 10px !important;
+}
+
+.active-icon {
+  font-size: 20px;
+  color: limegreen;
+  height: min-content;
+}
+
+.contacts-list {
+  height: auto !important;
+}
+
+.mat-mdc-tab-body-content {
+  height: 600px !important;
+  overflow-y: scroll;
+}
+
+.mat-mdc-card-header {
+  background: none;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  margin-bottom: 5px;
+}
+
+.bg-none {
+  background: none !important;
+}
+
+.br-top-10px {
+  border-top-left-radius: 10px !important;
+  border-top-right-radius: 10px !important;
+}
+
+.notSeen {
+  font-weight: bold !important;
+  color: black !important;
+}
+
+.seen {
+  font-weight: normal !important;
+  color: inherit !important;
 }

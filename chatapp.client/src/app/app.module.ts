@@ -21,6 +21,7 @@ import { AccountSettingsComponent } from './components/account-settings/account-
 import { LeftPaneComponent } from './components/left-pane/left-pane.component';
 import { HeaderComponent } from './components/header/header.component'
 import { MatIconModule } from '@angular/material/icon';
+import { DatePipe } from './shared/pipes/date.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -32,7 +33,8 @@ import { MatIconModule } from '@angular/material/icon';
     ChatSettingsComponent,
     AccountSettingsComponent,
     LeftPaneComponent,
-    HeaderComponent
+    HeaderComponent,
+    DatePipe
   ],
   imports: [
     BrowserModule,

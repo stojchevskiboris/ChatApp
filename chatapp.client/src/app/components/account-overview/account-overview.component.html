@@ -4,14 +4,17 @@
         <div [attr.data-initials]="userInitials"></div>
     </div>
 
-    <div class="col-6">
+    <div class="col-7 align-middle blockquote">
         <p>
             {{currentUser.firstName}} {{currentUser.lastName}}
         </p>
     </div>
 
-    <button mat-mini-fab color="basic">
-        <mat-icon>settings</mat-icon>
-    </button>
+    <div class="col-2 align-middle text-end">
+
+        <button class="w30px h30px" mat-mini-fab color="basic">
+            <mat-icon style="font-size: 15px; top: 5px;">settings</mat-icon>
+        </button>
+    </div>
 
 </div>
