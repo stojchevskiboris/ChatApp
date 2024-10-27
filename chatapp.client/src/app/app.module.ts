@@ -60,7 +60,7 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
       multi: true
     },
     provideScrollbarOptions({
-      orientation: 'auto',
+      orientation: 'vertical',
       position: 'native',
       visibility: 'visible',
       appearance: 'native',
