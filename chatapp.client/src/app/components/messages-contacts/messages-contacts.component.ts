@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, numberAttribute, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-messages-contacts',
@@ -11,6 +11,8 @@ export class MessagesContactsComponent implements OnInit {
 
   messagesList: any[] = [];
   contactsList: any[] = [];
+  @Output() chatSelected = new EventEmitter<number>();
+
 
   ngOnInit(): void {
 
@@ -30,6 +32,10 @@ export class MessagesContactsComponent implements OnInit {
     return diffInMinutes < 5;
   }
 
+  openChat(recipientId: number){
+    this.chatSelected.emit(recipientId);
+  }
+
   testData() {
     const names = [
       'Alice Foden', 'Bob Maguire', 'Charlie Scott', 'Diana Frank',
@@ -44,6 +50,7 @@ export class MessagesContactsComponent implements OnInit {
       'Let’s catch up soon!', 'How was your weekend?',
       'Happy to help with your project.', 'Are you free for lunch tomorrow?'
     ];
+    var j: number = 1;
 
     const now = new Date();
 
@@ -52,7 +59,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 3 * 60 * 1000), // 3 minutes ago
-      isSeen: false
+      isSeen: false,
+      recipientId: j++
     });
 
     // Case 2: 5 to 30 minutes ago
@@ -60,7 +68,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
-      isSeen: false
+      isSeen: false,
+      recipientId: j++
     });
 
     // Case 3: Same day, more than 30 minutes ago
@@ -68,7 +77,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
-      isSeen: true
+      isSeen: true,
+      recipientId: j++
     });
 
     // Case 4: Within the last 7 days
@@ -76,7 +86,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      isSeen: true
+      isSeen: true,
+      recipientId: j++
     });
 
     // Case 5: More than 7 days ago, within the same year
@@ -84,7 +95,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-      isSeen: true
+      isSeen: true,
+      recipientId: j++
     });
 
     // Case 6: Previous years
@@ -92,7 +104,8 @@ export class MessagesContactsComponent implements OnInit {
       name: names[Math.floor(Math.random() * names.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-      isSeen: false
+      isSeen: false,
+      recipientId: j++
     });
 
     // Adding some extra random data
@@ -104,7 +117,8 @@ export class MessagesContactsComponent implements OnInit {
         name: randomName,
         recentMessage: randomMessage,
         lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()),
-        isSeen: true
+        isSeen: true,
+        recipientId: j++
       });
     }
 

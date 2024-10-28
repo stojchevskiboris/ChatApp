@@ -8,12 +8,12 @@
         </button>
     </mat-form-field>
 
-    <mat-tab-group class="tabs-padding-0">
+    <mat-tab-group class="mat-tabs-messages-contacts">
         <mat-tab label="Messages">
             <ng-scrollbar>
                 <mat-selection-list>
-                    <mat-list-item *ngFor="let message of messagesList">
-                        <div class="d-flex align-items-center">
+                    <mat-list-item *ngFor="let message of messagesList" class="message-list" (click)="openChat(message.recipientId)">
+                        <div class="message-card d-flex align-items-center">
                             <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
                             <div>
                                 <span matListItemTitle>{{ message.name }}</span>

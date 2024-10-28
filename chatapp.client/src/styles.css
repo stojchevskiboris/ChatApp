@@ -57,7 +57,7 @@ body {
 }
 
 .mat-mdc-tab-body-content {
-  height: 600px !important;
+  /* height: 600px !important; */
   overflow: hidden !important;
 }
 
@@ -66,7 +66,7 @@ body {
   border-top-right-radius: 10px !important;
 }
 
-.tabs-padding-0 .mat-mdc-tab {
+.mat-tabs-messages-contacts .mat-mdc-tab {
   padding: 0 !important;
 }
 /*-- Material Components --*/
@@ -87,6 +87,10 @@ body {
 }
 /*-- Ngx Scrollbar --*/
 
+
+.acc-overview{
+  height: 50px;
+}
 
 .bg-none {
   background: none !important;
@@ -121,6 +125,18 @@ body {
   box-shadow: none !important;
 }
 
+.mat-tabs-messages-contacts{
+  height: calc(100vh - 175px);
+}
+
+.message-card{
+  margin-top: -25px;
+}
+
+.message-list{
+  height: 100px;
+}
+
 .notSeen {
   font-weight: bold !important;
   color: black !important;
@@ -129,6 +145,12 @@ body {
 .seen {
   font-weight: normal !important;
   color: inherit !important;
+}
+
+.start-chat{
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
 }
 
 .custom-container {
