@@ -43,6 +43,14 @@ body {
   border-radius: 10px !important;
 }
 
+.d-none-important{
+  display: none !important;
+}
+
+.d-block-important{
+  display: block !important;
+}
+
 .mat-icon-small {
   font-size: 48px !important;
   width: 48px;
@@ -148,7 +156,7 @@ body {
 }
 
 .start-chat{
-  display: flex !important;
+  display: flex;
   align-items: center;
   justify-content: center;
 }

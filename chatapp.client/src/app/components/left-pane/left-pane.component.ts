@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-left-pane',
@@ -6,5 +6,13 @@ import { Component } from '@angular/core';
   styleUrl: './left-pane.component.css'
 })
 export class LeftPaneComponent {
+
+  constructor() { }
+
+  @Output() selectedChat = new EventEmitter<number>();
+
+  handleSelectedChat(event: number) {
+    this.selectedChat.emit(event);
+  }
 
 }

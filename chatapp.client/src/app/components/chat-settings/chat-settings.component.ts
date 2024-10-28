@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-chat-settings',
@@ -6,5 +6,8 @@ import { Component } from '@angular/core';
   styleUrl: './chat-settings.component.css'
 })
 export class ChatSettingsComponent {
+
+  @Input() recipientId: number | null = null;
+
 
 }

@@ -5,21 +5,21 @@
   <div class="row">
 
     <div class="col-lg-4">
-      <app-left-pane></app-left-pane>
+      <app-left-pane (selectedChat)="handleSelectedChat($event)"></app-left-pane>
     </div>
 
     <div class="col-lg-8">
       <div class="row h-100">
 
-        <div class="col-lg-8 border"  [ngClass]="!isChatSelected ? 'd-none' : 'd-block'"> <!-- *ngIf="isChatSelected; else selectChatTemplate" -->
-          <app-chat></app-chat>
+        <div class="col-lg-8 border"  [ngClass]="!isChatSelected ? 'd-none-important' : 'd-block-important'"> <!-- *ngIf="isChatSelected; else selectChatTemplate" -->
+          <app-chat [recipientId]="selectedChatRecipientId"></app-chat>
         </div>
 
-        <div class="col-lg-4 border" [ngClass]="!isChatSelected ? 'd-none' : 'd-block'"> <!-- *ngIf="isChatSelected" -->
-          <app-chat-settings></app-chat-settings>
+        <div class="col-lg-4 border" [ngClass]="!isChatSelected ? 'd-none-important' : 'd-block-important'"> <!-- *ngIf="isChatSelected" -->
+          <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
         </div>
 
-        <div class="col-sm-12 start-chat border" [ngClass]="isChatSelected ? 'd-none' : 'd-block'">
+        <div class="col-sm-12 start-chat border" [ngClass]="isChatSelected ? 'd-none-important' : 'd-flex'">
           <!-- <ng-template #selectChatTemplate> -->
             <div>
               <p>Your messages</p>

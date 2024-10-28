@@ -11,8 +11,7 @@ export class MessagesContactsComponent implements OnInit {
 
   messagesList: any[] = [];
   contactsList: any[] = [];
-  @Output() chatSelected = new EventEmitter<number>();
-
+  @Output() selectedChat = new EventEmitter<number>();
 
   ngOnInit(): void {
 
@@ -33,7 +32,7 @@ export class MessagesContactsComponent implements OnInit {
   }
 
   openChat(recipientId: number){
-    this.chatSelected.emit(recipientId);
+    this.selectedChat.emit(recipientId);
   }
 
   testData() {

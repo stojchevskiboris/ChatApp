@@ -19,6 +19,7 @@ export class HomeComponent implements OnInit {
   ) { }
 
   isChatSelected: boolean = false;
+  selectedChatRecipientId: number = 0;
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
 
@@ -38,5 +39,10 @@ export class HomeComponent implements OnInit {
     this.authService.logout();
     this.router.navigate(['/']);
     this.currentUser = new UserViewModel();
+  }
+
+  handleSelectedChat(recipientId: number) {
+    this.isChatSelected = true;
+    this.selectedChatRecipientId = recipientId;
   }
 }
