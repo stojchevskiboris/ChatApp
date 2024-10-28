@@ -109,6 +109,14 @@ body {
   border-top-right-radius: 10px !important;
 }
 
+.cursor-pointer{
+  cursor: pointer !important;
+}
+
+.font-large{
+  font-size: 20px;
+}
+
 .w30px {
   width: 30px !important;
 }

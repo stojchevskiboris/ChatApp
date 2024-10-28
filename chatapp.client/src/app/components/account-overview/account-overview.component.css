@@ -1,11 +1,11 @@
 [data-initials]:before {
-    background: #099bdd;
+    background: #005cbb;
     color: white;
     opacity: 1; 
     content: attr(data-initials); 
     display: inline-block; 
     font-weight: bold; 
-    border-radius: 50%; 
+    border-radius:20px; 
     vertical-align: middle; 
     margin-right: 0.5em; 
     width: 3.125rem;

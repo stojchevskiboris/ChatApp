@@ -1,19 +1,16 @@
-<div class="row acc-overview">
+<div class="acc-overview d-flex align-items-center justify-content-between">
 
-    <div class="col-3">
-        <div [attr.data-initials]="userInitials"></div>
-    </div>
+    <div class="cursor-pointer" (click)="resetChat()">
+        <div class="d-inline-block" [attr.data-initials]="userInitials"></div>
 
-    <div class="col-7 align-middle blockquote">
-        <p>
+        <span class="font-large">
             {{currentUser.firstName}} {{currentUser.lastName}}
-        </p>
+        </span>
     </div>
 
-    <div class="col-2 align-middle text-end">
-
-        <button class="w30px h30px" mat-mini-fab color="basic">
-            <mat-icon style="font-size: 15px; top: 5px;">settings</mat-icon>
+    <div >
+        <button mat-mini-fab color="secondarys">
+            <mat-icon>settings</mat-icon>
         </button>
     </div>
 

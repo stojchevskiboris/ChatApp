@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { Router } from '@angular/router';
@@ -16,6 +16,7 @@ export class AccountOverviewComponent {
 
   userInitials: string = '';
   currentUser: UserViewModel = new UserViewModel();
+  @Output() selectedChat = new EventEmitter<number>();
 
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
@@ -28,4 +29,9 @@ export class AccountOverviewComponent {
       this.userInitials = this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
     }
   }
+
+  resetChat() {
+    this.selectedChat.emit(0);
+  }
+
 }
