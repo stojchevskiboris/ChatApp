@@ -1,2 +1,24 @@
-<p>chat works!</p>
-{{recipientId}}
+<div class="chat-window container">
+  <div class="recipient-info card p-3 mb-3">
+    <h2>{{recipientId}}{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
+    <p *ngIf="recipient?.isActive">Active Now</p>
+    <p *ngIf="!recipient?.isActive">Last active: {{ recipient?.lastActive }}</p>
+  </div>
+
+  <ng-scrollbar class="messages" style="flex: 1; overflow-y: auto;">
+    <div *ngFor="let message of messages" class="message"
+      [ngClass]="message.senderId == recipientId ? 'received' : 'sent'">
+      <div class="message-content">
+        <span class="wrap-anywhere">{{ message.conent }}</span>
+        <br>
+        <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
+        s: {{message.senderId}}, r: {{message.recipientId}}
+      </div>
+    </div>
+  </ng-scrollbar>
+
+  <div class="input-container d-flex p-2">
+    <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" />
+    <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+  </div>
+</div>

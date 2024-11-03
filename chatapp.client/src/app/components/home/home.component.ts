@@ -42,12 +42,11 @@ export class HomeComponent implements OnInit {
   }
 
   handleSelectedChat(recipientId: number) {
-    if (recipientId == null || recipientId == 0) {
-      this.isChatSelected = false;
-
-    } else {
-      this.isChatSelected = true;
-    }
     this.selectedChatRecipientId = recipientId;
+    if (recipientId == null || recipientId === 0) {
+      this.isChatSelected = false;
+    } else {
+        this.isChatSelected = true;
+    }
   }
 }

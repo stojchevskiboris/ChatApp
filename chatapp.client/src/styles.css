@@ -113,6 +113,11 @@ body {
   cursor: pointer !important;
 }
 
+.custom-container {
+  margin: 2px !important;
+}
+
+
 .font-large{
   font-size: 20px;
 }
@@ -131,6 +136,10 @@ body {
 
 .h-50px {
   height: 50px !important;
+}
+
+.chat{
+  height: 98vh !important;
 }
 
 .contacts-list {
@@ -169,6 +178,6 @@ body {
   justify-content: center;
 }
 
-.custom-container {
-  margin: 2px !important;
+.wrap-anywhere{
+  overflow-wrap: anywhere;
 }

@@ -11,22 +11,20 @@
     <div class="col-lg-8">
       <div class="row h-100">
 
-        <div class="col-lg-8 border"  [ngClass]="!isChatSelected ? 'd-none-important' : 'd-block-important'"> <!-- *ngIf="isChatSelected; else selectChatTemplate" -->
+        <div class="col-lg-8 border chat" *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat [recipientId]="selectedChatRecipientId"></app-chat>
         </div>
-
-        <div class="col-lg-4 border" [ngClass]="!isChatSelected ? 'd-none-important' : 'd-block-important'"> <!-- *ngIf="isChatSelected" -->
+        
+        <div class="col-lg-4 border" *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
         </div>
-
-        <div class="col-sm-12 start-chat border" [ngClass]="isChatSelected ? 'd-none-important' : 'd-flex'">
-          <!-- <ng-template #selectChatTemplate> -->
-            <div>
-              <p>Your messages</p>
-              <p>Send a message to start a chat.</p>
-              <button mat-flat-button color="primary">Start a chat</button>
-            </div>
-          <!-- </ng-template> -->
+        
+        <div class="col-sm-12 start-chat border" *ngIf="!isChatSelected">
+          <div>
+            <p>Your messages</p>
+            <p>Send a message to start a chat.</p>
+            <button mat-flat-button color="primary">Start a chat</button>
+          </div>
         </div>
 
       </div>
