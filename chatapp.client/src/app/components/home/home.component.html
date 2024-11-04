@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid fadeInAnimation">
 
   <!-- <app-header></app-header> -->
 
@@ -11,15 +11,15 @@
     <div class="col-lg-8">
       <div class="row h-100">
 
-        <div class="col-lg-8 border chat" *ngIf="isChatSelected && selectedChatRecipientId">
+        <div class="col-lg-8 border chat fadeInAnimation" *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat [recipientId]="selectedChatRecipientId"></app-chat>
         </div>
-        
-        <div class="col-lg-4 border" *ngIf="isChatSelected && selectedChatRecipientId">
+
+        <div class="col-lg-4 border fadeInAnimation" *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
         </div>
         
-        <div class="col-sm-12 start-chat border" *ngIf="!isChatSelected">
+        <div class="col-sm-12 start-chat border fadeInAnimation" *ngIf="!isChatSelected">
           <div>
             <p>Your messages</p>
             <p>Send a message to start a chat.</p>
