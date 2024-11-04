@@ -1,33 +1,56 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessageViewModel } from '../../models/message-view-model';
 import { AuthService } from '../../services/auth.service';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-chat',
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit, OnChanges {
+export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
 
   @Input() recipientId: number | null = null;
+  @ViewChild(NgScrollbar) scrollable: NgScrollbar;
+  @ViewChild('messageInput') messageInput: any;
   currentUserId: number = 0;
   recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
   messages: MessageViewModel[] = [];
   newMessage: string = '';
+  hasScrolledToBottom: boolean = false;
 
   constructor(private authService: AuthService) {
     this.currentUserId = +this.authService.getUserId();
   }
 
   ngOnInit(): void {
-    this.generateTestData();
     this.setRecipient();
+    this.generateTestData();
+  }
+
+  ngAfterViewInit(): void {
+    this.messageInput.nativeElement.focus();
+    // setTimeout(() => {
+    //   this.scrollToBottom();
+    // });
+  }
+
+  ngAfterViewChecked() {
+    if (!this.hasScrolledToBottom) {
+      try {
+        this.scrollToBottom();
+        this.hasScrolledToBottom = true;
+      } catch (e) {
+        console.log(e);
+       }
+    }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
       this.generateTestData();
+      this.scrollToBottom();
     }
   }
 
@@ -46,8 +69,9 @@ export class ChatComponent implements OnInit, OnChanges {
       };
       this.messages.push(message);
       this.newMessage = '';
-      // Optionally scroll to bottom
+      this.scrollToBottom();
     }
+    this.messageInput.nativeElement.focus();
   }
 
   setRecipient() {
@@ -60,6 +84,9 @@ export class ChatComponent implements OnInit, OnChanges {
     };
   }
 
+  scrollToBottom() {
+    this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+  }
 
   generateTestData() {
     this.messages = [
@@ -114,6 +141,83 @@ export class ChatComponent implements OnInit, OnChanges {
         conent: 'It’s a chat application.',
         hasMedia: false,
         isSeen: false,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
+        parentMessageId: false,
+        createdAt: new Date().toISOString(),
+        modifiedAt: new Date().toISOString(),
+      },
+      {
+        messageId: 6,
+        senderId: this.recipientId,
+        recipientId: this.currentUserId,
+        conent: 'Nice! I’d love to see it when it’s done.',
+        hasMedia: false,
+        isSeen: true,
         parentMessageId: false,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
