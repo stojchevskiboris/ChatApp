@@ -1,7 +1,8 @@
-import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { afterNextRender, AfterViewChecked, AfterViewInit, Component, inject, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessageViewModel } from '../../models/message-view-model';
 import { AuthService } from '../../services/auth.service';
 import { NgScrollbar } from 'ngx-scrollbar';
+import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 
 @Component({
   selector: 'app-chat',
@@ -13,11 +14,12 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   @Input() recipientId: number | null = null;
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
+  @ViewChild('autosize') autosize: CdkTextareaAutosize;
   currentUserId: number = 0;
   recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
   messages: MessageViewModel[] = [];
   newMessage: string = '';
-  hasScrolledToBottom: boolean = false;
+  hasScrolledToBottom: boolean = false;_injector = inject(Injector);
 
   constructor(private authService: AuthService) {
     this.currentUserId = +this.authService.getUserId();
@@ -52,6 +54,18 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
       this.generateTestData();
       this.scrollToBottom();
     }
+  }
+
+  triggerResize() {
+    // Wait for content to render, then trigger textarea resize.
+    afterNextRender(
+      () => {
+        this.autosize.resizeToFitContent(true);
+      },
+      {
+        injector: this._injector,
+      },
+    );
   }
 
   sendMessage() {

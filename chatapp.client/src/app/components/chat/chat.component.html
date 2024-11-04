@@ -16,8 +16,18 @@
     </div>
   </ng-scrollbar>
 
-  <div class="input-container d-flex p-2">
-    <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" #messageInput />
+  <div class="input-container d-flex align-items-end p-2">
+    <!-- <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" #messageInput /> -->
+      <textarea 
+        class="w-100 messageTextArea" 
+        matInput 
+        [(ngModel)]="newMessage" 
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize" 
+        cdkAutosizeMinRows="1"
+        cdkAutosizeMaxRows="5"
+        (keydown.enter)="sendMessage()">
+      </textarea>
     <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
   </div>
 </div>
