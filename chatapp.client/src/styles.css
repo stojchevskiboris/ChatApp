@@ -183,7 +183,7 @@ body {
 }
 
 .mat-tabs-messages-contacts {
-  height: calc(100vh - 175px);
+  height: calc(95vh - 100px);
 }
 
 .message-card {
@@ -219,4 +219,30 @@ body {
 
 .wrap-anywhere {
   overflow-wrap: anywhere;
+}
+
+
+.left-pane {
+  display: flex;
+  flex-direction: column;
+  height: 97vh !important; 
+}
+
+.acc-overview,
+.search-bar {
+  height: 50px;
+}
+
+.tab-group-container {
+  flex-grow: 1;
+  overflow-y: auto;
+}
+
+.mat-mdc-tab.mdc-tab {
+  padding: 0px !important;
+}
+
+.example-header-image {
+  background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
+  background-size: cover;
 }

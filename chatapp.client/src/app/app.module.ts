@@ -14,7 +14,6 @@ import { DataService } from './services/data.service';
 import { MaterialModule } from './shared/angular-material/material.module';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountOverviewComponent } from './components/account-overview/account-overview.component';
-import { MessagesContactsComponent } from './components/messages-contacts/messages-contacts.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatSettingsComponent } from './components/chat-settings/chat-settings.component';
 import { AccountSettingsComponent } from './components/account-settings/account-settings.component';
@@ -31,7 +30,6 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
     LoginComponent,
     HomeComponent,
     AccountOverviewComponent,
-    MessagesContactsComponent,
     ChatComponent,
     ChatSettingsComponent,
     AccountSettingsComponent,
