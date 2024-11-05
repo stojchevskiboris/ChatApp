@@ -1,4 +1,12 @@
-<div class="container fadeInAnimation" id="container">
+<!-- <div class="transparent">
+    <mat-spinner></mat-spinner>
+</div> -->
+
+<div *ngIf="loading" class="loading-container flex-content-center">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    <!-- <mat-spinner></mat-spinner> -->
+</div>
+    <div class="container fadeInAnimation" id="container">
     <div class="form-container sign-up-container">
         <form>
             <h1>Create Account</h1> <!-- NEW USER -->
@@ -10,9 +18,9 @@
             <input type="date" placeholder="Date of Birth" id="dateOfBirthNew" [(ngModel)]="dateOfBirthNew" name="dateOfBirthNew" required/>              
             <input type="text" placeholder="Phone number" id="phoneNumberNew" [(ngModel)]="phoneNumberNew" name="phoneNumberNew" required/>
             <button (click)="register()">Sign Up</button>
-            <div *ngIf="errorMessage"class="error-message">
-                {{ errorMessage }}
-            </div>
+            <p class="error-message"><span>&nbsp;</span>
+                <span *ngIf="errorMessage">{{ errorMessage }} </span>
+            </p>
         </form>
     </div>
     <div class="form-container sign-in-container">
@@ -21,9 +29,9 @@
             <input type="email" placeholder="Email" id="username" [(ngModel)]="username" name="username" required/>
             <input type="password" placeholder="Password" id="password" [(ngModel)]="password" name="password" required/>
             <button (click)="login()">Sign In</button>
-            <div *ngIf="errorMessage" class="error-message">
-                {{ errorMessage }}
-            </div>
+            <p class="error-message"><span>&nbsp;</span>
+                <span *ngIf="errorMessage">{{ errorMessage }} </span>
+            </p>
         </form>
     </div>
     <div class="overlay-container">

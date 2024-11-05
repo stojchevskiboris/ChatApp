@@ -28,6 +28,7 @@ export class LoginComponent implements OnInit {
   dateOfBirthNew: string = '';
   phoneNumberNew: string = '';
 
+  loading: boolean = false;
   errorMessage: string = '';
   isModelInvalid: boolean = false;
   container: any;
@@ -38,17 +39,19 @@ export class LoginComponent implements OnInit {
 
   register() {
     this.isModelInvalid = false;
-    if (this.usernameNew.trim() === '' || 
-    this.passwordNew.trim() === '' || 
-    this.confirmPasswordNew.trim() === '' || 
-    this.firstNameNew.trim() === '' || 
-    this.lastNameNew.trim() === '' || 
-    this.dateOfBirthNew.trim() === '' || 
-    this.phoneNumberNew.trim() === '') {
+    if (
+      this.usernameNew.trim() === '' ||
+      this.passwordNew.trim() === '' ||
+      this.confirmPasswordNew.trim() === '' ||
+      this.firstNameNew.trim() === '' ||
+      this.lastNameNew.trim() === '' ||
+      this.dateOfBirthNew.trim() === '' ||
+      this.phoneNumberNew.trim() === ''
+    ) {
       this.errorMessage = 'All fields are required';
       return;
     }
-    
+
     this.isModelInvalid = false;
 
     if (this.passwordNew !== this.confirmPasswordNew) {
@@ -60,10 +63,11 @@ export class LoginComponent implements OnInit {
     model.firstName = this.firstNameNew;
     model.lastName = this.lastNameNew;
     model.email = this.usernameNew;
-    model.password =  this.passwordNew;
+    model.password = this.passwordNew;
     model.dateOfBirth = this.dateOfBirthNew;
     model.phone = this.phoneNumberNew;
 
+    this.loading = true;
     this.authService.register(model).subscribe({
       next: (r) => {
         this.username = model.email;
@@ -73,15 +77,21 @@ export class LoginComponent implements OnInit {
       error: (err: HttpErrorResponse) => {
         if (err.status === 400) {
           this.errorMessage = 'Something went wrong, please try again later';
+          this.loading = false;
         }
       },
+      complete: () => {
+        this.loading = false;
+      }
     });
   }
 
   login() {
+    this.loading = true;
     this.authService.login(this.username, this.password).subscribe({
       next: (r) => {
         this.router.navigate(['/home']);
+        this.loading = false;
       },
       error: (err: HttpErrorResponse) => {
         if (err.status === 400) {
@@ -89,7 +99,11 @@ export class LoginComponent implements OnInit {
         } else {
           this.errorMessage = 'Something went wrong, please try again later';
         }
+        this.loading = false;
       },
+      complete: () => {
+        this.loading = false;
+      }
     });
   }
 

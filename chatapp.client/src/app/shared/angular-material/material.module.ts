@@ -35,7 +35,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { MatBottomSheetModule } from '@angular/material/bottom-sheet';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
-const material = [
+const materialModules = [
   MatToolbarModule,
   MatButtonModule,
   MatInputModule,
@@ -74,7 +74,7 @@ const material = [
 ];
 
 @NgModule({
-  exports: [material],
-  imports: [material]
+  exports: [materialModules],
+  imports: [materialModules]
 })
 export class MaterialModule { }

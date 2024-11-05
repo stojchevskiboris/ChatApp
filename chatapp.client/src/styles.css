@@ -77,6 +77,11 @@ body {
 .mat-tabs-messages-contacts .mat-mdc-tab {
   padding: 0 !important;
 }
+
+.mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
+/* remove additional spacing under the search component */
+  display: none;
+}
 /*-- Material Components --*/
 
 
