@@ -19,8 +19,9 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
   messages: MessageViewModel[] = [];
   newMessage: string = '';
-  hasScrolledToBottom: boolean = false;_injector = inject(Injector);
-
+  hasScrolledToBottom: boolean = false;
+  _injector = inject(Injector);
+  
   constructor(private authService: AuthService) {
     this.currentUserId = +this.authService.getUserId();
   }
@@ -54,18 +55,6 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
       this.generateTestData();
       this.scrollToBottom();
     }
-  }
-
-  triggerResize() {
-    // Wait for content to render, then trigger textarea resize.
-    afterNextRender(
-      () => {
-        this.autosize.resizeToFitContent(true);
-      },
-      {
-        injector: this._injector,
-      },
-    );
   }
 
   sendMessage() {
