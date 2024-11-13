@@ -7,7 +7,6 @@
 
 .messages {
   flex: 1;
-  padding: 10px;
   background-color: #fff;
 }
 
@@ -17,10 +16,12 @@
 }
 
 .sent {
+  margin-right: 10px;
   justify-content: flex-end;
 }
 
 .received {
+  margin-left: 10px;
   justify-content: flex-start;
 }
 
