@@ -19,7 +19,6 @@ export class LeftPaneComponent {
   contactsList: any[] = [];
 
   ngOnInit(): void {
-
     // test data
     this.testData();
   }
@@ -36,7 +35,7 @@ export class LeftPaneComponent {
     return diffInMinutes < 5;
   }
 
-  openChat(recipientId: number){
+  openChat(recipientId: number) {
     this.selectedChat.emit(recipientId);
   }
 
@@ -183,5 +182,4 @@ export class LeftPaneComponent {
 
 
   }
-
 }

@@ -1,4 +1,4 @@
-import { afterNextRender, AfterViewChecked, AfterViewInit, Component, inject, Injector, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
 import { MessageViewModel } from '../../models/message-view-model';
 import { AuthService } from '../../services/auth.service';
 import { NgScrollbar } from 'ngx-scrollbar';
@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
   messages: MessageViewModel[] = [];
   newMessage: string = '';
-  hasScrolledToBottom: boolean = false;_injector = inject(Injector);
+  hasScrolledToBottom: boolean = false;
 
   constructor(private authService: AuthService) {
     this.currentUserId = +this.authService.getUserId();
@@ -32,9 +32,6 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
 
   ngAfterViewInit(): void {
     this.messageInput.nativeElement.focus();
-    // setTimeout(() => {
-    //   this.scrollToBottom();
-    // });
   }
 
   ngAfterViewChecked() {
@@ -44,7 +41,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
         this.hasScrolledToBottom = true;
       } catch (e) {
         console.log(e);
-       }
+      }
     }
   }
 
@@ -54,18 +51,6 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
       this.generateTestData();
       this.scrollToBottom();
     }
-  }
-
-  triggerResize() {
-    // Wait for content to render, then trigger textarea resize.
-    afterNextRender(
-      () => {
-        this.autosize.resizeToFitContent(true);
-      },
-      {
-        injector: this._injector,
-      },
-    );
   }
 
   sendMessage() {

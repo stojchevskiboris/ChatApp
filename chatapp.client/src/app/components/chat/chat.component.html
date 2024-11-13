@@ -18,17 +18,17 @@
 
   <div class="input-container d-flex align-items-end p-2">
     <!-- <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" #messageInput /> -->
-      <textarea 
-        class="w-100 messageTextArea" 
-        matInput 
-        #messageInput
-        [(ngModel)]="newMessage" 
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize" 
-        cdkAutosizeMinRows="1"
-        cdkAutosizeMaxRows="5"
-        (keydown.enter)="sendMessage()">
-      </textarea>
+    <textarea 
+      class="w-100 messageTextArea" 
+      matInput 
+      #messageInput 
+      [(ngModel)]="newMessage" 
+      cdkTextareaAutosize
+      #autosize="cdkTextareaAutosize" 
+      cdkAutosizeMinRows="1" 
+      cdkAutosizeMaxRows="5" 
+      (keydown.enter)="sendMessage()">
+    </textarea>
     <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
   </div>
 </div>
