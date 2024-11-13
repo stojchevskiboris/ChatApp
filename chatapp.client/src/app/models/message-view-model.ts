@@ -2,7 +2,7 @@ export class MessageViewModel {
     messageId: number = 0;
     senderId: number = 0;
     recipientId: number = 0;
-    conent: string = '';
+    content: string = '';
     hasMedia: boolean = false;
     isSeen: boolean = false;
     parentMessageId: boolean = false;

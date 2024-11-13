@@ -8,7 +8,7 @@
     <div *ngFor="let message of messages" class="message"
       [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
       <div class="message-content">
-        <span class="wrap-anywhere">{{ message.conent }}</span>
+        <span class="wrap-anywhere">{{ message.content }}</span>
         <br>
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
         s: {{message.senderId}}, r: {{message.recipientId}}
