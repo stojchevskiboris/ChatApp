@@ -54,6 +54,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   }
 
   sendMessage() {
+    event.preventDefault();
     if (this.newMessage.trim()) {
       const message: MessageViewModel = {
         messageId: this.messages.length + 1,
