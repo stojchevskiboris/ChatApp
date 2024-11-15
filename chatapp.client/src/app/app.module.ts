@@ -61,6 +61,7 @@ import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
       orientation: 'vertical',
       position: 'native',
       visibility: 'visible',
+      // visibility: 'hover',
       appearance: 'native',
       buttons: false,
       trackClass: 'scrollbar-track',

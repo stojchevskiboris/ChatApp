@@ -31,10 +31,15 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   }
 
   ngAfterViewInit(): void {
+    this.inputFocus();
+  }
+
+  private inputFocus() {
     this.messageInput.nativeElement.focus();
   }
 
   ngAfterViewChecked() {
+    this.inputFocus();
     if (!this.hasScrolledToBottom) {
       try {
         this.scrollToBottom();
