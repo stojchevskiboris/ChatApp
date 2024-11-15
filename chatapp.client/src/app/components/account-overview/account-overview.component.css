@@ -1,15 +1,15 @@
 [data-initials]:before {
     background: #005cbb;
     color: white;
-    opacity: 1; 
-    content: attr(data-initials); 
-    display: inline-block; 
-    font-weight: bold; 
-    border-radius:20px; 
-    vertical-align: middle; 
-    margin-right: 0.5em; 
+    opacity: 1;
+    content: attr(data-initials);
+    display: inline-block;
+    font-weight: bold;
+    border-radius: 20px;
+    vertical-align: middle;
+    margin-right: 0.5em;
     width: 3.125rem;
     height: 3.125rem;
     line-height: 3.125rem;
-    text-align: center; 
-    }
+    text-align: center;
+}

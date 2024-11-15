@@ -179,7 +179,5 @@ export class LeftPaneComponent {
       name: names[Math.floor(Math.random() * names.length)],
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
-
-
   }
 }

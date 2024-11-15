@@ -1,8 +1,8 @@
 import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
-import { MessageViewModel } from '../../models/message-view-model';
-import { AuthService } from '../../services/auth.service';
-import { NgScrollbar } from 'ngx-scrollbar';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { NgScrollbar } from 'ngx-scrollbar';
+import { AuthService } from '../../services/auth.service';
+import { MessageViewModel } from '../../models/message-view-model';
 
 @Component({
   selector: 'app-chat',

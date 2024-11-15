@@ -222,11 +222,10 @@ body {
   white-space: pre-wrap;
 }
 
-
 .left-pane {
   display: flex;
   flex-direction: column;
-  height: 97vh !important; 
+  height: 97vh !important;
 }
 
 .acc-overview,

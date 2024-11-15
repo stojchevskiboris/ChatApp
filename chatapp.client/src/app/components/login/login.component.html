@@ -1,10 +1,5 @@
-<!-- <div class="transparent">
-    <mat-spinner></mat-spinner>
-</div> -->
-
 <div *ngIf="loading" class="loading-container flex-content-center">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-    <!-- <mat-spinner></mat-spinner> -->
 </div>
     <div class="container fadeInAnimation" id="container">
     <div class="form-container sign-up-container">
@@ -25,7 +20,7 @@
     </div>
     <div class="form-container sign-in-container">
         <form>
-            <h1>Sign In</h1>
+            <h1>Sign In</h1>  <!-- EXISTING USER -->
             <input type="email" placeholder="Email" id="username" [(ngModel)]="username" name="username" required/>
             <input type="password" placeholder="Password" id="password" [(ngModel)]="password" name="password" required/>
             <button (click)="login()">Sign In</button>

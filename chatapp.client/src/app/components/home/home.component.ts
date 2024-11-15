@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { AuthService } from '../../services/auth.service';
-import { HttpErrorResponse } from '@angular/common/http';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-home',
@@ -46,7 +46,7 @@ export class HomeComponent implements OnInit {
     if (recipientId == null || recipientId === 0) {
       this.isChatSelected = false;
     } else {
-        this.isChatSelected = true;
+      this.isChatSelected = true;
     }
   }
 }

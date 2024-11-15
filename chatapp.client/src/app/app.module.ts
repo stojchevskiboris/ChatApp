@@ -1,7 +1,10 @@
 import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { MatIconModule } from '@angular/material/icon';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -12,18 +15,15 @@ import { HomeComponent } from './components/home/home.component';
 import { UserService } from './services/user.service';
 import { DataService } from './services/data.service';
 import { MaterialModule } from './shared/angular-material/material.module';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AccountOverviewComponent } from './components/account-overview/account-overview.component';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatSettingsComponent } from './components/chat-settings/chat-settings.component';
 import { AccountSettingsComponent } from './components/account-settings/account-settings.component';
 import { LeftPaneComponent } from './components/left-pane/left-pane.component';
 import { HeaderComponent } from './components/header/header.component'
-import { MatIconModule } from '@angular/material/icon';
 import { ChatDatePipe } from './shared/pipes/chat-date.pipe';
 import { LastActivePipe } from './shared/pipes/last-active.pipe';
 import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
-import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 @NgModule({
   declarations: [
     AppComponent,
