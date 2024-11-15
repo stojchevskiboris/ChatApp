@@ -11,7 +11,7 @@
         <span class="wrap-anywhere">{{ message.content }}</span>
         <br>
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
-        s: {{message.senderId}}, r: {{message.recipientId}}
+        <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span>
       </div>
     </div>
   </ng-scrollbar>
