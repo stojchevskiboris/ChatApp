@@ -11,11 +11,11 @@
     <div class="col-lg-8">
       <div class="row h-100">
 
-        <div class="col-lg-8 chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId">
-          <app-chat [recipientId]="selectedChatRecipientId"></app-chat>
+        <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId">
+          <app-chat (toggleChatSettings)="toggleSettings()" [recipientId]="selectedChatRecipientId"></app-chat>
         </div>
 
-        <div class="col-lg-4 chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId">
+        <div class="col-lg-4 chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
           <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
         </div>
         

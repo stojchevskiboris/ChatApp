@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, Input, OnChanges, OnInit, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { AuthService } from '../../services/auth.service';
@@ -12,6 +12,7 @@ import { MessageViewModel } from '../../models/message-view-model';
 export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
 
   @Input() recipientId: number | null = null;
+  @Output() toggleChatSettings = new EventEmitter();
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
@@ -91,6 +92,10 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
 
   scrollToBottom() {
     this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+  }
+
+  toggleSettings() {
+    this.toggleChatSettings.emit()
   }
 
   generateTestData() {

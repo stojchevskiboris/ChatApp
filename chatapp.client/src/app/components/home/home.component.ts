@@ -22,6 +22,7 @@ export class HomeComponent implements OnInit {
   selectedChatRecipientId: number = 0;
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
+  isChatSettingsEnabled: boolean = true;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -48,5 +49,9 @@ export class HomeComponent implements OnInit {
     } else {
       this.isChatSelected = true;
     }
+  }
+
+  toggleSettings(): void {
+    this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
   }
 }

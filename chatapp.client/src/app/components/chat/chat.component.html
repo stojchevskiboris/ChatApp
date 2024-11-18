@@ -1,8 +1,17 @@
 <div class="chat-window">
   <div class="h-100px card p-3 mb-3">
-    <h2>{{recipientId}}{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
-    <p *ngIf="recipient?.isActive">Active Now</p>
-    <p *ngIf="!recipient?.isActive">Last active: {{ recipient?.lastActive }}</p>
+    <div class="d-flex justify-content-between">
+      <div>
+        <h2>{{recipientId}}{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
+        <p *ngIf="recipient?.isActive">Active Now</p>
+        <p *ngIf="!recipient?.isActive">Last active: {{ recipient?.lastActive }}</p>
+      </div>
+      <div>
+        <button mat-icon-button (click)="toggleSettings()">
+          <mat-icon>view_week</mat-icon>
+        </button>
+      </div>
+    </div>
   </div>
   <ng-scrollbar class="messages" #scrollbarRef="ngScrollbar">
     <div *ngFor="let message of messages" class="message"
