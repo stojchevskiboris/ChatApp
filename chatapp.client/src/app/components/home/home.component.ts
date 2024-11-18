@@ -44,7 +44,7 @@ export class HomeComponent implements OnInit {
 
   handleSelectedChat(recipientId: number) {
     this.selectedChatRecipientId = recipientId;
-    if (recipientId == null || recipientId === 0) {
+    if (recipientId === -1 || recipientId == null) {
       this.isChatSelected = false;
     } else {
       this.isChatSelected = true;

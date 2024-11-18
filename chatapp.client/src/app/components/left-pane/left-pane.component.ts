@@ -9,9 +9,14 @@ export class LeftPaneComponent {
 
   constructor() { }
 
+  selectedChatId: number = null;
+
   @Output() selectedChat = new EventEmitter<number>();
 
   handleSelectedChat(event: number) {
+    if (event == -1) {
+      this.selectedChatId = null;
+    }
     this.selectedChat.emit(event);
   }
 
@@ -37,6 +42,7 @@ export class LeftPaneComponent {
 
   openChat(recipientId: number) {
     this.selectedChat.emit(recipientId);
+    this.selectedChatId = recipientId;
   }
 
   testData() {
@@ -125,58 +131,71 @@ export class LeftPaneComponent {
       });
     }
 
+    j = 1;
+
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getTime() - 3 * 60 * 1000) // 3 minutes ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
 
     this.contactsList.push({
       name: names[Math.floor(Math.random() * names.length)],
+      recipientId: j++,
       lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
     });
   }

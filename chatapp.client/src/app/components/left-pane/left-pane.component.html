@@ -1,6 +1,6 @@
 <div class="left-pane d-flex flex-column h-100">
     <div class="acc-overview mb-2">
-        <app-account-overview (selectedChat)="handleSelectedChat($event)"></app-account-overview>
+        <app-account-overview (resetChat)="handleSelectedChat($event)"></app-account-overview>
     </div>
 
     <div class="search-bar mb-2">
@@ -18,7 +18,10 @@
             <mat-tab label="Messages">
                 <ng-scrollbar>
                     <mat-selection-list>
-                        <mat-list-item *ngFor="let message of messagesList" class="message-list"
+                        <mat-list-item 
+                            *ngFor="let message of messagesList; index as i" 
+                            class="message-list" 
+                            [ngClass]="{'selected': message.recipientId==selectedChatId}"
                             (click)="openChat(message.recipientId)">
                             <div class="message-card d-flex align-items-center">
                                 <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
@@ -40,7 +43,11 @@
             <mat-tab label="Contacts">
                 <ng-scrollbar>
                     <mat-selection-list>
-                        <mat-list-item *ngFor="let contact of contactsList" class="contacts-list">
+                        <mat-list-item 
+                            *ngFor="let contact of contactsList; index as i" 
+                            class="contacts-list" 
+                            [ngClass]="{'selected': contact.recipientId==selectedChatId}"
+                            (click)="openChat(contact.recipientId)">
                             <mat-card class="contact-card bg-none">
                                 <mat-card-header>
                                     <div mat-card-avatar class="example-header-image"></div>

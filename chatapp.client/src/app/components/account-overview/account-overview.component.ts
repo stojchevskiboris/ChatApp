@@ -16,7 +16,7 @@ export class AccountOverviewComponent {
 
   userInitials: string = '';
   currentUser: UserViewModel = new UserViewModel();
-  @Output() selectedChat = new EventEmitter<number>();
+  @Output() resetChat = new EventEmitter<number>();
 
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
@@ -30,8 +30,8 @@ export class AccountOverviewComponent {
     }
   }
 
-  resetChat() {
-    this.selectedChat.emit(0);
+  resetChats() {
+    this.resetChat.emit(-1);
   }
 
 }
