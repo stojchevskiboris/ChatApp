@@ -27,17 +27,29 @@
 
   <div class="input-container d-flex align-items-end p-2">
     <!-- <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" #messageInput /> -->
-    <textarea 
-      class="w-100 messageTextArea" 
-      matInput 
-      #messageInput 
-      [(ngModel)]="newMessage" 
-      cdkTextareaAutosize
-      #autosize="cdkTextareaAutosize" 
-      cdkAutosizeMinRows="1" 
-      cdkAutosizeMaxRows="5" 
-      (keydown.enter)="sendMessage()">
-    </textarea>
-    <button mat-raised-button color="primary" (click)="sendMessage()">Send</button>
+    <div class="w-100 d-flex align-items-end">
+      <textarea
+        class="w-100 messageTextArea" 
+        matInput #messageInput 
+        [(ngModel)]="newMessage" 
+        cdkTextareaAutosize
+        #autosize="cdkTextareaAutosize" 
+        cdkAutosizeMinRows="1" 
+        cdkAutosizeMaxRows="5" 
+        (keydown.enter)="sendMessage()">
+      </textarea>
+      <button mat-icon-button>
+        <mat-icon>gif</mat-icon>
+      </button>
+      <button mat-icon-button>
+        <mat-icon>image</mat-icon>
+      </button>
+    </div>
+    <!-- <button mat-raised-button color="primary" (click)="sendMessage()">Send</button> -->
+    <button mat-raised-button color="primary" (click)="sendMessage()">
+      <div class="d-flex">
+        <mat-icon>send</mat-icon>
+      </div>
+    </button>
   </div>
 </div>
