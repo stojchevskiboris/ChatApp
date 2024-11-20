@@ -3,6 +3,7 @@ export class UserRegisterModel {
     lastName: string = '';
     email: string = '';
     password: string = '';
+    confirmPassword: string = '';
     dateOfBirth: string = '';
     phone: string = '';
 }

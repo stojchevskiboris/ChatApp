@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { UserRegisterModel } from '../../models/user-register-model';
+import { UserLoginModel } from '../../models/user-login-model';
 
 @Component({
   selector: 'app-login',
@@ -17,16 +18,8 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) { }
 
-  username: string = '';
-  password: string = '';
-
-  firstNameNew: string = '';
-  lastNameNew: string = '';
-  usernameNew: string = '';
-  passwordNew: string = '';
-  confirmPasswordNew: string = '';
-  dateOfBirthNew: string = '';
-  phoneNumberNew: string = '';
+  loginModel = new UserLoginModel();
+  registerModel = new UserRegisterModel();
 
   loading: boolean = false;
   errorMessage: string = '';
@@ -35,18 +28,26 @@ export class LoginComponent implements OnInit {
 
   ngOnInit() {
     this.container = this.el.nativeElement.querySelector(".container");
+    this.authService.sessionLogin().subscribe({
+      next: (response) => {
+        if(response){
+          this.router.navigate(['/home']);
+          this.loading = false;
+        }
+      }
+    });
   }
 
   register() {
     this.isModelInvalid = false;
     if (
-      this.usernameNew.trim() === '' ||
-      this.passwordNew.trim() === '' ||
-      this.confirmPasswordNew.trim() === '' ||
-      this.firstNameNew.trim() === '' ||
-      this.lastNameNew.trim() === '' ||
-      this.dateOfBirthNew.trim() === '' ||
-      this.phoneNumberNew.trim() === ''
+      this.registerModel.email.trim() === '' ||
+      this.registerModel.password.trim() === '' ||
+      this.registerModel.confirmPassword.trim() === '' ||
+      this.registerModel.firstName.trim() === '' ||
+      this.registerModel.lastName.trim() === '' ||
+      this.registerModel.dateOfBirth.trim() === '' ||
+      this.registerModel.phone.trim() === ''
     ) {
       this.errorMessage = 'All fields are required';
       return;
@@ -54,24 +55,17 @@ export class LoginComponent implements OnInit {
 
     this.isModelInvalid = false;
 
-    if (this.passwordNew !== this.confirmPasswordNew) {
+    if (this.registerModel.password !== this.registerModel.confirmPassword) {
       this.errorMessage = 'Passwords do not match';
       return;
     }
 
-    var model = new UserRegisterModel();
-    model.firstName = this.firstNameNew;
-    model.lastName = this.lastNameNew;
-    model.email = this.usernameNew;
-    model.password = this.passwordNew;
-    model.dateOfBirth = this.dateOfBirthNew;
-    model.phone = this.phoneNumberNew;
 
     this.loading = true;
-    this.authService.register(model).subscribe({
+    this.authService.register(this.registerModel).subscribe({
       next: (r) => {
-        this.username = model.email;
-        this.password = model.password;
+        this.loginModel.username = this.registerModel.email;
+        this.loginModel.password = this.registerModel.password;
         this.login();
       },
       error: (err: HttpErrorResponse) => {
@@ -88,7 +82,7 @@ export class LoginComponent implements OnInit {
 
   login() {
     this.loading = true;
-    this.authService.login(this.username, this.password).subscribe({
+    this.authService.login(this.loginModel).subscribe({
       next: (r) => {
         this.router.navigate(['/home']);
         this.loading = false;

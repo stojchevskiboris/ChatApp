@@ -17,6 +17,7 @@ namespace ChatApp.Server.Services.Interfaces
 
         #region AuthenticationServices
         AuthenticateResponse Authenticate(AuthenticateRequest model);
+        AuthenticateResponse AuthenticateWithJwt(string token);
         #endregion
     }
 }

@@ -1,16 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DataService } from './data.service';
 import { UserViewModel } from '../models/user-view-model';
 import { UserRegisterModel } from '../models/user-register-model';
+import { UserLoginModel } from '../models/user-login-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private authEndpoint = '/Users/Authenticate';
-  private registerEndpoint = '/Users/CreateUser';
+  private loginEndpoint = '/Users/Login';
+  private sessionLoginEndpoint = '/Users/SessionLogin';
+  private registerEndpoint = '/Users/Register';
   currentUser: string = '';
   token: string = '';
 
@@ -18,7 +20,7 @@ export class AuthService {
 
   register(model: UserRegisterModel): Observable<UserViewModel> {
     return this.dataService
-      .post<any>(this.registerEndpoint, model )
+      .post<any>(this.registerEndpoint, model)
       .pipe(
         tap((response: UserViewModel) => {
           return response;
@@ -26,9 +28,28 @@ export class AuthService {
       );
   }
 
-  login(username: string, password: string): Observable<any> {
+  login(loginModel: UserLoginModel): Observable<any> {
     return this.dataService
-      .post<any>(this.authEndpoint, { username, password })
+      .post<any>(this.loginEndpoint, loginModel)
+      .pipe(
+        tap((response: any) => {
+          this.currentUser = JSON.stringify(response);
+          this.token = response.token;
+
+          localStorage.setItem('token', response.token);
+          localStorage.setItem('userId', response.id);
+          localStorage.setItem('currentUser', this.currentUser);
+        })
+      );
+  }
+
+  sessionLogin(): Observable<any> {
+    const token = this.getToken();
+    if (!token) {
+      return of(null);
+    }
+    return this.dataService
+      .post<any>(this.sessionLoginEndpoint, { token })
       .pipe(
         tap((response: any) => {
           this.currentUser = JSON.stringify(response);

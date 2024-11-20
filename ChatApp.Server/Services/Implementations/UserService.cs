@@ -58,6 +58,11 @@ namespace ChatApp.Server.Services.Implementations
                 throw new CustomException("There is already registered user with the provided Email");
             }
 
+            if (model.Password != model.ConfirmPassword)
+            {
+                throw new CustomException("Passwords must match");
+            }
+
             User user = new User();
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
@@ -159,6 +164,49 @@ namespace ChatApp.Server.Services.Implementations
             var token = GenerateJwtToken(user);
 
             return new AuthenticateResponse(user, token);
+        }
+
+        public AuthenticateResponse AuthenticateWithJwt(string token)
+        {
+            if (string.IsNullOrEmpty(token))
+            {
+                throw new CustomException("Session expired, please log in again.");
+            }
+
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.ASCII.GetBytes(_appSettings.Secret);
+
+            try
+            {
+                // Validate the token
+                tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero // No delay for token expiration
+                }, out SecurityToken validatedToken);
+
+                var jwtToken = (JwtSecurityToken)validatedToken;
+                var userId = int.Parse(jwtToken.Claims.First(claim => claim.Type == "id").Value);
+
+                // Get the user by ID
+                var user = _userRepository.Get(userId);
+                if (user == null)
+                {
+                    throw new CustomException("User not found");
+                }
+
+                // Generate a new JWT token for the response
+                var newToken = GenerateJwtToken(user);
+
+                return new AuthenticateResponse(user, newToken);
+            }
+            catch (Exception)
+            {
+                throw new CustomException("Session expired, please log in again.");
+            }
         }
 
         private string GenerateJwtToken(User user)

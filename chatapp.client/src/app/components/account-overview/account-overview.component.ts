@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserViewModel } from '../../models/user-view-model';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-account-overview',

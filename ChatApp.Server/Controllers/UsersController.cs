@@ -50,13 +50,6 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserByEmail(email);
         }
 
-        [HttpPost("CreateUser")]
-        public UserViewModel CreateUser(UserRegisterModel model)
-        {
-            var newUser = _userService.CreateUser(model);
-            return newUser;
-        }
-
         [HttpPost("DeleteUser")]
         [Authorize]
         public bool DeleteUser(int userId)
@@ -78,13 +71,33 @@ namespace ChatApp.Server.Controllers
             return _userService.ChangePassword(model);
         }
 
-        [HttpPost("Authenticate")]
+        [HttpPost("Register")]
+        public UserViewModel CreateUser(UserRegisterModel model)
+        {
+            var newUser = _userService.CreateUser(model);
+            return newUser;
+        }
+
+        [HttpPost("Login")]
         public IActionResult Authenticate(AuthenticateRequest model)
         {
             var response = _userService.Authenticate(model);
 
             if (response == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
+
+            return Ok(response);
+        }
+
+        [HttpPost("SessionLogin")]
+        public IActionResult SessionLogin(TokenRequestModel model)
+        {
+            if (string.IsNullOrEmpty(model.Token))
+            {
+                return BadRequest(new { message = "Session expired, please log in again." });
+            }
+
+            var response = _userService.AuthenticateWithJwt(model.Token);
 
             return Ok(response);
         }
