@@ -18,6 +18,9 @@
       [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
       <div class="message-content">
         <span class="wrap-anywhere">{{ message.content }}</span>
+        <div *ngIf="message.hasMedia" class="media-preview">
+          <span >{{ message }}</span>
+        </div>
         <br>
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
         <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span>
@@ -26,24 +29,37 @@
   </ng-scrollbar>
 
   <div class="input-container d-flex align-items-end p-2">
-    <!-- <input matInput [(ngModel)]="newMessage" placeholder="Type a message..." (keydown.enter)="sendMessage()" #messageInput /> -->
     <div class="w-100 d-flex align-items-end">
-      <textarea
-        class="w-100 messageTextArea" 
-        matInput #messageInput 
-        [(ngModel)]="newMessage" 
-        cdkTextareaAutosize
-        #autosize="cdkTextareaAutosize" 
-        cdkAutosizeMinRows="1" 
-        cdkAutosizeMaxRows="5" 
+      <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" matInput #messageInput [(ngModel)]="newMessage"
+        cdkTextareaAutosize #autosize="cdkTextareaAutosize" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5"
         (keydown.enter)="sendMessage()">
       </textarea>
+
+      <div id="selectedMediaInput" class="w-100" *ngIf="isMediaSelected">
+        <div *ngFor="let media of selectedMedia; let i = index" class="media-preview">
+          <!-- Display image or video thumbnail -->
+          <ng-container *ngIf="media.type.startsWith('image'); else videoPreview">
+            <img [src]="media.preview" alt="Preview" class="media-thumbnail">
+          </ng-container>
+          <ng-template #videoPreview>
+            <video [src]="media.preview" class="media-thumbnail" controls muted></video>
+          </ng-template>
+
+          <!-- Remove button -->
+          <button mat-icon-button color="warn" class="close" (click)="removeMedia(i)">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+      </div>
+
       <button mat-icon-button>
         <mat-icon>gif</mat-icon>
       </button>
-      <button mat-icon-button>
+      <input type="file" accept="image/*,video/*" multiple hidden #fileInput (change)="handleMediaUpload($event)">
+      <button mat-icon-button (click)="fileInput.click()">
         <mat-icon>image</mat-icon>
       </button>
+
     </div>
     <!-- <button mat-raised-button color="primary" (click)="sendMessage()">Send</button> -->
     <button mat-raised-button color="primary" (click)="sendMessage()">

@@ -13,14 +13,22 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
 
   @Input() recipientId: number | null = null;
   @Output() toggleChatSettings = new EventEmitter();
+
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
+
   currentUserId: number = 0;
   recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
   messages: MessageViewModel[] = [];
-  newMessage: string = '';
+
   hasScrolledToBottom: boolean = false;
+
+  newMessage: string = '';
+  isMediaSelected: boolean = false;
+  selectedMedia: { file: File, preview: string, type: string }[] = [];
+  maxFileSizeMB: number = 20; // Maximum file size limit in MB
+  errorMessage: string | null = null;
 
   constructor(private authService: AuthService) {
     this.currentUserId = +this.authService.getUserId();
@@ -59,22 +67,71 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
     }
   }
 
-  sendMessage() {
+  handleMediaUpload(event: Event): void {
+    var mediaToUpload = 0;
+    const input = event.target as HTMLInputElement;
+    this.errorMessage = null;
+    if (input.files && input.files.length > 0) {
+      this.isMediaSelected = true;
+      this.newMessage = "";
+      for (let i = 0; i < input.files.length; i++) {
+        const file = input.files[i];
+        if (file.size > this.maxFileSizeMB * 1024 * 1024) {
+          this.errorMessage = `File ${file.name} exceeds the maximum allowed size of ${this.maxFileSizeMB} MB.`;
+          continue; // Skip this file
+        }
+        mediaToUpload++;
+        const reader = new FileReader();
+        reader.onload = () => {
+          this.selectedMedia.push({
+            file: file,
+            preview: reader.result as string,
+            type: file.type,
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+    else{
+      this.isMediaSelected = false;
+    }
+    if(mediaToUpload == 0){
+      this.isMediaSelected = false;
+    }
+    mediaToUpload = 0;
+  }
+  
+  removeMedia(index: number): void {
+    this.selectedMedia.splice(index, 1);
+    this.isMediaSelected = this.selectedMedia.length > 0;
+  }
+
+  sendMessage(): void {
     event.preventDefault();
-    if (this.newMessage.trim()) {
+    if (this.newMessage.trim() || this.selectedMedia.length > 0) {
       const message: MessageViewModel = {
         messageId: this.messages.length + 1,
         senderId: this.currentUserId,
-        recipientId: this.recipient?.id || 3,
+        recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
-        hasMedia: false,
+        hasMedia: this.selectedMedia.length > 0,
         isSeen: false,
         parentMessageId: false,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
       };
+  
+      // Handle media sending (you would replace this with actual upload logic)
+      if (this.selectedMedia.length > 0) {
+        message.content += ' [Media attached]';
+        console.log('Sending media:', this.selectedMedia);
+      }
+  
       this.messages.push(message);
       this.newMessage = '';
+      this.selectedMedia = [];
+      this.isMediaSelected = false;
+  
       this.scrollToBottom();
     }
     this.messageInput.nativeElement.focus();
