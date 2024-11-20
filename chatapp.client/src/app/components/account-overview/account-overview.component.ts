@@ -21,8 +21,7 @@ export class AccountOverviewComponent {
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
     if (currentUserStr == null || currentUserStr == undefined || currentUserStr == '') {
-      this.authService.logout();
-      this.router.navigate(['/'])
+      this.logout();
     }
     else {
       this.currentUser = JSON.parse(currentUserStr);
@@ -34,4 +33,8 @@ export class AccountOverviewComponent {
     this.resetChat.emit(-1);
   }
 
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+  }
 }

@@ -14,8 +14,4 @@ export class AccountSettingsComponent {
     private router: Router
   ) { }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
-  }
 }
