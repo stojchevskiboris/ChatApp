@@ -26,6 +26,12 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
+    if(this.userId){
+      this.getUserDetails();
+    }
+  }
+  
+  getUserDetails() {
     this.userService.getUserDetails(+this.userId).subscribe({
       next: (model: UserViewModel) => {
         this.currentUser = model
