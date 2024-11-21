@@ -203,9 +203,10 @@ body {
 }
 
 .messageTextArea:focus {
-  outline: none; /* Removes the default focus outline */
-  border: 2px solid #005cbb; /* Adds a custom border color */
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Optional: add a glow effect */
+  outline: none;
+  /* border: 2px solid #005cbb; */
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+
 }
 
 .messageTextArea::-webkit-scrollbar {
