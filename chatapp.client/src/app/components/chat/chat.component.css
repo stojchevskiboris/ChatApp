@@ -68,6 +68,14 @@ button {
   max-width: 150px; /* Adjust the size of the media preview */
   max-height: 150px;
   border-radius: 8px; /* Optional styling */
+  border: 1px solid rgb(201, 201, 201);
+  display: block;
+}
+
+.media-chat {
+  max-width: 250px; /* Adjust the size of the media preview */
+  max-height: 250px;
+  border-radius: 8px; /* Optional styling */
   display: block;
 }
 

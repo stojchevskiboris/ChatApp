@@ -92,55 +92,82 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
         reader.readAsDataURL(file);
       }
     }
-    else{
+    else {
       this.isMediaSelected = false;
     }
-    if(mediaToUpload == 0){
+    if (mediaToUpload == 0) {
       this.isMediaSelected = false;
     }
     mediaToUpload = 0;
   }
-  
+
   removeMedia(index: number): void {
     this.selectedMedia.splice(index, 1);
     this.isMediaSelected = this.selectedMedia.length > 0;
+    setTimeout(() => {
+      if (this.messageInput) {
+        this.messageInput.nativeElement.focus();
+      }
+    }, 100);
   }
 
   sendMessage(): void {
     event.preventDefault();
-    if (this.newMessage.trim() || this.selectedMedia.length > 0) {
-      const message: MessageViewModel = {
+    // Text Message
+    if (this.newMessage.trim()) {
+      const textMessage: MessageViewModel = {
         messageId: this.messages.length + 1,
         senderId: this.currentUserId,
         recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
-        hasMedia: this.selectedMedia.length > 0,
+        hasMedia: false,
         isSeen: false,
         parentMessageId: false,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
       };
-  
-      // Handle media sending (you would replace this with actual upload logic)
-      if (this.selectedMedia.length > 0) {
-        message.content += ' [Media attached]';
-        console.log('Sending media:', this.selectedMedia);
-      }
-  
-      this.messages.push(message);
+
+      this.messages.push(textMessage);
       this.newMessage = '';
+    }
+
+    // Media Message
+    if (this.selectedMedia.length > 0) {
+      this.selectedMedia.forEach((media, index) => {
+        const mediaMessage: MessageViewModel = {
+          messageId: this.messages.length + 1 + index,
+          senderId: this.currentUserId,
+          recipientId: this.recipient?.id || 0,
+          content: media.preview,
+          hasMedia: true,
+          isSeen: false,
+          parentMessageId: false,
+          createdAt: new Date().toISOString(),
+          modifiedAt: new Date().toISOString(),
+        };
+
+        console.log('Sending media:', media);
+        // Replace with actual upload logic
+        this.messages.push(mediaMessage);
+      });
+
       this.selectedMedia = [];
       this.isMediaSelected = false;
-  
-      this.scrollToBottom();
     }
-    this.messageInput.nativeElement.focus();
+
+    this.scrollToBottom();
+
+    setTimeout(() => {
+      if (this.messageInput) {
+        this.messageInput.nativeElement.focus();
+      }
+    }, 100);
   }
 
   setRecipient() {
     this.recipient = {
-      firstName: 'Donald',
-      lastName: 'Trump',
+      firstName: 'John',
+      lastName: 'Doe',
       isActive: true,
       lastActive: new Date().toDateString(),
       id: this.recipientId
