@@ -23,7 +23,9 @@ namespace ChatApp.Server.Configs
             // --- Service Registration ---
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGroupService, GroupService>();
+            services.AddScoped<IGiphyService, GiphyService>();
             services.AddScoped<IGroupUserService, GroupUserService>();
+            services.AddHttpClient<IGiphyService, GiphyService>();
         }
 
         public static void ConfigureValidators(this IServiceCollection services)

@@ -1,0 +1,18 @@
+<div class="gif-search">
+  <input
+    type="text"
+    placeholder="Search GIFs..."
+    [(ngModel)]="searchQuery"
+    (input)="onSearch()"
+  />
+  <div class="gif-results">
+    <div
+      class="gif-item"
+      *ngFor="let gif of gifs"
+      (click)="selectGif(gif.imageUrl)"
+    >
+      <img [src]="gif.imageUrl" alt="GIF" />
+      <!-- <p>{{ gif.title }}</p> -->
+    </div>
+  </div>
+</div>

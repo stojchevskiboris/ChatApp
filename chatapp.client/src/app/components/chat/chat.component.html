@@ -25,7 +25,7 @@
 
         <!-- Media -->
         <div *ngIf="message.hasMedia" class="media-preview">
-          <ng-container *ngIf="message.content.startsWith('data:image'); else videoPreview">
+          <ng-container *ngIf="message.content.startsWith('data:image') || containsGiphy(message.content); else videoPreview">
             <img [src]="message.content" alt="Preview" class="media-chat">
           </ng-container>
           <ng-template #videoPreview>
@@ -73,11 +73,15 @@
       </div>
 
       <div class="d-flex align-items-end" *ngIf="newMessage.length==0">
-        <button mat-icon-button>
+        <button mat-icon-button (click)="toggleGifSearch()" [ngClass]="{'active-btn': showGifSearch}">
           <mat-icon>gif</mat-icon>
         </button>
+        <app-gif-search 
+          *ngIf="showGifSearch" 
+          (gifSelected)="handleGifSelected($event)">
+        </app-gif-search>
         <input type="file" accept="image/*,video/*" multiple hidden #fileInput (change)="handleMediaUpload($event)">
-        <button mat-icon-button (click)="fileInput.click()">
+        <button mat-icon-button (click)="fileInput.click()" [ngClass]="{'active-btn': isMediaSelected}">
           <mat-icon>image</mat-icon>
         </button>
       </div>

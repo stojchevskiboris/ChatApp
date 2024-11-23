@@ -103,6 +103,9 @@ body {
 
 /*-- Ngx Scrollbar --*/
 
+.active-btn{
+  background-color: #d4d6d6 !important;
+}
 
 .acc-overview {
   height: 65px;

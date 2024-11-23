@@ -25,6 +25,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   hasScrolledToBottom: boolean = false;
 
   newMessage: string = '';
+  showGifSearch: boolean = false;
   isMediaSelected: boolean = false;
   selectedMedia: { file: File, preview: string, type: string }[] = [];
   maxFileSizeMB: number = 20; // Maximum file size limit in MB
@@ -109,6 +110,38 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
         this.messageInput.nativeElement.focus();
       }
     }, 100);
+  }
+
+  toggleGifSearch(): void {
+    this.showGifSearch = !this.showGifSearch;
+  }
+
+  handleGifSelected(gifUrl: string): void {
+    console.log('Selected GIF:', gifUrl);
+  
+    const gifMessage: MessageViewModel = {
+      messageId: this.messages.length + 1,
+      senderId: this.currentUserId,
+      recipientId: this.recipient?.id || 0,
+      content: gifUrl,
+      hasMedia: true,
+      isSeen: false,
+      parentMessageId: false,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString(),
+    };
+  
+    this.messages.push(gifMessage);
+    this.scrollToBottom();
+  
+    this.showGifSearch = false; // Close the GIF search overlay
+  }
+
+  containsGiphy(content): any {
+    if(content){
+      return content.toLowerCase().includes('giphy');
+    }
+    return false;
   }
 
   sendMessage(): void {
