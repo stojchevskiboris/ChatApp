@@ -1,18 +1,26 @@
-<div class="gif-search">
-  <input
-    type="text"
-    placeholder="Search GIFs..."
-    [(ngModel)]="searchQuery"
-    (input)="onSearch()"
-  />
+<div class="gif-search mat-elevation-z3">
+  <mat-form-field appearance="outline" class="search-input">
+    <mat-label>Search GIFs</mat-label>
+    <input
+      matInput
+      type="text"
+      [(ngModel)]="searchQuery"
+      (input)="onSearch()"
+    />
+    <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="clearSearch()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-form-field>
   <div class="gif-results">
     <div
       class="gif-item"
       *ngFor="let gif of gifs"
-      (click)="selectGif(gif.imageUrl)"
-    >
-      <img [src]="gif.imageUrl" alt="GIF" />
-      <!-- <p>{{ gif.title }}</p> -->
+      (click)="selectGif(gif.imageUrl)">
+      <mat-card>
+        <img [src]="gif.imageUrl" alt="GIF" />
+        <!-- Uncomment below if titles are needed -->
+        <!-- <mat-card-title>{{ gif.title }}</mat-card-title> -->
+      </mat-card>
     </div>
   </div>
 </div>

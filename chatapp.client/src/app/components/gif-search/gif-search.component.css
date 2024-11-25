@@ -2,23 +2,41 @@
     position: absolute;
     bottom: 60px;
     background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 300px;
-    padding: 10px;
+    border-radius: 8px;
+    width: 320px;
+    padding: 16px;
     z-index: 1000;
-}
-
-.gif-results {
-    max-height: 200px;
+    box-shadow: var(--mat-elevation-z3);
+  }
+  
+  .search-input {
+    width: 100%;
+    margin-bottom: 12px;
+  }
+  
+  .gif-results {
+    max-height: 300px;
     overflow-y: auto;
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
-}
-
-.gif-item img {
-    width: 100px;
-    height: auto;
+    gap: 12px;
+    justify-content: space-between;
+  }
+  
+  .gif-item {
+    flex: 1 1 99%; /* Three items per row */
+    display: flex;
+    justify-content: center;
+  }
+  
+  .gif-item mat-card {
+    width: 100%;
     cursor: pointer;
-}
+    /* transition: transform 0.2s ease-in-out; */
+  }
+  
+  .gif-item img {
+    width: 100%;
+    border-radius: 4px;
+  }
+  

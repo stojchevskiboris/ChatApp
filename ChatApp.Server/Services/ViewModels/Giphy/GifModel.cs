@@ -35,5 +35,6 @@
     {
         public string Query { get; set; }
         public int Limit { get; set; } = 10;
+        public string Rating { get; set; } = "g";
     }
 }
