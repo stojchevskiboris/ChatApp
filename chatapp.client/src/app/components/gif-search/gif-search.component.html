@@ -15,7 +15,7 @@
     <div class="gif-results">
       <div class="gif-item" *ngFor="let gif of gifs" (click)="selectGif(gif)">
         <mat-card>
-          <img [src]="gif.imageUrl" alt="GIF" />
+          <img [src]="gif.previewUrl" alt="GIF" />
         </mat-card>
       </div>
     </div>

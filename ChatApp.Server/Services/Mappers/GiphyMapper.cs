@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Services.ViewModels.Giphy;
+﻿using ChatApp.Server.Services.ViewModels;
 
 namespace ChatApp.Server.Services.Mappers
 {
@@ -14,7 +14,7 @@ namespace ChatApp.Server.Services.Mappers
                 Id = model.Id,
                 Title = model.Title,
                 ImageUrl = model.Images.Original.Url,
-                PreviewUrl = model.Images.Preview.Url
+                PreviewUrl = model.Images.Fixed_Height_Downsampled.Url
             };
         }
 

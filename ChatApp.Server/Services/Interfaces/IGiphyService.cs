@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Services.ViewModels.Giphy;
+﻿using ChatApp.Server.Services.ViewModels;
 
 namespace ChatApp.Server.Services.Interfaces
 {

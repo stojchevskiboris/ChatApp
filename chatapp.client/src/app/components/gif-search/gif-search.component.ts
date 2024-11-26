@@ -35,6 +35,11 @@ export class GifSearchComponent {
       )
         .subscribe((response: any) => {
           this.gifs = response;
+          this.gifs.map((gif) =>{
+            if(!gif.previewUrl || gif.previewUrl == ''){
+              gif.previewUrl = gif.imageUrl;
+            }
+          });
         });
     }
     else {
