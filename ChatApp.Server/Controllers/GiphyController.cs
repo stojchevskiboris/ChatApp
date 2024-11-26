@@ -23,14 +23,7 @@ namespace ChatApp.Server.Controllers
 
             var gifs = await _giphyService.FetchGifsAsync(request);
 
-            var viewModel = gifs.Select(gif => new GifViewModel
-            {
-                Title = gif.Title,
-                ImageUrl = gif.Url,
-                PreviewUrl = gif.ThumbnailUrl
-            });
-
-            return Ok(viewModel);
+            return Ok(gifs);
         }
     }
 }

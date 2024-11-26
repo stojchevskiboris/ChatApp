@@ -1,13 +1,5 @@
 ﻿namespace ChatApp.Server.Services.ViewModels.Giphy
 {
-    public class GifModel
-    {
-        public string Id { get; set; }
-        public string Title { get; set; }
-        public string Url { get; set; }
-        public string ThumbnailUrl { get; set; }
-    }
-
     public class GiphyApiResponse
     {
         public List<GiphyData> Data { get; set; }

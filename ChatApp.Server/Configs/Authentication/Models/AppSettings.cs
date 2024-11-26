@@ -3,5 +3,6 @@
     public class AppSettings
     {
         public string Secret { get; set; } = string.Empty;
+        public string GiphyApiKey { get; set; } = string.Empty;
     }
 }
