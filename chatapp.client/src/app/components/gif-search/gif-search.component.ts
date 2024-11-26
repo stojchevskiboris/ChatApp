@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { GiphyService } from '../../services/giphy.service';
 import { GifViewModel } from '../../models/gif-view-model';
 
@@ -15,8 +15,16 @@ export class GifSearchComponent {
 
   gifs: GifViewModel[] = [];
   @Output() gifSelected = new EventEmitter<string>();
+  @ViewChild('gifSearchDiv') gifSearchDiv: any
 
   constructor(private giphyService: GiphyService) { }
+
+  ngAfterViewInit(): void {
+    this.gifSearchDiv.nativeElement.addEventListener('focusout', () => {
+      // error: clicks on the input in the div triggers focusout
+      console.log("item-clicked");
+    });
+  }
 
   onSearch(): void {
     if (this.searchQuery.length > 2) {
@@ -39,7 +47,7 @@ export class GifSearchComponent {
     this.gifs = [];
   }
 
-  selectGif(gifUrl: string): void {
-    this.gifSelected.emit(gifUrl);
+  selectGif(gif: GifViewModel): void {
+    this.gifSelected.emit(gif.imageUrl);
   }
 }

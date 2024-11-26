@@ -7,6 +7,8 @@
     padding: 16px;
     z-index: 1000;
     box-shadow: var(--mat-elevation-z3);
+    margin-left: -200px !important;
+    background-color:rgba(240, 240, 240, 0.9);
   }
   
   .search-input {
@@ -24,19 +26,37 @@
   }
   
   .gif-item {
-    flex: 1 1 99%; /* Three items per row */
+    flex: 1 1 99%;
     display: flex;
     justify-content: center;
+    padding-right: 2px;
   }
   
   .gif-item mat-card {
     width: 100%;
     cursor: pointer;
-    /* transition: transform 0.2s ease-in-out; */
   }
   
+  /* scrollbar */
   .gif-item img {
     width: 100%;
     border-radius: 4px;
   }
   
+  .gif-results::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  /* Track */
+  .gif-results::-webkit-scrollbar-track {
+    -webkit-border-radius: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Handle */
+  .gif-results::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 10px;
+    border-radius: 10px;
+    background: rgba(193, 193, 193, 1);
+  }
+  /*-- scrollbar --*/

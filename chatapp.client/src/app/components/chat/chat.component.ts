@@ -16,6 +16,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
+  @ViewChild('fileInput') fileInput: any;
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   currentUserId: number = 0;
@@ -116,6 +117,15 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
     this.showGifSearch = !this.showGifSearch;
   }
 
+  hideGifSearch() {
+    this.showGifSearch = false;
+  }
+
+  onImageUploadClick() {
+    this.fileInput.nativeElement.click()
+    this.showGifSearch = false;
+  }
+
   handleGifSelected(gifUrl: string): void {
     console.log('Selected GIF:', gifUrl);
   
@@ -212,6 +222,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   }
 
   toggleSettings() {
+    this.showGifSearch = false;
     this.toggleChatSettings.emit()
   }
 
