@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
+import { MatTabGroup } from '@angular/material/tabs';
 
 @Component({
   selector: 'app-left-pane',
@@ -9,23 +10,15 @@ export class LeftPaneComponent {
 
   constructor() { }
 
-  selectedChatId: number = null;
-
   @Output() selectedChat = new EventEmitter<number>();
-
-  handleSelectedChat(event: number) {
-    if (event == -1) {
-      this.selectedChatId = null;
-    }
-    this.selectedChat.emit(event);
-  }
-
+  selectedChatId: number = null;
   messagesList: any[] = [];
   contactsList: any[] = [];
+  selectedTabIndex: number = 0;
 
   ngOnInit(): void {
     // test data
-    this.testData();
+    // this.testData();
   }
 
   isLessThan5min(date: any): boolean {
@@ -43,6 +36,21 @@ export class LeftPaneComponent {
   openChat(recipientId: number) {
     this.selectedChat.emit(recipientId);
     this.selectedChatId = recipientId;
+  }
+
+  handleSelectedChat(event: number) {
+    if (event == -1) {
+      this.selectedChatId = null;
+    }
+    this.selectedChat.emit(event);
+  }
+
+  goToContactsTab() {
+    this.selectedTabIndex = 1;
+  }
+
+  addNewContactDialog() {
+    throw new Error('Method not implemented.');
   }
 
   testData() {

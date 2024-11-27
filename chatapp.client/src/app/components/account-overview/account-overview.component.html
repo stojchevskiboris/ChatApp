@@ -13,6 +13,10 @@
             <mat-icon>more_vert</mat-icon>
         </button>
         <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="addFriends()">
+                <mat-icon>settings</mat-icon>
+                <span>Add Friends</span>
+            </button>
             <button mat-menu-item routerLink="/settings">
                 <mat-icon>settings</mat-icon>
                 <span>Settings</span>

@@ -79,6 +79,12 @@ body {
   padding: 0 !important;
 }
 
+.mat-tabs-messages-contacts .mat-mdc-tab-header {
+  border-left: 1px solid #e0e2ec;
+  border-right: 1px solid #e0e2ec;
+}
+
+
 .mat-mdc-form-field .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
   /* remove additional spacing under the search component */
   display: none;
