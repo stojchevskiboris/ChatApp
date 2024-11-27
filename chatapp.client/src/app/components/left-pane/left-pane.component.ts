@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
-import { MatTabGroup } from '@angular/material/tabs';
+import { Component, ElementRef, EventEmitter, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-left-pane',
@@ -10,7 +9,9 @@ export class LeftPaneComponent {
 
   constructor() { }
 
+  @ViewChild('searchInput') searchInput: ElementRef;
   @Output() selectedChat = new EventEmitter<number>();
+  @Input() startChat: any;
   selectedChatId: number = null;
   messagesList: any[] = [];
   contactsList: any[] = [];
@@ -64,6 +65,14 @@ export class LeftPaneComponent {
     }
     this.selectedChat.emit(event);
   }
+
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    let change: SimpleChange = changes['startChat']; 
+    if(!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/){
+      this.selectedTabIndex = 0;
+      this.searchInput.nativeElement.focus();
+    }
+}
 
   goToContactsTab() {
     this.selectedTabIndex = 1;

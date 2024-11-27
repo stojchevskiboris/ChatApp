@@ -9,9 +9,6 @@ import { UserViewModel } from '../../models/user-view-model';
   styleUrl: './account-overview.component.css'
 })
 export class AccountOverviewComponent {
-addFriends() {
-throw new Error('Method not implemented.');
-}
   constructor(
     private authService: AuthService,
     private router: Router
@@ -34,6 +31,10 @@ throw new Error('Method not implemented.');
 
   resetChats() {
     this.resetChat.emit(-1);
+  }
+
+  addFriends() {
+    throw new Error('Method not implemented.');
   }
 
   logout() {

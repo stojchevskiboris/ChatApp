@@ -23,14 +23,15 @@ export class HomeComponent implements OnInit {
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
   isChatSettingsEnabled: boolean = true;
+  startChatEvent: boolean = false;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
-    if(this.userId){
+    if (this.userId) {
       this.getUserDetails();
     }
   }
-  
+
   getUserDetails() {
     this.userService.getUserDetails(+this.userId).subscribe({
       next: (model: UserViewModel) => {
@@ -59,5 +60,9 @@ export class HomeComponent implements OnInit {
 
   toggleSettings(): void {
     this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
+  }
+
+  startChat() {
+    this.startChatEvent = !this.startChatEvent;
   }
 }

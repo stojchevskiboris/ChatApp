@@ -5,25 +5,27 @@
   <div class="row">
 
     <div class="col-lg-4 border">
-      <app-left-pane (selectedChat)="handleSelectedChat($event)"></app-left-pane>
+      <app-left-pane (selectedChat)="handleSelectedChat($event)" [startChat]="startChatEvent"></app-left-pane>
     </div>
 
     <div class="col-lg-8">
       <div class="row h-100">
 
-        <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId">
+        <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border"
+          *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat (toggleChatSettings)="toggleSettings()" [recipientId]="selectedChatRecipientId"></app-chat>
         </div>
 
-        <div class="col-lg-4 chat fadeInAnimation border" *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
+        <div class="col-lg-4 chat fadeInAnimation border"
+          *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
           <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
         </div>
-        
+
         <div class="col-sm-12 start-chat fadeInAnimation border" *ngIf="!isChatSelected">
           <div>
             <p>Your messages</p>
             <p>Send a message to start a chat.</p>
-            <button mat-flat-button color="primary">Start a chat</button>
+            <button mat-flat-button color="primary" (click)="startChat()">Start a chat</button>
           </div>
         </div>
 
