@@ -14,31 +14,28 @@
     </div>
 
     <div class="tab-group-container flex-grow-1 overflow-hidden">
-        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
+        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex" >
             <mat-tab label="Messages">
-                <ng-template *ngIf="messagesList.length > 0; else noMessagesPage">
-
-                    <ng-scrollbar>
-                        <mat-selection-list>
-                            <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
-                                [ngClass]="{'selected': message.recipientId==selectedChatId}"
-                                (click)="openChat(message.recipientId)">
-                                <div class="message-card d-flex align-items-center">
-                                    <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
-                                    <div>
-                                        <span matListItemTitle>{{ message.name }}</span>
-                                        <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                            {{ message.recentMessage }}
-                                        </span>
-                                        <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                            {{ message.lastMessageSentAt | chatDate }}
-                                        </span>
-                                    </div>
+                <ng-scrollbar *ngIf="messagesList.length > 0; else noMessagesPage">
+                    <mat-selection-list >
+                        <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
+                            [ngClass]="{'selected': message.recipientId==selectedChatId}"
+                            (click)="openChat(message.recipientId)">
+                            <div class="message-card d-flex align-items-center">
+                                <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
+                                <div>
+                                    <span matListItemTitle>{{ message.name }}</span>
+                                    <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
+                                        {{ message.recentMessage }}
+                                    </span>
+                                    <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
+                                        {{ message.lastMessageSentAt | chatDate }}
+                                    </span>
                                 </div>
-                            </mat-list-item>
-                        </mat-selection-list>
-                    </ng-scrollbar>
-                </ng-template>
+                            </div>
+                        </mat-list-item>
+                    </mat-selection-list>
+                </ng-scrollbar>
 
                 <ng-template #noMessagesPage>
                     <div class="text-center mt-3 mb-3">
@@ -52,10 +49,7 @@
             </mat-tab>
 
             <mat-tab label="Contacts">
-                <ng-template *ngIf="contactsList.length > 0; else noContactsPage">
-
-
-                <ng-scrollbar>
+                <ng-scrollbar *ngIf="contactsList.length > 0; else noContactsPage">
                     <mat-selection-list>
                         <mat-list-item *ngFor="let contact of contactsList; index as i" class="contacts-list"
                             [ngClass]="{'selected': contact.recipientId==selectedChatId}"
@@ -79,17 +73,16 @@
                         </mat-list-item>
                     </mat-selection-list>
                 </ng-scrollbar>
-            </ng-template>
 
-            <ng-template #noContactsPage>
-                <div class="text-center mt-3 mb-3">
-                    <span>No contacts found</span>
-                    <br>
-                    <button mat-stroked-button class="mt-3 mb-3" (click)="addNewContactDialog()">
-                        Add Friends
-                    </button>
-                </div>
-            </ng-template>
+                <ng-template #noContactsPage>
+                    <div class="text-center mt-3 mb-3">
+                        <span>No contacts found</span>
+                        <br>
+                        <button mat-stroked-button class="mt-3 mb-3" (click)="addNewContactDialog()">
+                            Add Friends
+                        </button>
+                    </div>
+                </ng-template>
             </mat-tab>
         </mat-tab-group>
     </div>
