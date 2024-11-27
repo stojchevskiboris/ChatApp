@@ -18,7 +18,27 @@ export class LeftPaneComponent {
 
   ngOnInit(): void {
     // test data
-    // this.testData();
+    this.testData();
+  }
+
+  ngAfterViewInit(): void {
+    this.changeBackgroundColor();
+    
+  }
+  changeActiveTab(): void {
+    this.removePreviousActiveTabClass();
+    this.changeBackgroundColor();
+  }
+
+  removePreviousActiveTabClass(): void {
+    const previousActiveTab = document.getElementsByClassName('active-tab')[0];
+    (previousActiveTab as HTMLElement).style.backgroundColor = 'unset';
+    previousActiveTab.classList.remove('active-tab');
+  }
+
+  changeBackgroundColor(): void {
+    const activeTab = document.getElementsByClassName('mdc-tab--active')[0];    
+    (activeTab as HTMLElement).classList.add('active-tab');
   }
 
   isLessThan5min(date: any): boolean {

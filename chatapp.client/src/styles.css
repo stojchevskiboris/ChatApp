@@ -113,6 +113,10 @@ body {
   background-color: #d4d6d6 !important;
 }
 
+.active-tab{
+  background-color: #f5f5f5 !important;
+}
+
 .acc-overview {
   height: 65px;
 }

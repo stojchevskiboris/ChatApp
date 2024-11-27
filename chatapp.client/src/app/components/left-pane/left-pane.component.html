@@ -14,7 +14,7 @@
     </div>
 
     <div class="tab-group-container flex-grow-1 overflow-hidden">
-        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex" >
+        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="changeActiveTab()" >
             <mat-tab label="Messages">
                 <ng-scrollbar *ngIf="messagesList.length > 0; else noMessagesPage">
                     <mat-selection-list >
