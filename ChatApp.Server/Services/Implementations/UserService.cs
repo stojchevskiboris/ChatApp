@@ -51,6 +51,21 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
+        public List<AddUserModel> SearchUsers(string query)
+        {
+            var users = _userRepository.SearchUsers(query.Trim());
+            if (users == null)
+            {
+                throw new CustomException($"No results found");
+            }
+
+            var result = users
+                .ToList()
+                .MapToAddUserModelList();
+
+            return result;
+        }
+
         public UserViewModel CreateUser(UserRegisterModel model)
         {
             if (_userRepository.GetAll().Where(x => x.Email == model.Email).Any())

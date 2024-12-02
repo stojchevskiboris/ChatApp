@@ -17,5 +17,17 @@ namespace ChatApp.Server.Data.Implementations
         {
             return _context.Users.FirstOrDefault(u => u.Email == email);
         }
+
+        public IEnumerable<User> SearchUsers(string query)
+        {
+            var terms = query.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+
+            return _context.Users.Where(u =>
+                terms.Any(term =>
+                    u.FirstName.ToLower().Contains(term) ||
+                    u.LastName.ToLower().Contains(term)
+                )
+            );
+        }
     }
 }

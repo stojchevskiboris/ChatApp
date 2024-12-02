@@ -17,7 +17,7 @@
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="changeActiveTab()" >
             <mat-tab label="Messages">
                 <ng-scrollbar *ngIf="messagesList.length > 0; else noMessagesPage">
-                    <mat-selection-list >
+                    <mat-selection-list>
                         <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
                             [ngClass]="{'selected': message.recipientId==selectedChatId}"
                             (click)="openChat(message.recipientId)">

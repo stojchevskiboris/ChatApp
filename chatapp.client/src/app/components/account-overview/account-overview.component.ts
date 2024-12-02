@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserViewModel } from '../../models/user-view-model';
+import { MatDialog } from '@angular/material/dialog';
+import { AddContactDialogComponent } from '../add-contact/add-contact-dialog.component';
 
 @Component({
   selector: 'app-account-overview',
@@ -14,9 +16,10 @@ export class AccountOverviewComponent {
     private router: Router
   ) { }
 
+  @Output() resetChat = new EventEmitter<number>();
   userInitials: string = '';
   currentUser: UserViewModel = new UserViewModel();
-  @Output() resetChat = new EventEmitter<number>();
+  dialog = inject(MatDialog);
 
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
@@ -34,7 +37,14 @@ export class AccountOverviewComponent {
   }
 
   addFriends() {
-    throw new Error('Method not implemented.');
+    const dialogRef = this.dialog.open(AddContactDialogComponent, {
+      width: '70%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log(`Dialog result: ${result}`);
+    });
+
   }
 
   logout() {

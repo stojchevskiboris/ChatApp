@@ -50,6 +50,17 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserByEmail(email);
         }
 
+        [HttpPost("SearchUsers")]
+        [Authorize]
+        public List<AddUserModel> SearchUsers(RequestQueryModel model)
+        {
+            if (string.IsNullOrEmpty(model.Query) || model.Query.Trim().Length < 3)
+            {
+                return new List<AddUserModel>();
+            }
+            return _userService.SearchUsers(model.Query);
+        }
+
         [HttpPost("DeleteUser")]
         [Authorize]
         public bool DeleteUser(int userId)
