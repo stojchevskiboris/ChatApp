@@ -18,8 +18,12 @@
         </button>
         <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="addFriends()">
-                <mat-icon>supervisor_account</mat-icon>
+                <mat-icon>person_add</mat-icon>
                 <span>Add Friends</span>
+            </button>
+            <button mat-menu-item routerLink="/contacts">
+                <mat-icon>supervisor_account</mat-icon>
+                <span>Manage Friends</span>
             </button>
             <button mat-menu-item routerLink="/settings">
                 <mat-icon>settings</mat-icon>

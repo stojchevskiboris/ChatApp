@@ -194,7 +194,8 @@ body {
 }
 
 .chat, 
-.account-settings {
+.account-settings,
+.contacts-view {
   height: 98vh !important;
 }
 

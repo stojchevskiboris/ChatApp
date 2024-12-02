@@ -27,6 +27,7 @@ import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
 import { GifSearchComponent } from './components/gif-search/gif-search.component';
 import { AddContactDialogComponent } from './components/dialogs/add-contact-dialog/add-contact-dialog.component';
 import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
+import { ContactsComponent } from './components/contacts/contacts.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -42,7 +43,8 @@ import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sig
     LastActivePipe,
     GifSearchComponent,
     AddContactDialogComponent,
-    SignOutDialogComponent
+    SignOutDialogComponent,
+    ContactsComponent
   ],
   imports: [
     BrowserModule,
