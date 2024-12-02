@@ -15,6 +15,7 @@ namespace ChatApp.Server.Data
         public DbSet<Message> Messages { get; set; }
         public DbSet<Media> Media { get; set; }
         public DbSet<Recipient> Recipients { get; set; }
+        public DbSet<Request> Requests { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
