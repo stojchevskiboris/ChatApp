@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { HttpClient } from '@angular/common/http';
-import { AddContactModel } from '../../models/add-contact-model';
-import { UserService } from '../../services/user.service';
+import { AddContactModel } from '../../../models/add-contact-model';
+import { UserService } from '../../../services/user.service';
 
 @Component({
   selector: 'app-add-contact-dialog',

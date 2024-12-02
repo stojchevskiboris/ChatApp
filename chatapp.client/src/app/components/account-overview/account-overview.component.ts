@@ -3,7 +3,8 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { MatDialog } from '@angular/material/dialog';
-import { AddContactDialogComponent } from '../add-contact/add-contact-dialog.component';
+import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import { SignOutDialogComponent } from '../dialogs/sign-out-dialog/sign-out-dialog.component';
 
 @Component({
   selector: 'app-account-overview',
@@ -20,6 +21,7 @@ export class AccountOverviewComponent {
   userInitials: string = '';
   currentUser: UserViewModel = new UserViewModel();
   dialog = inject(MatDialog);
+  loading: boolean = false;
 
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
@@ -38,7 +40,7 @@ export class AccountOverviewComponent {
 
   addFriends() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
-      width: '70%',
+      width: '50%',
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -48,7 +50,15 @@ export class AccountOverviewComponent {
   }
 
   logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
+    const dialogRef = this.dialog.open(SignOutDialogComponent, {
+      width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(!!result) {
+        this.authService.logout();
+        this.router.navigate(['/']);
+      }
+    });
   }
 }

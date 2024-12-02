@@ -25,7 +25,8 @@ import { ChatDatePipe } from './shared/pipes/chat-date.pipe';
 import { LastActivePipe } from './shared/pipes/last-active.pipe';
 import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
 import { GifSearchComponent } from './components/gif-search/gif-search.component';
-import { AddContactDialogComponent } from './components/add-contact/add-contact-dialog.component';
+import { AddContactDialogComponent } from './components/dialogs/add-contact-dialog/add-contact-dialog.component';
+import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -40,7 +41,8 @@ import { AddContactDialogComponent } from './components/add-contact/add-contact-
     ChatDatePipe,
     LastActivePipe,
     GifSearchComponent,
-    AddContactDialogComponent
+    AddContactDialogComponent,
+    SignOutDialogComponent
   ],
   imports: [
     BrowserModule,
