@@ -53,39 +53,6 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
-        public List<AddUserModel> SearchUsersToAdd(int currentUserId, string query)
-        {
-            var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim());
-            if (users == null)
-            {
-                //throw new CustomException($"No results found");
-                return new List<AddUserModel>();
-            }
-
-            var result = users
-                .ToList()
-                .MapToAddUserModelList();
-
-            var pendingRequestsForCurrentUser = _requestRepository.GetPendingRequestsFromCurrentUser(currentUserId);
-
-            if (pendingRequestsForCurrentUser.Any())
-            {
-
-                foreach (var user in result)
-                {
-                    foreach(var request in pendingRequestsForCurrentUser)
-                    {
-                        if (request.UserTo.Id == user.Id)
-                        {
-                            user.IsAdded = true;
-                        }
-                    }
-                }
-            }
-
-            return result;
-        }
-
         public UserViewModel CreateUser(UserRegisterModel model)
         {
             if (_userRepository.GetAll().Where(x => x.Email == model.Email).Any())

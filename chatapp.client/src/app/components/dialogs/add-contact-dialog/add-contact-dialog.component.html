@@ -30,7 +30,7 @@
               <div class="ms-2">{{ user.firstName }} {{ user.lastName }}</div>
             </div>
 
-            <button mat-flat-button (click)="addContact(user)" *ngIf="!user.isAdded">
+            <button mat-flat-button (click)="newRequest(user)" *ngIf="!user.isAdded">
               Add
             </button>
             <button mat-stroked-button (click)="cancelRequest(user)" *ngIf="user.isAdded">

@@ -1,4 +1,5 @@
 ﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
@@ -26,18 +27,45 @@ namespace ChatApp.Server.Services.Implementations
             return _requestRepository.GetAll()
                 .ToList()
                 .MapToViewModelList();
-
         }
 
-        public bool RequestByUserId(NewRequestModel model)
+        public List<AddUserModel> SearchUsersToAdd(string query)
         {
-            if (model.UserFromId == 0 || model.UserToId == 0)
+            var currentUserId = Context.GetCurrentUserId();
+            var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim());
+            if (users == null)
             {
-                return false;
+                //throw new CustomException($"No results found");
+                return new List<AddUserModel>();
             }
 
-            var userFrom = _userRepository.Get(model.UserFromId);
-            var userTo = _userRepository.Get(model.UserToId);
+            var result = users
+                .ToList()
+                .MapToAddUserModelList();
+
+            var pendingRequestsForCurrentUser = _requestRepository.GetPendingRequestsFromCurrentUser(currentUserId);
+
+            if (pendingRequestsForCurrentUser.Any())
+            {
+                foreach (var user in result)
+                {
+                    foreach (var request in pendingRequestsForCurrentUser)
+                    {
+                        if (request.UserTo.Id == user.Id)
+                        {
+                            user.IsAdded = true;
+                        }
+                    }
+                }
+            }
+            return result;
+        }
+
+        public bool NewRequest(int userToId)
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var userFrom = _userRepository.Get(currentUserId);
+            var userTo = _userRepository.Get(userToId);
 
             if (userFrom == null || userTo == null)
             {
@@ -70,17 +98,41 @@ namespace ChatApp.Server.Services.Implementations
             return true;
         }
 
-        public bool CancelRequestById(int id)
+        public bool CancelRequest(int userToId)
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var userFrom = _userRepository.Get(currentUserId);
+            var userTo = _userRepository.Get(userToId);
+
+            if (userFrom == null || userTo == null)
+            {
+                return false;
+            }
+
+            if (userFrom.Id == userTo.Id)
+            {
+                throw new CustomException("The new contact must be different than current user");
+            }
+
+            var request = _requestRepository.GetByUserIds(userFrom.Id, userTo.Id).FirstOrDefault();
+            if (request != null)
+            {
+                request.RequestStatus = (int)RequestStatusEnum.Canceled;
+                request.IsDeleted = true;
+                request.ModifiedAt = DateTime.Now;
+
+                _requestRepository.Update(request);
+            }
+
+            return true;
+        }
+
+        public bool ApproveRequest(int id)
         {
             throw new NotImplementedException();
         }
 
-        public bool ApproveRequestById(int id)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool RejectRequestById(int id)
+        public bool RejectRequest(int id)
         {
             throw new NotImplementedException();
         }

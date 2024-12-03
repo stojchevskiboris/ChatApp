@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AddContactModel } from '../../../models/add-contact-model';
-import { UserService } from '../../../services/user.service';
 import { AuthService } from '../../../services/auth.service';
+import { RequestService } from '../../../services/request.service';
 
 @Component({
   selector: 'app-add-contact-dialog',
@@ -12,13 +12,12 @@ import { AuthService } from '../../../services/auth.service';
 export class AddContactDialogComponent implements OnInit {
 
   constructor(
-    private userService: UserService,
-    private authService: AuthService
+    private authService: AuthService,
+    private requestService: RequestService
   ) { }
 
   query: string = '';
   isLoading: boolean = false;
-  // searchResults: Array<AddContactModel> = [];
   searchResults: Array<AddContactModel> = [];
   currentUserId: number = 0;
 
@@ -37,32 +36,30 @@ export class AddContactDialogComponent implements OnInit {
     }
 
     this.isLoading = true;
-    this.userService.searchUsersToAdd(this.currentUserId, this.query)
+    this.requestService.searchUsersToAdd(this.query)
       .subscribe({
         next: (data: any) => {
-          this.searchResults = data.map((user: any) => ({
-            ...user,
-            added: false,
-          }));
+          this.searchResults = data;
         },
         error: () => {
           console.error('Error fetching search results.');
           this.searchResults = [];
+          this.isLoading = false
         },
         complete: () => (this.isLoading = false),
       });
 
   }
 
-  addContact(user: AddContactModel): void {
-    this.userService.addUser(this.currentUserId, user.id)
+  newRequest(user: AddContactModel): void {
+    this.requestService.newRequest(user.id)
       .subscribe({
         next: (response: any) => {
           if (response) {
             user.isAdded = true;
             // toastr: succesfully sent request
           } else {
-            console.error('Failed to add contact');
+            // toastr: succesfully sent request
           }
         },
         error: () => console.error('Error sending add request.'),
@@ -70,14 +67,14 @@ export class AddContactDialogComponent implements OnInit {
   }
 
   cancelRequest(user: AddContactModel): void {
-    this.userService.cancelRequest(this.currentUserId, user.id)
+    this.requestService.cancelRequest(user.id)
       .subscribe({
         next: (response: any) => {
           if (response) {
             user.isAdded = false;
             // toastr: friend request cancelled
           } else {
-            console.error('Failed to add contact');
+            // toastr: failed to cancel friend request
           }
         },
         error: () => console.error('Error sending add request.'),

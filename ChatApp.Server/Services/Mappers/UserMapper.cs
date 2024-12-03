@@ -38,9 +38,9 @@ namespace ChatApp.Server.Services.Mappers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
-                Email = user.Email,
-                Phone = user.Phone,
-                DateOfBirth = user.DateOfBirth
+                //Email = user.Email,
+                //Phone = user.Phone,
+                //DateOfBirth = user.DateOfBirth
             };
         }
 

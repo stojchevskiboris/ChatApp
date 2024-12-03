@@ -29,6 +29,7 @@ namespace ChatApp.Server.Configs
             services.AddScoped<IRequestService, RequestService>();
 
             services.AddHttpClient<IGiphyService, GiphyService>();
+            services.AddHttpContextAccessor();
         }
 
         public static void ConfigureValidators(this IServiceCollection services)

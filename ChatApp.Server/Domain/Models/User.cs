@@ -29,6 +29,8 @@ namespace ChatApp.Server.Domain.Models
 
         public Media? ProfilePicture { get; set; }
 
+        // ToDo: Add contacts (User[])
+
         [Required]
         public DateTime CreatedAt { get; set; }
 

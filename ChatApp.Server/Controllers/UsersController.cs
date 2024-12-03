@@ -1,5 +1,4 @@
 ﻿using ChatApp.Server.Common.Exceptions;
-using ChatApp.Server.Common.Models;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
@@ -49,17 +48,6 @@ namespace ChatApp.Server.Controllers
                 throw new CustomException("Invalid parameters");
             }
             return _userService.GetUserByEmail(email);
-        }
-
-        [HttpPost("SearchUsersToAdd")]
-        [Authorize]
-        public List<AddUserModel> SearchUsersToAdd(SearchUsersToAddModel model)
-        {
-            if (string.IsNullOrEmpty(model.Query))
-            {
-                return new List<AddUserModel>();
-            }
-            return _userService.SearchUsersToAdd(model.CurrentUserId, model.Query);
         }
 
         [HttpPost("DeleteUser")]

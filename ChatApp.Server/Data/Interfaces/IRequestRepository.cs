@@ -8,5 +8,7 @@ namespace ChatApp.Server.Data.Interfaces
         public bool HasExistingActiveRequest(int userFromId, int userToId);
 
         public List<Request> GetPendingRequestsFromCurrentUser(int currentUserId);
+
+        public List<Request> GetByUserIds(int userFromId, int userToId);
     }
 }

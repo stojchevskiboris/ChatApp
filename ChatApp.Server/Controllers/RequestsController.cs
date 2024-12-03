@@ -1,5 +1,6 @@
 ﻿using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -24,14 +25,32 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
-        [HttpPost("NewRequestByUserId")]
+
+        [HttpPost("SearchUsersToAdd")]
         [Authorize]
-        public bool NewRequestByUserId(NewRequestModel model)
+        public List<AddUserModel> SearchUsersToAdd(HttpRequestQueryModel model)
         {
-            var result = _requestService.RequestByUserId(model);
+            if (string.IsNullOrEmpty(model.Query))
+            {
+                return new List<AddUserModel>();
+            }
+            return _requestService.SearchUsersToAdd(model.Query);
+        }
+
+        [HttpPost("NewRequest")]
+        [Authorize]
+        public bool NewRequest(HttpRequestIdModel model)
+        {
+            var result = _requestService.NewRequest(model.Id);
             return result;
         }
 
-        
+        [HttpPost("CancelRequest")]
+        [Authorize]
+        public bool CancelRequest(HttpRequestIdModel model)
+        {
+            var result = _requestService.CancelRequest(model.Id);
+            return result;
+        }
     }
 }

@@ -30,7 +30,19 @@ namespace ChatApp.Server.Data.Implementations
             var pendingRequests = _context.Requests
                 .Where(x => x.UserFrom.Id == currentUserId
                     && x.UserTo.Id != currentUserId
-                    && x.RequestStatus == (int)RequestStatusEnum.Pending).ToList();
+                    && x.RequestStatus == (int)RequestStatusEnum.Pending)
+                .ToList();
+
+            return pendingRequests;
+        }
+
+        public List<Request> GetByUserIds(int userFromId, int userToId)
+        {
+            var pendingRequests = _context.Requests
+                .Where(x => x.UserFrom.Id == userFromId
+                    && x.UserTo.Id == userToId
+                    && x.RequestStatus == (int)RequestStatusEnum.Pending)
+                .ToList();
 
             return pendingRequests;
         }
