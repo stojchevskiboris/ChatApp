@@ -1,190 +1,43 @@
-import { Component } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
-import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
+
 import { AddContactModel } from '../../../models/add-contact-model';
 import { UserService } from '../../../services/user.service';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-add-contact-dialog',
   templateUrl: './add-contact-dialog.component.html',
   styleUrls: ['./add-contact-dialog.component.scss'],
 })
-export class AddContactDialogComponent {
+export class AddContactDialogComponent implements OnInit {
+
+  constructor(
+    private userService: UserService,
+    private authService: AuthService
+  ) { }
+
   query: string = '';
   isLoading: boolean = false;
   // searchResults: Array<AddContactModel> = [];
-  searchResults: Array<AddContactModel> = [
-    {
-      "id": 1,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 2,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris2@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 3,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris3@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 8,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "nextsense",
-      "dateOfBirth": "2024-10-17T14:30:59.339",
-      "phone": "string",
-      "profilePicture": null,
-      "isAdded": false
-    }, {
-      "id": 1,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 2,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris2@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 3,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris3@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 8,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "nextsense",
-      "dateOfBirth": "2024-10-17T14:30:59.339",
-      "phone": "string",
-      "profilePicture": null,
-      "isAdded": false
-    }, {
-      "id": 1,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 2,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris2@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 3,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris3@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 8,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "nextsense",
-      "dateOfBirth": "2024-10-17T14:30:59.339",
-      "phone": "string",
-      "profilePicture": null,
-      "isAdded": false
-    }, {
-      "id": 1,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 2,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris2@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 3,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "stojchevskiboris3@gmail.com",
-      "dateOfBirth": "2002-02-25T07:55:49.538",
-      "phone": "075855147",
-      "profilePicture": null,
-      "isAdded": false
-    },
-    {
-      "id": 8,
-      "firstName": "Boris",
-      "lastName": "Stojchevski",
-      "email": "nextsense",
-      "dateOfBirth": "2024-10-17T14:30:59.339",
-      "phone": "string",
-      "profilePicture": null,
-      "isAdded": false
-    },
-  ];
+  searchResults: Array<AddContactModel> = [];
+  currentUserId: number = 0;
 
-  constructor(
-    private userService: UserService
-  ) { }
+  ngOnInit(): void {
+    this.currentUserId = +(this.authService.getUserId() ?? 0);
+    if (this.currentUserId == 0){
+      this.authService.logout();
+      // toastr: unauthorized
+    }
+  }
 
   onSearch(): void {
-    if (this.query.trim() === '' || this.query.trim().length < 3) {
+    if (this.query.trim() === '') {
       this.searchResults = [];
       return;
     }
 
     this.isLoading = true;
-    this.userService.searchUsers(this.query)
+    this.userService.searchUsersToAdd(this.currentUserId, this.query)
       .subscribe({
         next: (data: any) => {
           this.searchResults = data.map((user: any) => ({
@@ -202,11 +55,27 @@ export class AddContactDialogComponent {
   }
 
   addContact(user: AddContactModel): void {
-    this.userService.addUser(user.id)
+    this.userService.addUser(this.currentUserId, user.id)
       .subscribe({
         next: (response: any) => {
-          if (response.success) {
+          if (response) {
             user.isAdded = true;
+            // toastr: succesfully sent request
+          } else {
+            console.error('Failed to add contact');
+          }
+        },
+        error: () => console.error('Error sending add request.'),
+      });
+  }
+
+  cancelRequest(user: AddContactModel): void {
+    this.userService.cancelRequest(this.currentUserId, user.id)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            user.isAdded = false;
+            // toastr: friend request cancelled
           } else {
             console.error('Failed to add contact');
           }

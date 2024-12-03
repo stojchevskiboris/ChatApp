@@ -1,4 +1,5 @@
 ﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Common.Models;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
@@ -30,7 +31,7 @@ namespace ChatApp.Server.Controllers
 
         [HttpPost("GetUserById")]
         [Authorize]
-        public UserViewModel GetUserById(RequestIdModel model)
+        public UserViewModel GetUserById(HttpRequestIdModel model)
         {
             if (model.Id == 0)
             {
@@ -50,15 +51,15 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserByEmail(email);
         }
 
-        [HttpPost("SearchUsers")]
+        [HttpPost("SearchUsersToAdd")]
         [Authorize]
-        public List<AddUserModel> SearchUsers(RequestQueryModel model)
+        public List<AddUserModel> SearchUsersToAdd(SearchUsersToAddModel model)
         {
-            if (string.IsNullOrEmpty(model.Query) || model.Query.Trim().Length < 3)
+            if (string.IsNullOrEmpty(model.Query))
             {
                 return new List<AddUserModel>();
             }
-            return _userService.SearchUsers(model.Query);
+            return _userService.SearchUsersToAdd(model.CurrentUserId, model.Query);
         }
 
         [HttpPost("DeleteUser")]

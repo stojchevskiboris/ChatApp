@@ -1,36 +1,47 @@
 <h2 mat-dialog-title>Add New Contact</h2>
 <div mat-dialog-content class="pt-2">
+  <!-- <mat-form-field appearance="outline" class="w-100">
+    <mat-label>Search</mat-label>
+    <input matInput [(ngModel)]="query" (input)="onSearch()" placeholder="Name" />
+  </mat-form-field> -->
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>Search</mat-label>
     <input matInput [(ngModel)]="query" (input)="onSearch()" placeholder="Name" />
+    <button matSuffix mat-icon-button aria-label="Search" (click)="onSearch()" class="me-2">
+      <mat-icon>search</mat-icon>
+    </button>
   </mat-form-field>
 
-  <div *ngIf="isLoading" class="text-center">
+  <div *ngIf="isLoading" class="d-flex text-center justify-content-center mt-4">
     <mat-progress-spinner diameter="30" mode="indeterminate"></mat-progress-spinner>
   </div>
 
-  <div *ngIf="!isLoading && searchResults.length === 0 && query.length > 2" class="text-center">
+  <div *ngIf="!isLoading && searchResults.length === 0 && query.length!=0" class="text-center">
     <p>No results found</p>
   </div>
 
   <div class="add-contacts-list">
-  <ng-scrollbar>
-    <mat-list *ngIf="!isLoading && searchResults.length > 0">
-      <mat-list-item *ngFor="let user of searchResults">
-        <div class="d-flex align-items-center justify-content-between">
-          <div class="d-flex align-items-center">
-            <img matListAvatar class="w-40px h-40px" [src]="user.profilePicture || 'img/default-avatar.png'" />
-            <div class="ms-2">{{ user.firstName }} {{ user.lastName }}</div>
+    <ng-scrollbar>
+      <mat-list *ngIf="!isLoading && searchResults.length > 0">
+        <mat-list-item *ngFor="let user of searchResults">
+          <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <img matListAvatar class="w-40px h-40px" [src]="user.profilePicture || 'img/default-avatar.png'" />
+              <div class="ms-2">{{ user.firstName }} {{ user.lastName }}</div>
+            </div>
+
+            <button mat-flat-button (click)="addContact(user)" *ngIf="!user.isAdded">
+              Add
+            </button>
+            <button mat-stroked-button (click)="cancelRequest(user)" *ngIf="user.isAdded">
+              Requested
+            </button>
+
           </div>
-          <button mat-flat-button (click)="addContact(user)">
-            <!-- <button mat-button color="primary" [disabled]="user.isAdded" (click)="addContact(user)"> -->
-            {{ user.isAdded ? 'Requested' : 'Add' }}
-          </button>
-        </div>
-      </mat-list-item>
-    </mat-list>
-  </ng-scrollbar>
-</div>
+        </mat-list-item>
+      </mat-list>
+    </ng-scrollbar>
+  </div>
 
 </div>
 

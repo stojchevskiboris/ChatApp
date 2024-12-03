@@ -18,11 +18,13 @@ namespace ChatApp.Server.Services.Implementations
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+        private readonly IRequestRepository _requestRepository;
         private readonly AppSettings _appSettings;
 
-        public UserService(IUserRepository userRepository, IOptions<AppSettings> appSettings)
+        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IOptions<AppSettings> appSettings)
         {
             _userRepository = userRepository;
+            _requestRepository = requestRepository;
             _appSettings = appSettings.Value;
         }
 
@@ -51,17 +53,35 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
-        public List<AddUserModel> SearchUsers(string query)
+        public List<AddUserModel> SearchUsersToAdd(int currentUserId, string query)
         {
-            var users = _userRepository.SearchUsers(query.Trim());
+            var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim());
             if (users == null)
             {
-                throw new CustomException($"No results found");
+                //throw new CustomException($"No results found");
+                return new List<AddUserModel>();
             }
 
             var result = users
                 .ToList()
                 .MapToAddUserModelList();
+
+            var pendingRequestsForCurrentUser = _requestRepository.GetPendingRequestsFromCurrentUser(currentUserId);
+
+            if (pendingRequestsForCurrentUser.Any())
+            {
+
+                foreach (var user in result)
+                {
+                    foreach(var request in pendingRequestsForCurrentUser)
+                    {
+                        if (request.UserTo.Id == user.Id)
+                        {
+                            user.IsAdded = true;
+                        }
+                    }
+                }
+            }
 
             return result;
         }

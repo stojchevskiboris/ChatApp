@@ -81,7 +81,7 @@ app.UseSerilogRequestLogging();
 app.UseCors("AllowAngularApp");
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
-app.MapControllers();
+    app.MapControllers();
 app.MapFallbackToFile("/index.html");
 
 // --- Run the Application ---

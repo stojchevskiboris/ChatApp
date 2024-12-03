@@ -51,6 +51,14 @@ namespace ChatApp.Server.Data
             modelBuilder.Entity<Group>()
                 .Navigation(gu => gu.CreatedByUser)
                 .AutoInclude();
+
+            modelBuilder.Entity<Request>()
+                .Navigation(r => r.UserFrom)
+                .AutoInclude();
+
+            modelBuilder.Entity<Request>()
+                .Navigation(r => r.UserTo)
+                .AutoInclude();
         }
     }
 }
