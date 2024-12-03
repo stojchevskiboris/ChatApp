@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Services.Interfaces;
+﻿using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpGet("Search")]
+        [Authorize]
         public async Task<IActionResult> Search([FromQuery] GifRequest request)
         {
             if (string.IsNullOrEmpty(request.Query))

@@ -1,4 +1,5 @@
 ﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -17,6 +18,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpGet("GetAllGroups")]
+        [Authorize]
         public List<GroupViewModel> GetAllGroups()
         {
             var result = _groupService.GetAllGroups();
@@ -24,6 +26,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("GetGroupById")]
+        [Authorize]
         public GroupViewModel GetGroupById(int id)
         {
             if (id == 0)
@@ -34,6 +37,7 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("CreateGroup")]
+        [Authorize]
         public GroupViewModel CreateGroup(GroupViewModel model)
         {
             var newGroup = _groupService.CreateGroup(model);
@@ -41,12 +45,14 @@ namespace ChatApp.Server.Controllers
         }
 
         [HttpPost("UpdateGroup")]
+        [Authorize]
         public GroupViewModel UpdateGroup(GroupViewModel model)
         {
             return _groupService.UpdateGroup(model);
         }
 
         [HttpPost("DeleteGroup")]
+        [Authorize]
         public bool DeleteGroup(int groupId)
         {
             return _groupService.DeleteGroup(groupId);

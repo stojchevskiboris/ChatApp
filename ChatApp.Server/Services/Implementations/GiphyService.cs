@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Configs.Authentication.Models;
+﻿using ChatApp.Server.Common.Constants;
+using ChatApp.Server.Configs.Authentication.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels;
@@ -26,7 +27,7 @@ namespace ChatApp.Server.Services.Implementations
                 Log.Error("Unable to fetch giphy api key from appSettings.");
                 return Enumerable.Empty<GifViewModel>();
             }
-            string giphyUrl = $"https://api.giphy.com/v1/gifs/search?q={request.Query}&limit={request.Limit}&api_key={apiKey}";
+            string giphyUrl = AppParameters.GiphyApiURL(request.Query, request.Limit, request.Rating, apiKey);
 
             var response = await _httpClient.GetFromJsonAsync<GiphyApiResponse>(giphyUrl);
 

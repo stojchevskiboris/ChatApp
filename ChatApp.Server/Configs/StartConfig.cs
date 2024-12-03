@@ -81,16 +81,15 @@ namespace ChatApp.Server.Configs
                 swagger.AddSecurityRequirement(new OpenApiSecurityRequirement
                 {
                     {
-                          new OpenApiSecurityScheme
+                        new OpenApiSecurityScheme
+                        {
+                            Reference = new OpenApiReference
                             {
-                                Reference = new OpenApiReference
-                                {
-                                    Type = ReferenceType.SecurityScheme,
-                                    Id = "Bearer"
-                                }
-                            },
-                            new string[] {}
-
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        new string[] {}
                     }
                 });
             });

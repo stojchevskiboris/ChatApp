@@ -21,7 +21,7 @@ namespace ChatApp.Server.Data.Implementations
         public IEnumerable<User> SearchUsers(string query)
         {
             var terms = query.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
+            // ToDo: fix search algorithm ("Testuser St" returns results without containing Testuser because of the St)
             return _context.Users.Where(u =>
                 terms.Any(term =>
                     u.FirstName.ToLower().Contains(term) ||
