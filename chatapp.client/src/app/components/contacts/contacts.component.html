@@ -1,9 +1,67 @@
 <div class="container-fluid fadeInAnimation account-settings">
-    <div class="row">
-        <div class="col-sm-12">
+    <div class="row mb-3">
+        <div class="col-2 d-flex justify-content-start align-items-center">
             <button mat-mini-fab color="secondary" routerLink="/home">
                 <mat-icon>arrow_back</mat-icon>
-            </button>            
+            </button>
+        </div>
+        <div class="col d-flex justify-content-center align-items-center text-center">
+            <h2 class="mb-0">Manage Contacts</h2>
+        </div>
+        <div class="col-2 d-flex justify-content-end align-items-center">
+            <button mat-mini-fab color="secondary" (click)="addContacts()">
+                <mat-icon>person_add</mat-icon>
+            </button>
         </div>
     </div>
+
+    <mat-tab-group (selectedIndexChange)="changeActiveTab()">
+        <!-- Contacts Tab -->
+        <mat-tab label="Contacts">
+            <div class="contacts-list mt-2">
+                <div *ngFor="let contact of contacts" class="contact-item">
+                    <span>{{ contact.name }}</span>
+                    <button mat-icon-button [matMenuTriggerFor]="contactMenu">
+                        <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #contactMenu="matMenu">
+                        <button mat-menu-item (click)="removeContact(contact.id)">
+                            <mat-icon>delete</mat-icon> Remove Contact
+                        </button>
+                    </mat-menu>
+                </div>
+            </div>
+        </mat-tab>
+
+        <!-- Requests Tab -->
+        <mat-tab label="Requests">
+            <div class="requests-list mt-2 fadeInAnimation" *ngIf="!showArchivedRequests">
+                <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
+                    <mat-icon>filter_list</mat-icon>Show Archived Requests
+                </button>
+
+                <div *ngFor="let request of requests" class="request-item">
+                    <span>{{ request.name }}</span>
+                    <div class="actions">
+                        <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
+                            Accept
+                        </button>
+                        <button mat-stroked-button color="warn" (click)="rejectRequest(request.id)">
+                            Reject
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+            <!-- Archived Requests Section -->
+            <div class="requests-list mt-2 fadeInAnimation" *ngIf="showArchivedRequests">
+                <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
+                    <mat-icon>list_alt</mat-icon> Show current requests
+                </button>
+                <div *ngFor="let archivedRequest of archivedRequests" class="request-item">
+                    <span>{{ archivedRequest.name }} ({{ archivedRequest.status }})</span>
+                </div>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
 </div>

@@ -38,7 +38,7 @@ export class AccountOverviewComponent {
     this.resetChat.emit(-1);
   }
 
-  addFriends() {
+  addContacts() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
       width: '50%',
     });

@@ -1,4 +1,6 @@
-import { Component, ElementRef, EventEmitter, Input, Output, SimpleChange, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, Output, SimpleChange, ViewChild } from '@angular/core';
+import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-left-pane',
@@ -9,6 +11,7 @@ export class LeftPaneComponent {
 
   constructor() { }
 
+  dialog = inject(MatDialog);
   @ViewChild('searchInput') searchInput: ElementRef;
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
@@ -22,25 +25,25 @@ export class LeftPaneComponent {
     this.testData();
   }
 
-  ngAfterViewInit(): void {
-    this.changeBackgroundColor();
+  // ngAfterViewInit(): void {
+  //   this.changeBackgroundColor();
     
-  }
-  changeActiveTab(): void {
-    this.removePreviousActiveTabClass();
-    this.changeBackgroundColor();
-  }
+  // }
+  // changeActiveTab(): void {
+  //   this.removePreviousActiveTabClass();
+  //   this.changeBackgroundColor();
+  // }
 
-  removePreviousActiveTabClass(): void {
-    const previousActiveTab = document.getElementsByClassName('active-tab')[0];
-    (previousActiveTab as HTMLElement).style.backgroundColor = 'unset';
-    previousActiveTab.classList.remove('active-tab');
-  }
+  // removePreviousActiveTabClass(): void {
+  //   const previousActiveTab = document.getElementsByClassName('active-tab')[0];
+  //   (previousActiveTab as HTMLElement).style.backgroundColor = 'unset';
+  //   previousActiveTab.classList.remove('active-tab');
+  // }
 
-  changeBackgroundColor(): void {
-    const activeTab = document.getElementsByClassName('mdc-tab--active')[0];    
-    (activeTab as HTMLElement).classList.add('active-tab');
-  }
+  // changeBackgroundColor(): void {
+  //   const activeTab = document.getElementsByClassName('mdc-tab--active')[0];    
+  //   (activeTab as HTMLElement).classList.add('active-tab');
+  // }
 
   isLessThan5min(date: any): boolean {
     if (!date || isNaN(new Date(date).getTime())) {
@@ -78,8 +81,15 @@ export class LeftPaneComponent {
     this.selectedTabIndex = 1;
   }
 
-  addNewContactDialog() {
-    throw new Error('Method not implemented.');
+  addContacts() {
+      const dialogRef = this.dialog.open(AddContactDialogComponent, {
+        width: '50%',
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        console.log(`Dialog result: ${result}`);
+      });
+  
   }
 
   testData() {

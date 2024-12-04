@@ -14,7 +14,7 @@
     </div>
 
     <div class="tab-group-container flex-grow-1 overflow-hidden">
-        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex" (selectedIndexChange)="changeActiveTab()" >
+        <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
                 <ng-scrollbar *ngIf="messagesList.length > 0; else noMessagesPage">
                     <mat-selection-list>
@@ -78,8 +78,8 @@
                     <div class="text-center mt-3 mb-3">
                         <span>No contacts found</span>
                         <br>
-                        <button mat-stroked-button class="mt-3 mb-3" (click)="addNewContactDialog()">
-                            Add Friends
+                        <button mat-stroked-button class="mt-3 mb-3" (click)="addContacts()">
+                            Add Contacts
                         </button>
                     </div>
                 </ng-template>
