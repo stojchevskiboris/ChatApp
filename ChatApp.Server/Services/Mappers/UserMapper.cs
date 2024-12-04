@@ -10,7 +10,7 @@ namespace ChatApp.Server.Services.Mappers
             if (user == null)
                 return null;
 
-            return new UserViewModel
+            var model = new UserViewModel
             {
                 Id = user.Id,
                 FirstName = user.FirstName,
@@ -21,6 +21,13 @@ namespace ChatApp.Server.Services.Mappers
                 CreatedAt = user.CreatedAt,
                 ModifiedAt = user.ModifiedAt
             };
+
+            if (user.Contacts.Any())
+            {
+                model.ContactsId = user.Contacts.Select(x => x.ContactId).ToList();
+            }
+
+            return model;
         }
 
         public static List<UserViewModel> MapToViewModelList(this List<User> users)

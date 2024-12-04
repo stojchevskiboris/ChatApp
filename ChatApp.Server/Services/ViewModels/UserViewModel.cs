@@ -18,6 +18,8 @@
 
         //public Media? ProfilePicture { get; set; }
 
+        public List<int> ContactsId { get; set; } = new List<int>();
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime ModifiedAt { get; set; }

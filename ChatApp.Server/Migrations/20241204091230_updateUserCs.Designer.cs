@@ -4,6 +4,7 @@ using ChatApp.Server.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApp.Server.Migrations
 {
     [DbContext(typeof(ChatAppDbContext))]
-    partial class ChatAppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204091230_updateUserCs")]
+    partial class updateUserCs
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -329,7 +332,7 @@ namespace ChatApp.Server.Migrations
             modelBuilder.Entity("ChatApp.Server.Domain.Models.GroupUser", b =>
                 {
                     b.HasOne("ChatApp.Server.Domain.Models.Group", "Group")
-                        .WithMany("GroupUsers")
+                        .WithMany()
                         .HasForeignKey("GroupId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -436,11 +439,6 @@ namespace ChatApp.Server.Migrations
                     b.Navigation("Contact");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("ChatApp.Server.Domain.Models.Group", b =>
-                {
-                    b.Navigation("GroupUsers");
                 });
 
             modelBuilder.Entity("ChatApp.Server.Domain.Models.User", b =>

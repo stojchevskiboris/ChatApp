@@ -207,7 +207,8 @@ namespace ChatApp.Server.Services.Implementations
             }
             catch (Exception)
             {
-                throw new CustomException("Session expired, please log in again.");
+                return null;
+                //throw new CustomException("Session expired, please log in again.");
             }
         }
 

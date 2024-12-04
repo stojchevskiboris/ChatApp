@@ -29,7 +29,7 @@ namespace ChatApp.Server.Domain.Models
 
         public Media? ProfilePicture { get; set; }
 
-        // ToDo: Add contacts (User[])
+        public IList<UserContact> Contacts { get; set; } = new List<UserContact>();
 
         [Required]
         public DateTime CreatedAt { get; set; }

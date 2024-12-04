@@ -10,7 +10,7 @@ namespace ChatApp.Server.Services.Mappers
             if (group == null)
                 return null;
 
-            return new GroupViewModel
+            var model = new GroupViewModel
             {
                 Id = group.Id,
                 Name = group.Name,
@@ -18,6 +18,13 @@ namespace ChatApp.Server.Services.Mappers
                 CreatedAt = group.CreatedAt,
                 ModifiedAt = group.ModifiedAt
             };
+
+            if (group.GroupUsers.Any())
+            {
+                model.GroupUsersId = group.GroupUsers.Select(x => x.UserId).ToList();
+            }
+
+            return model;
         }
 
         public static List<GroupViewModel> MapToViewModelList(this List<Group> groups)

@@ -10,7 +10,7 @@
 
         //public Media? ProfilePicture { get; set; }
 
-        List<UserViewModel> GroupUsers { get; set; }
+        public List<int> GroupUsersId { get; set; } = new List<int>();
 
         public DateTime CreatedAt { get; set; }
 

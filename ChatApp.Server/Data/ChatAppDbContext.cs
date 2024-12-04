@@ -19,6 +19,7 @@ namespace ChatApp.Server.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // Message relationships
             modelBuilder.Entity<Message>()
                 .HasOne(e => e.Sender)
                 .WithMany()
@@ -29,15 +30,36 @@ namespace ChatApp.Server.Data
                 .WithMany()
                 .OnDelete(DeleteBehavior.Restrict);
 
+            // GroupUser relationships
             modelBuilder.Entity<GroupUser>()
-                .HasOne(c => c.Group)
-                .WithMany()
+                .HasOne(gu => gu.Group)
+                .WithMany(g => g.GroupUsers)
+                .HasForeignKey(gu => gu.GroupId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<GroupUser>()
-                .HasOne(c => c.User)
+                .HasOne(gu => gu.User)
                 .WithMany()
+                .HasForeignKey(gu => gu.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            // UserContact relationships
+            modelBuilder.Entity<UserContact>()
+                .HasOne(uc => uc.User)
+                .WithMany(u => u.Contacts)
+                .HasForeignKey(uc => uc.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserContact>()
+                .HasOne(uc => uc.Contact)
+                .WithMany()
+                .HasForeignKey(uc => uc.ContactId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Eager loading
+            modelBuilder.Entity<User>()
+                .Navigation(u => u.Contacts)
+                .AutoInclude();
 
             modelBuilder.Entity<GroupUser>()
                 .Navigation(gu => gu.User)
@@ -48,7 +70,11 @@ namespace ChatApp.Server.Data
                 .AutoInclude();
 
             modelBuilder.Entity<Group>()
-                .Navigation(gu => gu.CreatedByUser)
+                .Navigation(g => g.CreatedByUser)
+                .AutoInclude();
+
+            modelBuilder.Entity<Group>()
+                .Navigation(g => g.GroupUsers)
                 .AutoInclude();
 
             modelBuilder.Entity<Request>()
