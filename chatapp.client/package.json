@@ -26,6 +26,7 @@
     "bootstrap": "^5.3.3",
     "jest-editor-support": "*",
     "ngx-scrollbar": "^16.0.0",
+    "ngx-toastr": "^19.0.0",
     "run-script-os": "*",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",

@@ -90,7 +90,6 @@ body {
   /* remove additional spacing under the search component */
   display: none;
 }
-
 /*-- Material Components --*/
 
 
@@ -107,7 +106,6 @@ body {
 .scrollbar-thumb:hover {
   background-color: #787878;
 }
-
 /*-- Ngx Scrollbar --*/
 
 .active-btn{

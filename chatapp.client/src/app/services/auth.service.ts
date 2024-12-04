@@ -5,6 +5,7 @@ import { DataService } from './data.service';
 import { UserViewModel } from '../models/user-view-model';
 import { UserRegisterModel } from '../models/user-register-model';
 import { UserLoginModel } from '../models/user-login-model';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,10 @@ export class AuthService {
   currentUser: string = '';
   token: string = '';
 
-  constructor(private dataService: DataService) { }
+  constructor(
+    private dataService: DataService,
+    private toastr: ToastrService
+  ) { }
 
   register(model: UserRegisterModel): Observable<UserViewModel> {
     return this.dataService
@@ -64,6 +68,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
+    this.toastr.success('Succesfully signed out');
   }
 
   getToken(): string | null {

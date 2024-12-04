@@ -28,6 +28,7 @@ import { GifSearchComponent } from './components/gif-search/gif-search.component
 import { AddContactDialogComponent } from './components/dialogs/add-contact-dialog/add-contact-dialog.component';
 import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
+import { provideToastr, ToastrModule } from 'ngx-toastr';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +55,8 @@ import { ContactsComponent } from './components/contacts/contacts.component';
     MaterialModule,
     BrowserAnimationsModule,
     MatIconModule,
-    NgScrollbarModule
+    NgScrollbarModule,
+    ToastrModule.forRoot(),
   ],
   providers: [
     DataService,
@@ -75,7 +77,23 @@ import { ContactsComponent } from './components/contacts/contacts.component';
       trackClass: 'scrollbar-track',
       thumbClass: 'scrollbar-thumb',
     }),
-    provideAnimationsAsync()
+    provideAnimationsAsync(),
+    provideToastr({
+      tapToDismiss: true,
+      closeButton: true,
+      preventDuplicates: true,
+      countDuplicates: true,
+      resetTimeoutOnDuplicate: true,
+      includeTitleDuplicates: true,
+      newestOnTop: true,
+      progressBar: true,
+      progressAnimation: 'decreasing',
+      timeOut: 4000,
+      extendedTimeOut: 3000,
+      disableTimeOut: false,
+      easeTime: 200,
+      positionClass: 'toast-bottom-center',
+    })
   ],
   exports: [
     MaterialModule,
