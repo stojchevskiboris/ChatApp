@@ -33,7 +33,19 @@ namespace ChatApp.Server.Services.Implementations
         public List<AddUserModel> SearchUsersToAdd(string query)
         {
             var currentUserId = Context.GetCurrentUserId();
-            var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim());
+            var currentUser = _userRepository.Get(currentUserId);
+            if (currentUser == null)
+            {
+                throw new CustomException("User not existing");
+            }
+
+            List<int> userContactIds = new List<int>();
+            if (currentUser.Contacts.Any())
+            {
+                userContactIds = currentUser.Contacts.Select(x => x.ContactId).ToList();
+            }
+
+            var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim(), userContactIds);
             if (users == null)
             {
                 //throw new CustomException($"No results found");
@@ -70,7 +82,7 @@ namespace ChatApp.Server.Services.Implementations
 
             if (pendingRequests.Any())
             {
-                return pendingRequests.MapToContactModelList();
+                return pendingRequests.MapToContactModelList(true);
             }
             return new List<AddUserModel>();
         }
@@ -83,7 +95,7 @@ namespace ChatApp.Server.Services.Implementations
 
             if (archivedRequests.Any())
             {
-                return archivedRequests.MapToContactModelList();
+                return archivedRequests.MapToContactModelList(true);
             }
             return new List<AddUserModel>();
         }
@@ -139,6 +151,11 @@ namespace ChatApp.Server.Services.Implementations
             if (userFrom.Id == userTo.Id)
             {
                 throw new CustomException("The new contact must be different than current user");
+            }
+
+            if (_userRepository.HasInContacts(userFrom, userToId))
+            {
+                throw new CustomException("Cannot cancel request, user has accepted your invitation");
             }
 
             var request = _requestRepository.GetByUserIds(userFrom.Id, userTo.Id).FirstOrDefault();

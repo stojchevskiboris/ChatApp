@@ -18,12 +18,13 @@ namespace ChatApp.Server.Data.Implementations
             return _context.Users.FirstOrDefault(u => u.Email == email);
         }
 
-        public IEnumerable<User> SearchUsersToAdd(int currentUserId, string query)
+        public IEnumerable<User> SearchUsersToAdd(int currentUserId, string query, List<int> contactIds)
         {
             var terms = query.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
             // ToDo: fix search algorithm ("Testuser St" returns results without containing Testuser because of the St)
             return _context.Users.Where(
                 u => u.Id != currentUserId &&
+                !contactIds.Contains(u.Id) &&
                 terms.Any(term =>
                     u.FirstName.ToLower().Contains(term) ||
                     u.LastName.ToLower().Contains(term)

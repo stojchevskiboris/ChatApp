@@ -68,7 +68,7 @@ export class AuthService {
 
   logout() {
     localStorage.clear();
-    this.toastr.success('Succesfully signed out');
+    this.toastr.info('Succesfully signed out');
   }
 
   getToken(): string | null {

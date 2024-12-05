@@ -27,12 +27,19 @@ namespace ChatApp.Server.Services.Mappers
             return requests.Select(x => x.MapToViewModel()).ToList();
         }
 
-        public static List<AddUserModel> MapToContactModelList(this List<Request> requests)
+        public static List<AddUserModel> MapToContactModelList(this List<Request> requests, bool mapUserFrom = false)
         {
-            return requests
-                .Where(x => x.UserTo != null)
-                .Select(x => x.UserTo.MapToAddUserModel(x.Id, x.RequestStatus)) // send the requestId as parameter
-                .ToList();
+            return 
+                mapUserFrom ?
+                requests
+                    .Where(x => x.UserFrom != null)
+                    .Select(x => x.UserFrom.MapToAddUserModel(x.Id, x.RequestStatus)) // send the requestId as parameter
+                    .ToList()
+                :
+                requests
+                    .Where(x => x.UserTo != null)
+                    .Select(x => x.UserTo.MapToAddUserModel(x.Id, x.RequestStatus)) // send the requestId as parameter
+                    .ToList();
         }
     }
 }
