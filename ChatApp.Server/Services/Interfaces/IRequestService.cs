@@ -6,8 +6,8 @@ namespace ChatApp.Server.Services.Interfaces
     {
         List<RequestViewModel> GetAllRequests();
         List<AddUserModel> SearchUsersToAdd(string query);
-        List<AddUserModel> GetPendingRequests();
-        List<AddUserModel> GetArchivedRequests();
+        List<RequestDetailsModel> GetPendingRequests();
+        List<RequestDetailsModel> GetArchivedRequests();
         bool NewRequest(int userId);
         bool CancelRequest(int id);
         bool AcceptRequest(int id);

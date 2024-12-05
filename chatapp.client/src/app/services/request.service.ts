@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { Observable, tap } from 'rxjs';
 import { AddContactModel } from '../models/add-contact-model';
+import { RequestDetailsModel } from '../models/request-details-model';
 
 @Injectable({
   providedIn: 'root'
@@ -28,9 +29,9 @@ export class RequestService {
       );
   }
 
-  getPendingRequests(): Observable<AddContactModel[]>{
+  getPendingRequests(): Observable<RequestDetailsModel[]>{
     return this.dataService
-     .get<AddContactModel[]>(this.getPendingRequestsEndpoint)
+     .get<RequestDetailsModel[]>(this.getPendingRequestsEndpoint)
      .pipe(
         tap((response) => {
           return response;
@@ -38,9 +39,9 @@ export class RequestService {
       );
   }
 
-  getArchivedRequests(): Observable<AddContactModel[]>{
+  getArchivedRequests(): Observable<RequestDetailsModel[]>{
     return this.dataService
-     .get<AddContactModel[]>(this.getArchivedRequestsEndpoint)
+     .get<RequestDetailsModel[]>(this.getArchivedRequestsEndpoint)
      .pipe(
         tap((response) => {
           return response;

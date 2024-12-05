@@ -74,7 +74,7 @@ namespace ChatApp.Server.Services.Implementations
             return result;
         }
 
-        public List<AddUserModel> GetPendingRequests()
+        public List<RequestDetailsModel> GetPendingRequests()
         {
             var currentUserId = Context.GetCurrentUserId();
 
@@ -82,12 +82,12 @@ namespace ChatApp.Server.Services.Implementations
 
             if (pendingRequests.Any())
             {
-                return pendingRequests.MapToContactModelList(true);
+                return pendingRequests.MapToRequestDetailsModelList();
             }
-            return new List<AddUserModel>();
+            return new List<RequestDetailsModel>();
         }
 
-        public List<AddUserModel> GetArchivedRequests()
+        public List<RequestDetailsModel> GetArchivedRequests()
         {
             var currentUserId = Context.GetCurrentUserId();
 
@@ -95,9 +95,9 @@ namespace ChatApp.Server.Services.Implementations
 
             if (archivedRequests.Any())
             {
-                return archivedRequests.MapToContactModelList(true);
+                return archivedRequests.MapToRequestDetailsModelList();
             }
-            return new List<AddUserModel>();
+            return new List<RequestDetailsModel>();
         }
 
         public bool NewRequest(int userToId)

@@ -5,6 +5,7 @@ import { RequestService } from '../../services/request.service';
 import { AddContactModel } from '../../models/add-contact-model';
 import { ToastrService } from 'ngx-toastr';
 import { RequestStatusEnum } from '../../models/enums/request-status-enum';
+import { RequestDetailsModel } from '../../models/request-details-model';
 
 @Component({
   selector: 'app-contacts',
@@ -24,8 +25,8 @@ export class ContactsComponent implements OnInit {
     { id: 3, name: 'Charlie' },
   ];
 
-  requests: AddContactModel[] = [];
-  archivedRequests: AddContactModel[] = [];
+  requests: RequestDetailsModel[] = [];
+  archivedRequests: RequestDetailsModel[] = [];
 
   constructor(
     private requestService: RequestService,
@@ -33,13 +34,17 @@ export class ContactsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  loadData() {
     this.getPendingRequests();
     this.getArchivedRequests();
   }
 
   getPendingRequests() {
     this.requestService.getPendingRequests().subscribe({
-      next: (model: AddContactModel[]) => {
+      next: (model: RequestDetailsModel[]) => {
         this.requests = model
       },
       error: (err: any) => {
@@ -50,7 +55,7 @@ export class ContactsComponent implements OnInit {
 
   getArchivedRequests() {
     this.requestService.getArchivedRequests().subscribe({
-      next: (model: AddContactModel[]) => {
+      next: (model: RequestDetailsModel[]) => {
         this.archivedRequests = model
       },
       error: (err: any) => {
@@ -101,10 +106,12 @@ export class ContactsComponent implements OnInit {
   }
 
   toggleArchivedRequests(): void {
+    this.loadData();
     this.showArchivedRequests = !this.showArchivedRequests;
   }
 
   changeActiveTab() {
+    this.loadData();
     this.showArchivedRequests = false
   }
 

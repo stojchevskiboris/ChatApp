@@ -44,14 +44,14 @@
                 <div *ngFor="let request of requests" class="request-item">
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px"
-                            [src]="request.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ request.firstName }} {{ request.lastName }}</div>
+                            [src]="request.userFrom.profilePicture || 'img/default-avatar.png'" />
+                        <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }} ({{request.userFrom.email}})</div>
                     </div>
                     <div class="actions">
-                        <button mat-stroked-button color="primary" (click)="acceptRequest(request.requestId)">
+                        <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
                             Accept
                         </button>
-                        <button mat-stroked-button color="warn" (click)="rejectRequest(request.requestId)">
+                        <button mat-stroked-button color="warn" (click)="rejectRequest(request.id)">
                             Reject
                         </button>
                     </div>
@@ -69,11 +69,11 @@
                 <div *ngFor="let archivedRequest of archivedRequests" class="request-item">
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px"
-                            [src]="archivedRequest.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ archivedRequest.firstName }} {{ archivedRequest.lastName }}</div>
+                            [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
+                        <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName }} ({{archivedRequest.userFrom.email}})</div>
                     </div>
                     <div class="actions">
-                        {{ getRequestStatus(archivedRequest.requestStatusId) }}
+                        {{ getRequestStatus(archivedRequest.requestStatus) }}
                     </div>
                 </div>
                 <div *ngIf="archivedRequests.length === 0" class="text-center mt-3">

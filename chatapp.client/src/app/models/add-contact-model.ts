@@ -4,9 +4,9 @@ export class AddContactModel {
     lastName: string = '';
     profilePicture: string = '';
     isAdded: boolean = false;
-    requestId: number = 0;
-    requestStatusId: number = 0;
-    // email: string = '';
+    email: string = '';
     // dateOfBirth: string = '';
     // phone: string = '';
+    createdAt: string = '';
+    modifiedAt: string = '';
 }

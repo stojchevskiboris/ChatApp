@@ -12,11 +12,7 @@
 
         public bool IsAdded { get; set; }
 
-        public int RequestId { get; set; }
-
-        public int RequestStatusId { get; set; }
-
-        //public string Email { get; set; }
+        public string Email { get; set; }
 
         //public DateTime DateOfBirth { get; set; }
 

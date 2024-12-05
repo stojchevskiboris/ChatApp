@@ -38,7 +38,7 @@ namespace ChatApp.Server.Controllers
 
         [HttpGet("GetPendingRequests")]
         [Authorize]
-        public List<AddUserModel> GetPendingRequests()
+        public List<RequestDetailsModel> GetPendingRequests()
         {
             var result = _requestService.GetPendingRequests();
             return result;
@@ -46,7 +46,7 @@ namespace ChatApp.Server.Controllers
 
         [HttpGet("GetArchivedRequests")]
         [Authorize]
-        public List<AddUserModel> GetArchivedRequests()
+        public List<RequestDetailsModel> GetArchivedRequests()
         {
             var result = _requestService.GetArchivedRequests();
             return result;
