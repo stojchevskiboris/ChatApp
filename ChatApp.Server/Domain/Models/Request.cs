@@ -6,9 +6,13 @@ namespace ChatApp.Server.Domain.Models
     {
         public int Id { get; set; }
 
-        public User? UserFrom { get; set; }
+        public int UserFromId { get; set; }
 
-        public User? UserTo { get; set; }
+        public User UserFrom { get; set; }
+
+        public int UserToId { get; set; }
+
+        public User UserTo { get; set; }
 
         public int RequestStatus { get; set; }
 

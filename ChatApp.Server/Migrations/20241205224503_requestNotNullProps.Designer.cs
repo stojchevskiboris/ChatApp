@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatApp.Server.Migrations
 {
     [DbContext(typeof(ChatAppDbContext))]
-    [Migration("20241204092107_updateGroupCs")]
-    partial class updateGroupCs
+    [Migration("20241205224503_requestNotNullProps")]
+    partial class requestNotNullProps
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -221,10 +221,10 @@ namespace ChatApp.Server.Migrations
                     b.Property<int>("RequestStatus")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserFromId")
+                    b.Property<int>("UserFromId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserToId")
+                    b.Property<int>("UserToId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -402,11 +402,15 @@ namespace ChatApp.Server.Migrations
                 {
                     b.HasOne("ChatApp.Server.Domain.Models.User", "UserFrom")
                         .WithMany()
-                        .HasForeignKey("UserFromId");
+                        .HasForeignKey("UserFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("ChatApp.Server.Domain.Models.User", "UserTo")
                         .WithMany()
-                        .HasForeignKey("UserToId");
+                        .HasForeignKey("UserToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("UserFrom");
 

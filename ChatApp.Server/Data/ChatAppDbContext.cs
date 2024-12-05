@@ -1,5 +1,6 @@
 ﻿using ChatApp.Server.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing;
 
 namespace ChatApp.Server.Data
 {
@@ -54,6 +55,19 @@ namespace ChatApp.Server.Data
                 .HasOne(uc => uc.Contact)
                 .WithMany()
                 .HasForeignKey(uc => uc.ContactId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Requests relationships
+            modelBuilder.Entity<Request>()
+                .HasOne(r => r.UserFrom)
+                .WithMany()
+                .HasForeignKey(r => r.UserFromId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Request>()
+                .HasOne(r => r.UserTo)
+                .WithMany()
+                .HasForeignKey(r => r.UserToId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Eager loading

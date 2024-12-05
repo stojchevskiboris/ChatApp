@@ -89,7 +89,7 @@ export class ContactsComponent implements OnInit {
         next: (response: any) => {
           if (response) {
             this.toastr.info('Request accepted');
-            this.getPendingRequests();
+            this.loadData();
           } else {
             this.toastr.warning('An unexpected error has occurred');
           }

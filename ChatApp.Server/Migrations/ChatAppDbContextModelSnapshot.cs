@@ -218,10 +218,10 @@ namespace ChatApp.Server.Migrations
                     b.Property<int>("RequestStatus")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserFromId")
+                    b.Property<int>("UserFromId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("UserToId")
+                    b.Property<int>("UserToId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -399,11 +399,15 @@ namespace ChatApp.Server.Migrations
                 {
                     b.HasOne("ChatApp.Server.Domain.Models.User", "UserFrom")
                         .WithMany()
-                        .HasForeignKey("UserFromId");
+                        .HasForeignKey("UserFromId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.HasOne("ChatApp.Server.Domain.Models.User", "UserTo")
                         .WithMany()
-                        .HasForeignKey("UserToId");
+                        .HasForeignKey("UserToId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("UserFrom");
 

@@ -36,7 +36,8 @@ namespace ChatApp.Server.Data.Implementations
         {
             if (user.Contacts.Any())
             {
-                return user.Contacts.Select(x => x.ContactId == contactId).Any();
+                //return user.Contacts.Select(x => x.ContactId == contactId).Any();
+                return user.Contacts.Any(x => x.ContactId == contactId);
             }
             return false;
         }
