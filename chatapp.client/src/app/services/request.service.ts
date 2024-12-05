@@ -11,6 +11,7 @@ export class RequestService {
   constructor(private dataService: DataService) {}
 
   private searchUsersEndpoint = '/Requests/SearchUsersToAdd';
+  private getPendingRequestsEndpoint = '/Requests/GetPendingRequests';
   private newRequestEndpoint = '/Requests/NewRequest';
   private cancelRequestEndpoint = '/Requests/CancelRequest';
 
@@ -18,6 +19,16 @@ export class RequestService {
   searchUsersToAdd(query: string): Observable<AddContactModel[]> {
     return this.dataService
      .post<AddContactModel[]>(this.searchUsersEndpoint, { query: query })
+     .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getPendingRequests(): Observable<AddContactModel[]>{
+    return this.dataService
+     .get<AddContactModel[]>(this.getPendingRequestsEndpoint)
      .pipe(
         tap((response) => {
           return response;

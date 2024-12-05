@@ -43,7 +43,7 @@ namespace ChatApp.Server.Services.Implementations
                 .ToList()
                 .MapToAddUserModelList();
 
-            var pendingRequestsForCurrentUser = _requestRepository.GetPendingRequestsFromCurrentUser(currentUserId);
+            var pendingRequestsForCurrentUser = _requestRepository.GetPendingRequestsSentFromCurrentUser(currentUserId);
 
             if (pendingRequestsForCurrentUser.Any())
             {
@@ -59,6 +59,19 @@ namespace ChatApp.Server.Services.Implementations
                 }
             }
             return result;
+        }
+
+        public List<AddUserModel> GetPendingRequests()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            
+            var pendingRequests = _requestRepository.GetPendingRequests(currentUserId);
+
+            if (pendingRequests.Any())
+            {
+                return pendingRequests.MapToContactModelList();
+            }
+            return new List<AddUserModel>();
         }
 
         public bool NewRequest(int userToId)

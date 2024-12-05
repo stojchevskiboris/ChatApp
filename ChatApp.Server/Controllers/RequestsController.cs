@@ -25,7 +25,6 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
-
         [HttpPost("SearchUsersToAdd")]
         [Authorize]
         public List<AddUserModel> SearchUsersToAdd(HttpRequestQueryModel model)
@@ -35,6 +34,14 @@ namespace ChatApp.Server.Controllers
                 return new List<AddUserModel>();
             }
             return _requestService.SearchUsersToAdd(model.Query);
+        }
+
+        [HttpGet("GetPendingRequests")]
+        [Authorize]
+        public List<AddUserModel> GetPendingRequests()
+        {
+            var result = _requestService.GetPendingRequests();
+            return result;
         }
 
         [HttpPost("NewRequest")]

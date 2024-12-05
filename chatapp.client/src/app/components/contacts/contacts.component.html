@@ -35,13 +35,18 @@
 
         <!-- Requests Tab -->
         <mat-tab label="Requests">
+            <!-- Pending Requests Section -->
             <div class="requests-list mt-2 fadeInAnimation" *ngIf="!showArchivedRequests">
                 <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
                     <mat-icon>filter_list</mat-icon>Show Archived Requests
                 </button>
-
+                
                 <div *ngFor="let request of requests" class="request-item">
-                    <span>{{ request.name }}</span>
+                    <div class="d-flex align-items-center">
+                        <img matListAvatar class="w-40px h-40px"
+                            [src]="request.profilePicture || 'img/default-avatar.png'" />
+                        <div class="ms-2">{{ request.firstName }} {{ request.lastName }}</div>
+                    </div>
                     <div class="actions">
                         <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
                             Accept
@@ -51,8 +56,11 @@
                         </button>
                     </div>
                 </div>
-
+                <div *ngIf="requests.length === 0" class="text-center mt-3">
+                    No pending requests
+                </div>
             </div>
+
             <!-- Archived Requests Section -->
             <div class="requests-list mt-2 fadeInAnimation" *ngIf="showArchivedRequests">
                 <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
