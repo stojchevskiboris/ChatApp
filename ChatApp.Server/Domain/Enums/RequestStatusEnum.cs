@@ -10,8 +10,8 @@ namespace ChatApp.Server.Domain.Enums
         [Description("Canceled")]
         Canceled = 2, // sender cancels the request
 
-        [Description("Approved")]
-        Approved = 3, // reciever appoves the request
+        [Description("Accepted")]
+        Accepted = 3, // reciever accepts the request
 
         [Description("Rejected")]
         Rejected = 4 // reciever rejects the request

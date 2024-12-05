@@ -40,7 +40,7 @@
                 <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
                     <mat-icon>filter_list</mat-icon>Show Archived Requests
                 </button>
-                
+
                 <div *ngFor="let request of requests" class="request-item">
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px"
@@ -48,10 +48,10 @@
                         <div class="ms-2">{{ request.firstName }} {{ request.lastName }}</div>
                     </div>
                     <div class="actions">
-                        <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
+                        <button mat-stroked-button color="primary" (click)="acceptRequest(request.requestId)">
                             Accept
                         </button>
-                        <button mat-stroked-button color="warn" (click)="rejectRequest(request.id)">
+                        <button mat-stroked-button color="warn" (click)="rejectRequest(request.requestId)">
                             Reject
                         </button>
                     </div>
@@ -67,7 +67,17 @@
                     <mat-icon>list_alt</mat-icon> Show current requests
                 </button>
                 <div *ngFor="let archivedRequest of archivedRequests" class="request-item">
-                    <span>{{ archivedRequest.name }} ({{ archivedRequest.status }})</span>
+                    <div class="d-flex align-items-center">
+                        <img matListAvatar class="w-40px h-40px"
+                            [src]="archivedRequest.profilePicture || 'img/default-avatar.png'" />
+                        <div class="ms-2">{{ archivedRequest.firstName }} {{ archivedRequest.lastName }}</div>
+                    </div>
+                    <div class="actions">
+                        {{ getRequestStatus(archivedRequest.requestStatusId) }}
+                    </div>
+                </div>
+                <div *ngIf="archivedRequests.length === 0" class="text-center mt-3">
+                    No archived requests
                 </div>
             </div>
         </mat-tab>

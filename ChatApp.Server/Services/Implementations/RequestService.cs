@@ -6,6 +6,7 @@ using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels;
+using Serilog;
 
 namespace ChatApp.Server.Services.Implementations
 {
@@ -64,12 +65,25 @@ namespace ChatApp.Server.Services.Implementations
         public List<AddUserModel> GetPendingRequests()
         {
             var currentUserId = Context.GetCurrentUserId();
-            
+
             var pendingRequests = _requestRepository.GetPendingRequests(currentUserId);
 
             if (pendingRequests.Any())
             {
                 return pendingRequests.MapToContactModelList();
+            }
+            return new List<AddUserModel>();
+        }
+
+        public List<AddUserModel> GetArchivedRequests()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+
+            var archivedRequests = _requestRepository.GetArchivedRequests(currentUserId);
+
+            if (archivedRequests.Any())
+            {
+                return archivedRequests.MapToContactModelList();
             }
             return new List<AddUserModel>();
         }
@@ -140,9 +154,62 @@ namespace ChatApp.Server.Services.Implementations
             return true;
         }
 
-        public bool ApproveRequest(int id)
+        public bool AcceptRequest(int requestId)
         {
-            throw new NotImplementedException();
+            var request = _requestRepository.Get(requestId);
+            if (request == null)
+            {
+                throw new CustomException("The request does not exist");
+            }
+
+            var user1 = _userRepository.Get(request?.UserFrom?.Id ?? -1);
+            var user2 = _userRepository.Get(request?.UserTo?.Id ?? -1);
+
+            if (user1 == null || user2 == null)
+            {
+                throw new CustomException("Users not existing in system");
+            }
+
+            try
+            {
+                if (!_userRepository.HasInContacts(user1, user2.Id))
+                {
+                    var contact = new UserContact()
+                    {
+                        UserId = user1.Id,
+                        User = user1,
+                        ContactId = user2.Id,
+                        Contact = user2,
+                        CreatedAt = DateTime.Now
+                    };
+                    user1.Contacts.Add(contact);
+                    _userRepository.Update(user1);
+                }
+
+                if (!_userRepository.HasInContacts(user2, user1.Id))
+                {
+                    var contact = new UserContact()
+                    {
+                        UserId = user2.Id,
+                        User = user2,
+                        ContactId = user1.Id,
+                        Contact = user1,
+                        CreatedAt = DateTime.Now
+                    };
+                    user2.Contacts.Add(contact);
+                    _userRepository.Update(user2);
+                }
+
+                request.RequestStatus = (int)RequestStatusEnum.Accepted;
+                _requestRepository.Update(request);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
         }
 
         public bool RejectRequest(int id)

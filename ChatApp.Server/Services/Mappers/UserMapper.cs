@@ -35,7 +35,7 @@ namespace ChatApp.Server.Services.Mappers
             return users.Select(x => x.MapToViewModel()).ToList();
         }
 
-        public static AddUserModel MapToAddUserModel(this User user)
+        public static AddUserModel MapToAddUserModel(this User user, int requestId = 0, int requestStatus = 0)
         {
             if (user == null)
                 return null;
@@ -45,6 +45,8 @@ namespace ChatApp.Server.Services.Mappers
                 Id = user.Id,
                 FirstName = user.FirstName,
                 LastName = user.LastName,
+                RequestId = requestId,
+                RequestStatusId = requestStatus
                 //Email = user.Email,
                 //Phone = user.Phone,
                 //DateOfBirth = user.DateOfBirth

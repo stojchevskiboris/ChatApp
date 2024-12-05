@@ -44,6 +44,14 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
+        [HttpGet("GetArchivedRequests")]
+        [Authorize]
+        public List<AddUserModel> GetArchivedRequests()
+        {
+            var result = _requestService.GetArchivedRequests();
+            return result;
+        }
+
         [HttpPost("NewRequest")]
         [Authorize]
         public bool NewRequest(HttpRequestIdModel model)
@@ -57,6 +65,14 @@ namespace ChatApp.Server.Controllers
         public bool CancelRequest(HttpRequestIdModel model)
         {
             var result = _requestService.CancelRequest(model.Id);
+            return result;
+        }
+
+        [HttpPost("AcceptRequest")]
+        [Authorize]
+        public bool AcceptRequest(HttpRequestIdModel model)
+        {
+            var result = _requestService.AcceptRequest(model.Id);
             return result;
         }
     }

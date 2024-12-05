@@ -3,6 +3,8 @@ import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-con
 import { MatDialog } from '@angular/material/dialog';
 import { RequestService } from '../../services/request.service';
 import { AddContactModel } from '../../models/add-contact-model';
+import { ToastrService } from 'ngx-toastr';
+import { RequestStatusEnum } from '../../models/enums/request-status-enum';
 
 @Component({
   selector: 'app-contacts',
@@ -14,6 +16,7 @@ export class ContactsComponent implements OnInit {
   dialog = inject(MatDialog);
   showArchivedRequests: boolean = false;
   currentUserId: string = null;
+  requestStatusEnum: typeof RequestStatusEnum = RequestStatusEnum;
 
   contacts = [
     { id: 1, name: 'Alice' },
@@ -22,29 +25,38 @@ export class ContactsComponent implements OnInit {
   ];
 
   requests: AddContactModel[] = [];
-
-  archivedRequests = [
-    { id: 1, name: 'John', status: 'Accepted' },
-    { id: 2, name: 'Jane', status: 'Rejected' },
-  ];
+  archivedRequests: AddContactModel[] = [];
 
   constructor(
     private requestService: RequestService,
+    private toastr: ToastrService
   ) { }
 
   ngOnInit(): void {
     this.getPendingRequests();
+    this.getArchivedRequests();
   }
-  
-  private getPendingRequests(){
-      this.requestService.getPendingRequests().subscribe({
-        next: (model: AddContactModel[]) => {
-          this.requests = model
-        },
-        error: (err: any) => {
-          console.log(err);
-        }
-      })
+
+  getPendingRequests() {
+    this.requestService.getPendingRequests().subscribe({
+      next: (model: AddContactModel[]) => {
+        this.requests = model
+      },
+      error: (err: any) => {
+        console.log(err);
+      }
+    })
+  }
+
+  getArchivedRequests() {
+    this.requestService.getArchivedRequests().subscribe({
+      next: (model: AddContactModel[]) => {
+        this.archivedRequests = model
+      },
+      error: (err: any) => {
+        this.toastr.warning('An unexpected error has occurred');
+      }
+    })
   }
 
   addContacts() {
@@ -63,8 +75,24 @@ export class ContactsComponent implements OnInit {
   }
 
   acceptRequest(requestId: number): void {
-    console.log(`Accepted request ID: ${requestId}`);
-    this.requests = this.requests.filter(request => request.id !== requestId);
+    if (requestId == 0){
+      this.toastr.warning('An unexpected error has occurred');
+      return;
+    }
+    this.requestService.acceptRequest(requestId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.toastr.info('Request accepted');
+            this.getPendingRequests();
+          } else {
+            this.toastr.warning('An unexpected error has occurred');
+          }
+        },
+        error: () => {
+          this.toastr.warning('An unexpected error has occurred');
+        }
+      });
   }
 
   rejectRequest(requestId: number): void {
@@ -76,7 +104,11 @@ export class ContactsComponent implements OnInit {
     this.showArchivedRequests = !this.showArchivedRequests;
   }
 
-  changeActiveTab(){
+  changeActiveTab() {
     this.showArchivedRequests = false
+  }
+
+  getRequestStatus(requestStatusId: number): string {
+    return RequestStatusEnum[requestStatusId];
   }
 }

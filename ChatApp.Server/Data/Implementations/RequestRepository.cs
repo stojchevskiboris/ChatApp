@@ -47,6 +47,18 @@ namespace ChatApp.Server.Data.Implementations
             return pendingRequests;
         }
 
+        public List<Request> GetArchivedRequests(int currentUserId)
+        {
+            var archivedRequests = _context.Requests
+                .Where(x => x.UserFrom.Id != currentUserId
+                         && x.UserTo.Id == currentUserId
+                         && (x.RequestStatus == (int)RequestStatusEnum.Accepted || 
+                             x.RequestStatus == (int)RequestStatusEnum.Rejected))
+                .ToList();
+
+            return archivedRequests;
+        }
+
         public List<Request> GetByUserIds(int userFromId, int userToId)
         {
             var pendingRequests = _context.Requests

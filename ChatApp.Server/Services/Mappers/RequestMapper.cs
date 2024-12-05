@@ -31,7 +31,7 @@ namespace ChatApp.Server.Services.Mappers
         {
             return requests
                 .Where(x => x.UserTo != null)
-                .Select(x => x.UserTo.MapToAddUserModel())
+                .Select(x => x.UserTo.MapToAddUserModel(x.Id, x.RequestStatus)) // send the requestId as parameter
                 .ToList();
         }
     }

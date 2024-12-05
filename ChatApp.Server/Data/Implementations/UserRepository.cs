@@ -30,5 +30,14 @@ namespace ChatApp.Server.Data.Implementations
                 )
             );
         }
+
+        public bool HasInContacts(User user, int contactId)
+        {
+            if (user.Contacts.Any())
+            {
+                return user.Contacts.Select(x => x.ContactId == contactId).Any();
+            }
+            return false;
+        }
     }
 }
