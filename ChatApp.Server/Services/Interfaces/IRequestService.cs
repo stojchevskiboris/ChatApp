@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Services.ViewModels;
+﻿using ChatApp.Server.Services.ViewModels.Requests;
+using ChatApp.Server.Services.ViewModels.Users;
 
 namespace ChatApp.Server.Services.Interfaces
 {

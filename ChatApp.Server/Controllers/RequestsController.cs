@@ -2,7 +2,9 @@
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
-using ChatApp.Server.Services.ViewModels;
+using ChatApp.Server.Services.ViewModels.Common;
+using ChatApp.Server.Services.ViewModels.Requests;
+using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.Server.Controllers

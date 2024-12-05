@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Services.ViewModels;
+﻿using ChatApp.Server.Services.ViewModels.Groups;
 
 namespace ChatApp.Server.Services.Interfaces
 {

@@ -1,6 +1,6 @@
 ﻿using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
-using ChatApp.Server.Services.ViewModels;
+using ChatApp.Server.Services.ViewModels.Giphy;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.Server.Controllers

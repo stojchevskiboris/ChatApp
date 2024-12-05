@@ -2,7 +2,7 @@
 using ChatApp.Server.Configs.Authentication.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
-using ChatApp.Server.Services.ViewModels;
+using ChatApp.Server.Services.ViewModels.Giphy;
 using Microsoft.Extensions.Options;
 using Serilog;
 

@@ -1,12 +1,12 @@
-﻿namespace ChatApp.Server.Services.ViewModels
+﻿namespace ChatApp.Server.Services.ViewModels.Requests
 {
-    public class RequestDetailsModel
+    public class RequestViewModel
     {
         public int Id { get; set; }
 
-        public AddUserModel UserFrom { get; set; }
+        public int UserFromId { get; set; }
 
-        public AddUserModel UserTo { get; set; }
+        public int UserToId { get; set; }
 
         public int RequestStatus { get; set; }
 

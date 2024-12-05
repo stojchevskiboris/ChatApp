@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Services.ViewModels;
+﻿using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 

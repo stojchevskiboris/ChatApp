@@ -1,7 +1,5 @@
-﻿namespace ChatApp.Server.Services.ViewModels
+﻿namespace ChatApp.Server.Services.ViewModels.Common
 {
-    public class HttpRequestModels { }
-
     public class HttpRequestIdModel
     {
         public int Id { get; set; }

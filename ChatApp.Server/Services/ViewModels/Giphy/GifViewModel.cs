@@ -1,4 +1,4 @@
-﻿namespace ChatApp.Server.Services.ViewModels
+﻿namespace ChatApp.Server.Services.ViewModels.Giphy
 {
     public class GifViewModel
     {

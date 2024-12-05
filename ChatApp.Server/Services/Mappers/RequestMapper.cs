@@ -1,5 +1,5 @@
 ﻿using ChatApp.Server.Domain.Models;
-using ChatApp.Server.Services.ViewModels;
+using ChatApp.Server.Services.ViewModels.Requests;
 
 namespace ChatApp.Server.Services.Mappers
 {

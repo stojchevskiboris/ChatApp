@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Services.ViewModels;
+﻿using ChatApp.Server.Services.ViewModels.Users;
 
 namespace ChatApp.Server.Configs.Authentication
 {

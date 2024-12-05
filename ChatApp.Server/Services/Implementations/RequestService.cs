@@ -5,7 +5,8 @@ using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
-using ChatApp.Server.Services.ViewModels;
+using ChatApp.Server.Services.ViewModels.Requests;
+using ChatApp.Server.Services.ViewModels.Users;
 using Serilog;
 
 namespace ChatApp.Server.Services.Implementations
