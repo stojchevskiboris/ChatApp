@@ -1,7 +1,12 @@
-﻿using ChatApp.Server.Data.Interfaces;
+﻿using ChatApp.Server.Common.Constants;
+using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Data.Utils;
 using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
+using Dapper;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace ChatApp.Server.Data.Implementations
 {
@@ -27,13 +32,25 @@ namespace ChatApp.Server.Data.Implementations
 
         public List<Request> GetPendingRequestsSentFromCurrentUser(int currentUserId)
         {
-            var pendingRequests = _context.Requests
-                .Where(x => x.UserFrom.Id == currentUserId
-                         && x.UserTo.Id != currentUserId
-                         && x.RequestStatus == (int)RequestStatusEnum.Pending)
-                .ToList();
+            // Execute the stored procedure and map results
+            var result = new List<Request>();
 
-            return pendingRequests;
+            using (var connection = _context.Database.GetDbConnection())
+            {
+                connection.ConnectionString = AppParameters.ConnectionString;
+                connection.Open();
+
+                result = connection.Query<Request>(
+                    "EXEC dbo.GetPendingRequestsSentFromCurrentUser @CurrentUserId",
+                    new
+                    {
+                        currentUserId
+                    }).ToList();
+
+                connection.Close();
+            }
+
+            return result;
         }
 
         public List<Request> GetPendingRequests(int currentUserId)

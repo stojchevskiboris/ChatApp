@@ -1,3 +1,4 @@
+using ChatApp.Server.Common.Constants;
 using ChatApp.Server.Configs;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Configs.Authentication.Models;
@@ -9,13 +10,11 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
+AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb2");
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("devDb2")));
+    options.UseSqlServer(AppParameters.ConnectionString));
 
 builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
-
-// --- AutoMapper Configuration ---
-//builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 // --- Repository Registration ---
 builder.Services.ConfigureRepositories();
