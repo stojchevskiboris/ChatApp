@@ -1,6 +1,8 @@
 ﻿using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Data.Utils;
 using ChatApp.Server.Domain.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Server.Data.Implementations
 {
@@ -30,6 +32,15 @@ namespace ChatApp.Server.Data.Implementations
                     u.LastName.ToLower().Contains(term)
                 )
             );
+        }
+
+
+        public List<int> GetContactsByUserId(int currentUserId)
+        {
+            var result = _context.Database
+                .SqlQuery<int>($"EXEC dbo.GetContactsByUserId {currentUserId}");
+
+            return result.ToList();
         }
 
         public bool HasInContacts(User user, int contactId)

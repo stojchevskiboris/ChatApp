@@ -7,6 +7,7 @@ namespace ChatApp.Server.Data.Interfaces
     {
         User GetByEmail(string email);
         IEnumerable<User> SearchUsersToAdd(int currentUserId, string query, List<int> userContactIds);
+        List<int> GetContactsByUserId(int currentUserId);
         bool HasInContacts(User user, int contactId);
     }
 }
