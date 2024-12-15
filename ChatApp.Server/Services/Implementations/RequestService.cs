@@ -230,9 +230,60 @@ namespace ChatApp.Server.Services.Implementations
             }
         }
 
-        public bool RejectRequest(int id)
+        public bool RejectRequest(int requestId)
         {
-            throw new NotImplementedException();
+            var request = _requestRepository.Get(requestId);
+            if (request == null)
+            {
+                throw new CustomException("The request does not exist");
+            }
+
+            var user1 = _userRepository.Get(request?.UserFrom?.Id ?? -1);
+            var user2 = _userRepository.Get(request?.UserTo?.Id ?? -1);
+
+            if (user1 == null || user2 == null)
+            {
+                throw new CustomException("Users not existing in system");
+            }
+
+            try
+            {
+                if (_userRepository.HasInContacts(user1, user2.Id)) // ensure there arent contacts between each other
+                {
+                    var possibleContacts = user1.Contacts.Where(x => x.UserId == user1.Id && x.ContactId == user2.Id).ToList();
+                    if (possibleContacts.Any())
+                    {
+                        foreach (var contact in possibleContacts)
+                        {
+                            user1.Contacts.Remove(contact);
+                        }
+                    }
+                    _userRepository.Update(user1);
+                }
+
+                if (_userRepository.HasInContacts(user2, user1.Id)) // ensure there arent contacts between each other
+                {
+                    var possibleContacts = user2.Contacts.Where(x => x.UserId == user2.Id && x.ContactId == user1.Id).ToList();
+                    if (possibleContacts.Any())
+                    {
+                        foreach (var contact in possibleContacts)
+                        {
+                            user2.Contacts.Remove(contact);
+                        }
+                    }
+                    _userRepository.Update(user1);
+                }
+
+                request.RequestStatus = (int)RequestStatusEnum.Rejected;
+                _requestRepository.Update(request);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error(ex.Message);
+                return false;
+            }
         }
     }
 }

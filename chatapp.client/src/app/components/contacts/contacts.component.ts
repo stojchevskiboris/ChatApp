@@ -18,6 +18,7 @@ export class ContactsComponent implements OnInit {
   showArchivedRequests: boolean = false;
   currentUserId: string = null;
   requestStatusEnum: typeof RequestStatusEnum = RequestStatusEnum;
+  loading: boolean = false;
 
   contacts = [
     { id: 1, name: 'Alice' },
@@ -80,10 +81,12 @@ export class ContactsComponent implements OnInit {
   }
 
   acceptRequest(requestId: number): void {
-    if (requestId == 0){
+    if (requestId == 0) {
       this.toastr.warning('An unexpected error has occurred');
       return;
     }
+
+    this.loading = true;
     this.requestService.acceptRequest(requestId)
       .subscribe({
         next: (response: any) => {
@@ -93,16 +96,43 @@ export class ContactsComponent implements OnInit {
           } else {
             this.toastr.warning('An unexpected error has occurred');
           }
+          this.loading = false;
         },
         error: () => {
           this.toastr.warning('An unexpected error has occurred');
+        },
+        complete: () => {
+          this.loading = false;
         }
       });
   }
 
   rejectRequest(requestId: number): void {
-    console.log(`Rejected request ID: ${requestId}`);
-    this.requests = this.requests.filter(request => request.id !== requestId);
+    if (requestId == 0) {
+      this.toastr.warning('An unexpected error has occurred');
+      return;
+    }
+
+    this.loading = true;
+    this.requestService.rejectRequest(requestId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.toastr.info('Request rejected');
+            this.loadData();
+          } else {
+            this.toastr.warning('An unexpected error has occurred');
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.toastr.warning('An unexpected error has occurred');
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
   }
 
   toggleArchivedRequests(): void {

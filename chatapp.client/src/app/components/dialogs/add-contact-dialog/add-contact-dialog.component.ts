@@ -20,6 +20,7 @@ export class AddContactDialogComponent implements OnInit {
   isLoading: boolean = false;
   searchResults: Array<AddContactModel> = [];
   currentUserId: number = 0;
+  loading: boolean = false;
 
   ngOnInit(): void {
     this.currentUserId = +(this.authService.getUserId() ?? 0);
@@ -52,32 +53,48 @@ export class AddContactDialogComponent implements OnInit {
   }
 
   newRequest(user: AddContactModel): void {
+    this.loading = true;
     this.requestService.newRequest(user.id)
       .subscribe({
         next: (response: any) => {
           if (response) {
             user.isAdded = true;
+            this.loading = false;
             // toastr: succesfully sent request
           } else {
+            this.loading = false;
             // toastr: succesfully sent request
           }
         },
-        error: () => console.error('Error sending add request.'),
+        error: () => {
+          console.log("Error sending add request");
+          this.loading = false
+        },
+        complete: () => {
+          this.loading = false;
+        }
       });
   }
 
   cancelRequest(user: AddContactModel): void {
+    this.loading = true;
     this.requestService.cancelRequest(user.id)
       .subscribe({
         next: (response: any) => {
           if (response) {
             user.isAdded = false;
-            // toastr: friend request cancelled
+            this.loading = false
           } else {
-            // toastr: failed to cancel friend request
+            this.loading = false
           }
         },
-        error: () => console.error('Error sending add request.'),
+        error: () => {
+          console.log("Error cancelling request");
+          this.loading = false
+        },
+        complete: () => {
+          this.loading = false;
+        }
       });
   }
 }

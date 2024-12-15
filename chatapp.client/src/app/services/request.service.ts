@@ -17,6 +17,7 @@ export class RequestService {
   private newRequestEndpoint = '/Requests/NewRequest';
   private cancelRequestEndpoint = '/Requests/CancelRequest';
   private acceptRequestEndpoint = '/Requests/AcceptRequest';
+  private rejectRequestEndpoint = '/Requests/RejectRequest';
 
   
   searchUsersToAdd(query: string): Observable<AddContactModel[]> {
@@ -72,6 +73,16 @@ export class RequestService {
   acceptRequest(requestId: number){
     return this.dataService
       .post<boolean>(this.acceptRequestEndpoint, { id: requestId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  rejectRequest(requestId: number){
+    return this.dataService
+      .post<boolean>(this.rejectRequestEndpoint, { id: requestId })
       .pipe(
         tap((response) => {
           return response;

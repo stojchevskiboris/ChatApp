@@ -77,5 +77,13 @@ namespace ChatApp.Server.Controllers
             var result = _requestService.AcceptRequest(model.Id);
             return result;
         }
+
+        [HttpPost("RejectRequest")]
+        [Authorize]
+        public bool RejectRequest(HttpRequestIdModel model)
+        {
+            var result = _requestService.RejectRequest(model.Id);
+            return result;
+        }
     }
 }

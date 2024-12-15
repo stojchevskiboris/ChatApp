@@ -1,22 +1,4 @@
-/* Loader */
-.loading-container {
-	display: flex;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100vw;
-	height: 100vh;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 50;
-}
 
-.flex-content-center {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-/*-- Loader --*/
 
 .error-message {
 	color: #FF416C;
