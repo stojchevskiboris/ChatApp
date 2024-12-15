@@ -8,6 +8,7 @@ namespace ChatApp.Server.Services.Interfaces
         #region UserServices
         List<UserViewModel> GetAllUsers();
         UserViewModel GetUserById(int id);
+        List<UserViewModel> GetContacts();
         UserViewModel GetUserByEmail(string email);
         UserViewModel CreateUser(UserRegisterModel model);
         UserViewModel UpdateUser(UserViewModel user);

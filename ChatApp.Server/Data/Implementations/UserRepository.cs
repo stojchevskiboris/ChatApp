@@ -32,7 +32,7 @@ namespace ChatApp.Server.Data.Implementations
                 .Where(x => x.Id == currentUserId)
                 .FirstOrDefault();
 
-            if (userContacts != null && userContacts.Contacts.Any()) 
+            if (userContacts != null && userContacts.Contacts.Any())
             {
                 result = userContacts.Contacts.Select(x => x.ContactId).ToList();
             }

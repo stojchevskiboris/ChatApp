@@ -42,6 +42,34 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
+        public List<UserViewModel> GetContacts()
+        {
+            var contacts = new List<UserViewModel>();
+
+            var currentUserId = Context.GetCurrentUserId();
+            var currentUser = _userRepository.Get(currentUserId);
+            if (currentUser == null)
+            {
+                throw new CustomException("User not existing");
+            }
+
+            var contactsId = _userRepository.GetContactsByUserId(currentUserId);
+
+            if (contactsId.Any())
+            {
+                foreach (var id in contactsId)
+                {
+                    var contact = _userRepository.Get(id);
+                    if(contact != null)
+                    {
+                        contacts.Add(contact.MapToViewModel());
+                    }
+                }
+            }
+
+            return contacts;
+        }
+
         public UserViewModel GetUserByEmail(string email)
         {
             var user = _userRepository.GetByEmail(email.Trim());

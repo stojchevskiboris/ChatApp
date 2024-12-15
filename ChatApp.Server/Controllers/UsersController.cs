@@ -40,6 +40,13 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserById(model.Id);
         }
 
+        [HttpGet("GetContacts")]
+        [Authorize]
+        public List<UserViewModel> GetContacts()
+        {
+            return _userService.GetContacts();
+        }
+
         [HttpPost("GetUserByEmail")]
         [Authorize]
         public UserViewModel GetUserByEmail(string email)
@@ -65,6 +72,7 @@ namespace ChatApp.Server.Controllers
             return _userService.UpdateUser(model);
         }
 
+        #region Authorization
         [HttpPost("ChangePassword")]
         [Authorize]
         public bool ChangePassword(PasswordViewModel model)
@@ -102,5 +110,6 @@ namespace ChatApp.Server.Controllers
 
             return Ok(response);
         }
+        #endregion
     }
 }

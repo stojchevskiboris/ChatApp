@@ -3,9 +3,10 @@ export class UserViewModel {
     firstName: string = '';
     lastName: string = '';
     email: string = '';
-    password: string = '';
+    // password: string = '';
     dateOfBirth: string = '';
     phone: string = '';
+    profilePicture: string = '';
     createdAt: string = '';
     modifiedAt: string = '';
 }

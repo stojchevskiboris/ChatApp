@@ -2,10 +2,11 @@ import { Component, inject, OnInit } from '@angular/core';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { RequestService } from '../../services/request.service';
-import { AddContactModel } from '../../models/add-contact-model';
 import { ToastrService } from 'ngx-toastr';
 import { RequestStatusEnum } from '../../models/enums/request-status-enum';
 import { RequestDetailsModel } from '../../models/request-details-model';
+import { UserViewModel } from '../../models/user-view-model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-contacts',
@@ -19,17 +20,14 @@ export class ContactsComponent implements OnInit {
   currentUserId: string = null;
   requestStatusEnum: typeof RequestStatusEnum = RequestStatusEnum;
   loading: boolean = false;
+  hasContactsLoaded: boolean = false;
 
-  contacts = [
-    { id: 1, name: 'Alice' },
-    { id: 2, name: 'Bob' },
-    { id: 3, name: 'Charlie' },
-  ];
-
+  contacts: UserViewModel[] = [];
   requests: RequestDetailsModel[] = [];
   archivedRequests: RequestDetailsModel[] = [];
 
   constructor(
+    private userService: UserService,
     private requestService: RequestService,
     private toastr: ToastrService
   ) { }
@@ -39,8 +37,23 @@ export class ContactsComponent implements OnInit {
   }
 
   loadData() {
+    this.getContacts();
     this.getPendingRequests();
     this.getArchivedRequests();
+  }
+
+  getContacts() {
+    this.userService.getContacts().subscribe({
+      next: (model: UserViewModel[]) => {
+        this.contacts = model
+      },
+      error: (err: any) => {
+        console.log(err);
+      },
+      complete: () => {
+        this.hasContactsLoaded = true;
+      }
+    })
   }
 
   getPendingRequests() {
@@ -71,7 +84,7 @@ export class ContactsComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log(`Dialog result: ${result}`);
+      this.loadData();
     });
 
   }

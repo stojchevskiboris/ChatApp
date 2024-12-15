@@ -23,8 +23,16 @@
         <!-- Contacts Tab -->
         <mat-tab label="Contacts">
             <div class="contacts-list mt-2">
+                <button mat-stroked-button class="archived-requests" (click)="addContacts()" *ngIf="contacts.length == 0 && hasContactsLoaded">
+                    <mat-icon>person_add</mat-icon>Add Contacts
+                </button>
+
                 <div *ngFor="let contact of contacts" class="contact-item">
-                    <span>{{ contact.name }}</span>
+                    <div class="d-flex align-items-center">
+                        <img matListAvatar class="w-40px h-40px"
+                            [src]="contact.profilePicture || 'img/default-avatar.png'" />
+                        <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} ({{contact.email}})</div>
+                    </div>
                     <button mat-icon-button [matMenuTriggerFor]="contactMenu">
                         <mat-icon>more_vert</mat-icon>
                     </button>
@@ -33,6 +41,9 @@
                             <mat-icon>delete</mat-icon> Remove Contact
                         </button>
                     </mat-menu>
+                </div>
+                <div *ngIf="contacts.length === 0 && hasContactsLoaded" class="text-center mt-3">
+                    No contacts
                 </div>
             </div>
         </mat-tab>

@@ -10,13 +10,13 @@
 
         public string Email { get; set; }
 
-        public string Password { get; set; }
+        //public string Password { get; set; }
 
         public DateTime DateOfBirth { get; set; }
 
         public string Phone { get; set; }
 
-        //public Media? ProfilePicture { get; set; }
+        public string ProfilePicture { get; set; }
 
         public List<int> ContactsId { get; set; } = new List<int>();
 
