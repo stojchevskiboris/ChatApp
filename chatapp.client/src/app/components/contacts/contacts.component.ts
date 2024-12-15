@@ -7,6 +7,7 @@ import { RequestStatusEnum } from '../../models/enums/request-status-enum';
 import { RequestDetailsModel } from '../../models/request-details-model';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
+import { RemoveContactDialogComponent } from '../dialogs/remove-contact-dialog/remove-contact-dialog.component';
 
 @Component({
   selector: 'app-contacts',
@@ -86,11 +87,39 @@ export class ContactsComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       this.loadData();
     });
-
   }
 
-  removeContact(contactId: number): void {
-    this.contacts = this.contacts.filter(contact => contact.id !== contactId);
+  removeContact(contact: UserViewModel): void {
+    const dialogRef = this.dialog.open(RemoveContactDialogComponent, {
+      data:{
+        contact
+      },
+      width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if(!!result){
+        this.loading = true;
+        this.userService.removeContact(contact.id).subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.contacts = this.contacts.filter(c => c.id !== contact.id);
+              this.toastr.info('Succesfully removed contact');
+            } else {
+              this.toastr.warning('An unexpected error has occurred');
+            }
+            this.loading = false;
+          },
+          error: () => {
+            this.toastr.warning('An unexpected error has occurred');
+            this.loading = false;
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
+      }
+    });
   }
 
   acceptRequest(requestId: number): void {

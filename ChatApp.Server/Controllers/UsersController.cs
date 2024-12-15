@@ -58,6 +58,17 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserByEmail(email);
         }
 
+        [HttpPost("RemoveContact")]
+        [Authorize]
+        public bool RemoveContact(HttpRequestIdModel model)
+        {
+            if (model.Id == 0)
+            {
+                throw new CustomException("Invalid parameters");
+            }
+            return _userService.RemoveContact(model.Id);
+        }
+
         [HttpPost("DeleteUser")]
         [Authorize]
         public bool DeleteUser(int userId)

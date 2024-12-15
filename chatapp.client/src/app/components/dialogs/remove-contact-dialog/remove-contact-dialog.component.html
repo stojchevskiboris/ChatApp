@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Remove contact</h2>
+<mat-dialog-content *ngIf="data">
+  Are you sure you want to remove {{data.contact.firstName}} {{data.contact.lastName}} from your contacts?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="actionBtn(false)">No</button>
+  <button mat-button (click)="actionBtn(true)" cdkFocusInitial>Remove</button>
+</mat-dialog-actions>

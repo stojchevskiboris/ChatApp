@@ -60,7 +60,7 @@ namespace ChatApp.Server.Services.Implementations
                 foreach (var id in contactsId)
                 {
                     var contact = _userRepository.Get(id);
-                    if(contact != null)
+                    if (contact != null)
                     {
                         contacts.Add(contact.MapToViewModel());
                     }
@@ -79,6 +79,50 @@ namespace ChatApp.Server.Services.Implementations
             }
 
             return user.MapToViewModel();
+        }
+
+        public bool RemoveContact(int contactId)
+        {
+            try
+            {
+                var currentUserId = Context.GetCurrentUserId();
+                var user1 = _userRepository.Get(currentUserId);
+                var user2 = _userRepository.Get(contactId);
+                if (user1 == null)
+                {
+                    throw new CustomException("User not existing");
+                }
+                if (user2 == null)
+                {
+                    throw new CustomException("Contact not existing");
+                }
+
+                var user1Contacts = user1.Contacts.Where(x => x.ContactId == contactId).ToList();
+                if (user1Contacts.Any())
+                {
+                    foreach (var uc in user1Contacts)
+                    {
+                        user1.Contacts.Remove(uc);
+                    }
+                    _userRepository.Update(user1);
+                }
+
+                var user2Contacts = user2.Contacts.Where(x => x.ContactId == currentUserId).ToList();
+                if (user2Contacts.Any())
+                {
+                    foreach (var uc in user2Contacts)
+                    {
+                        user2.Contacts.Remove(uc);
+                    }
+                    _userRepository.Update(user2);
+                }
+
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public UserViewModel CreateUser(UserRegisterModel model)

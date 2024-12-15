@@ -3,7 +3,6 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DataService } from './data.service';
 import { UserViewModel } from '../models/user-view-model';
-import { AddContactModel } from '../models/add-contact-model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ import { AddContactModel } from '../models/add-contact-model';
 export class UserService {
   private getUserEndpoint = '/Users/GetUserById';
   private getContactsEndpoint = '/Users/GetContacts';
-
+  private removeContactEndpoint = '/Users/RemoveContact';
 
   constructor(private dataService: DataService) {}
 
@@ -28,6 +27,16 @@ export class UserService {
   getContacts(): Observable<UserViewModel[]> {
     return this.dataService
       .get<UserViewModel[]>(this.getContactsEndpoint)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  
+  removeContact(contactId: number): Observable<boolean> {
+    return this.dataService
+      .post<boolean>(this.removeContactEndpoint, { id: contactId })
       .pipe(
         tap((response) => {
           return response;

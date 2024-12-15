@@ -29,6 +29,7 @@ import { AddContactDialogComponent } from './components/dialogs/add-contact-dial
 import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
+import { RemoveContactDialogComponent } from './components/dialogs/remove-contact-dialog/remove-contact-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -45,7 +46,8 @@ import { provideToastr, ToastrModule } from 'ngx-toastr';
     GifSearchComponent,
     AddContactDialogComponent,
     SignOutDialogComponent,
-    ContactsComponent
+    ContactsComponent,
+    RemoveContactDialogComponent
   ],
   imports: [
     BrowserModule,

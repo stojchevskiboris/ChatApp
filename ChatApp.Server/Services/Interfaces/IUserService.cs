@@ -10,6 +10,7 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel GetUserById(int id);
         List<UserViewModel> GetContacts();
         UserViewModel GetUserByEmail(string email);
+        bool RemoveContact(int contactId);
         UserViewModel CreateUser(UserRegisterModel model);
         UserViewModel UpdateUser(UserViewModel user);
         bool DeleteUser(int id);

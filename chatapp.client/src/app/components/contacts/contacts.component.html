@@ -23,6 +23,11 @@
         <!-- Contacts Tab -->
         <mat-tab label="Contacts">
             <div class="contacts-list mt-2">
+
+                <div class="flex-content-center mt-1" *ngIf="!hasContactsLoaded">
+                    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+                </div>
+
                 <button mat-stroked-button class="archived-requests" (click)="addContacts()" *ngIf="contacts.length == 0 && hasContactsLoaded">
                     <mat-icon>person_add</mat-icon>Add Contacts
                 </button>
@@ -37,7 +42,7 @@
                         <mat-icon>more_vert</mat-icon>
                     </button>
                     <mat-menu #contactMenu="matMenu">
-                        <button mat-menu-item (click)="removeContact(contact.id)">
+                        <button mat-menu-item (click)="removeContact(contact)">
                             <mat-icon>delete</mat-icon> Remove Contact
                         </button>
                     </mat-menu>
