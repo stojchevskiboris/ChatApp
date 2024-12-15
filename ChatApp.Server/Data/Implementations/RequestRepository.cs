@@ -33,24 +33,26 @@ namespace ChatApp.Server.Data.Implementations
         public List<Request> GetPendingRequestsSentFromCurrentUser(int currentUserId)
         {
             // Execute the stored procedure and map results
-            var result = new List<Request>();
+            var result = _context.Requests
+                .Where(x => x.UserFrom.Id == currentUserId
+                         && x.RequestStatus == (int)RequestStatusEnum.Pending);
 
-            using (var connection = _context.Database.GetDbConnection())
-            {
-                connection.ConnectionString = AppParameters.ConnectionString;
-                connection.Open();
+            //using (var connection = _context.Database.GetDbConnection())
+            //{
+            //    connection.ConnectionString = AppParameters.ConnectionString;
+            //    connection.Open();
 
-                result = connection.Query<Request>(
-                    "EXEC dbo.GetPendingRequestsSentFromCurrentUser @CurrentUserId",
-                    new
-                    {
-                        currentUserId
-                    }).ToList();
+            //    result = connection.Query<Request>(
+            //        "EXEC dbo.GetPendingRequestsSentFromCurrentUser @CurrentUserId",
+            //        new
+            //        {
+            //            currentUserId
+            //        }).ToList();
 
-                connection.Close();
-            }
+            //    connection.Close();
+            //}
 
-            return result;
+            return result.ToList();
         }
 
         public List<Request> GetPendingRequests(int currentUserId)

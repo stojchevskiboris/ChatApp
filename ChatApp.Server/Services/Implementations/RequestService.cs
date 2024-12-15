@@ -41,11 +41,10 @@ namespace ChatApp.Server.Services.Implementations
             }
 
             List<int> userContactIds = new List<int>();
-            userContactIds = _userRepository.GetContactsByUserId(currentUserId);
-            //if (currentUser.Contacts.Any())
-            //{
-            //    userContactIds = currentUser.Contacts.Select(x => x.ContactId).ToList();
-            //}
+            if (currentUser.Contacts.Any())
+            {
+                userContactIds = currentUser.Contacts.Select(x => x.ContactId).ToList();
+            }
 
             var users = _userRepository.SearchUsersToAdd(currentUserId, query.Trim(), userContactIds);
             if (users == null)

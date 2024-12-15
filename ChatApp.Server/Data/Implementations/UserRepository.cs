@@ -24,8 +24,18 @@ namespace ChatApp.Server.Data.Implementations
 
         public List<int> GetContactsByUserId(int currentUserId)
         {
-            var result = _context.Database
-                .SqlQuery<int>($"EXEC dbo.GetContactsByUserId {currentUserId}");
+            var result = new List<int>();
+            //result = _context.Database
+            //    .SqlQuery<int>($"EXEC dbo.GetContactsByUserId {currentUserId}");
+
+            var userContacts = _context.Users
+                .Where(x => x.Id == currentUserId)
+                .FirstOrDefault();
+
+            if (userContacts != null && userContacts.Contacts.Any()) 
+            {
+                result = userContacts.Contacts.Select(x => x.ContactId).ToList();
+            }
 
             return result.ToList();
         }
@@ -33,46 +43,57 @@ namespace ChatApp.Server.Data.Implementations
 
         public List<User> SearchUsersToAdd(int currentUserId, string query, List<int> contactIds)
         {
-            // Split the query into terms
             var terms = query.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            // ToDo: fix search algorithm ("Testuser St" returns results without containing Testuser because of the St)
+            return _context.Users.Where(
+                u => u.Id != currentUserId &&
+                !contactIds.Contains(u.Id) &&
+                terms.Any(term =>
+                    u.FirstName.ToLower().Contains(term) ||
+                    u.LastName.ToLower().Contains(term)
+                )
+            ).ToList();
 
-            // Create DataTable for @terms
-            var termsTable = new DataTable();
-            termsTable.Columns.Add("Value", typeof(string));
-            foreach (var term in terms)
-            {
-                termsTable.Rows.Add(term);
-            }
+            //// Split the query into terms
+            //var terms = query.ToLower().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
-            // Create DataTable for @contactIds
-            var contactIdsTable = new DataTable();
-            contactIdsTable.Columns.Add("Value", typeof(int));
-            foreach (var contactId in contactIds)
-            {
-                contactIdsTable.Rows.Add(contactId);
-            }
+            //// Create DataTable for @terms
+            //var termsTable = new DataTable();
+            //termsTable.Columns.Add("Value", typeof(string));
+            //foreach (var term in terms)
+            //{
+            //    termsTable.Rows.Add(term);
+            //}
 
-            // Execute the stored procedure and map results
-            var result = new List<User>();
+            //// Create DataTable for @contactIds
+            //var contactIdsTable = new DataTable();
+            //contactIdsTable.Columns.Add("Value", typeof(int));
+            //foreach (var contactId in contactIds)
+            //{
+            //    contactIdsTable.Rows.Add(contactId);
+            //}
 
-            using (var connection = _context.Database.GetDbConnection())
-            {
-                connection.ConnectionString = AppParameters.ConnectionString;
-                connection.Open();
+            //// Execute the stored procedure and map results
+            //var result = new List<User>();
 
-                result = connection.Query<User>(
-                    "EXEC dbo.SearchUsersToAdd @currentUserId, @terms, @contactIds",
-                    new
-                    {
-                        currentUserId,
-                        terms = termsTable.AsTableValuedParameter("dbo.StringListType"),
-                        contactIds = contactIdsTable.AsTableValuedParameter("dbo.IntListType")
-                    }).ToList();
+            //using (var connection = _context.Database.GetDbConnection())
+            //{
+            //    connection.ConnectionString = AppParameters.ConnectionString;
+            //    connection.Open();
 
-                connection.Close();
-            }
+            //    result = connection.Query<User>(
+            //        "EXEC dbo.SearchUsersToAdd @currentUserId, @terms, @contactIds",
+            //        new
+            //        {
+            //            currentUserId,
+            //            terms = termsTable.AsTableValuedParameter("dbo.StringListType"),
+            //            contactIds = contactIdsTable.AsTableValuedParameter("dbo.IntListType")
+            //        }).ToList();
 
-            return result;
+            //    connection.Close();
+            //}
+
+            //return result;
         }
 
         public bool HasInContacts(User user, int contactId)
