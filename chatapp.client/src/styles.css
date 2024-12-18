@@ -273,6 +273,25 @@ body {
   color: black !important;
 }
 
+.notifications{
+  position: absolute;
+  right: -10px;
+  padding-left: 2px;
+  border-radius: 50px;
+  width: 20px;
+  height: 20px;
+  background: #ff000070;
+  font-size: 13px;
+}
+
+.left1px{
+  left: 1px !important;
+}
+
+.right10px{
+  right: -10px !important
+}
+
 .seen {
   font-weight: normal !important;
   color: inherit !important;

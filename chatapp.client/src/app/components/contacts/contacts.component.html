@@ -54,7 +54,7 @@
         </mat-tab>
 
         <!-- Requests Tab -->
-        <mat-tab label="Requests">
+        <mat-tab label="Requests ({{ requestsCount > 9 ? '+9' : requestsCount }})">
             <!-- Pending Requests Section -->
             <div class="requests-list mt-2 fadeInAnimation" *ngIf="!showArchivedRequests">
                 <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">

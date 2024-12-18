@@ -13,18 +13,31 @@
     </div>
 
     <div>
-        <button mat-icon-button [matMenuTriggerFor]="menu">
-            <mat-icon>more_vert</mat-icon>
-        </button>
+        <div class="position-relative">
+            <div class="notifications right10px" *ngIf="hasRequests">
+                <span *ngIf="requestsCount > 9">+9</span>
+                <span *ngIf="requestsCount <= 9">+{{requestsCount}}</span>
+            </div>
+            <button mat-icon-button [matMenuTriggerFor]="menu">
+                <mat-icon>more_vert</mat-icon>
+            </button>
+        </div>
         <mat-menu #menu="matMenu">
             <button mat-menu-item (click)="addContacts()">
                 <mat-icon>person_add</mat-icon>
                 <span>Add Contacts</span>
             </button>
-            <button mat-menu-item routerLink="/contacts">
-                <mat-icon>supervisor_account</mat-icon>
-                <span>Manage Contacts</span>
-            </button>
+            <div class="position-relative">
+                <div class="notifications left1px" *ngIf="hasRequests">
+                    <span *ngIf="requestsCount > 9">+9</span>
+                    <span *ngIf="requestsCount <= 9">+{{requestsCount}}</span>
+                </div>
+                <button mat-menu-item routerLink="/contacts">
+                    <mat-icon>supervisor_account</mat-icon>
+                    <span>Manage Contacts</span>
+                </button>
+            </div>
+
             <button mat-menu-item routerLink="/settings">
                 <mat-icon>settings</mat-icon>
                 <span>Settings</span>
