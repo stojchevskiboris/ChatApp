@@ -5,6 +5,7 @@ import { UserViewModel } from '../../models/user-view-model';
 import { MatDialog } from '@angular/material/dialog';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { SignOutDialogComponent } from '../dialogs/sign-out-dialog/sign-out-dialog.component';
+import { RequestService } from '../../services/request.service';
 
 @Component({
   selector: 'app-account-overview',
@@ -14,6 +15,7 @@ import { SignOutDialogComponent } from '../dialogs/sign-out-dialog/sign-out-dial
 export class AccountOverviewComponent {
   constructor(
     private authService: AuthService,
+    private requestService: RequestService,
     private router: Router
   ) { }
 
@@ -22,6 +24,8 @@ export class AccountOverviewComponent {
   currentUser: UserViewModel = new UserViewModel();
   dialog = inject(MatDialog);
   loading: boolean = false;
+  hasRequests: boolean = false;
+  requestsCount: number = 0;
 
   ngOnInit(): void {
     var currentUserStr = this.authService.getCurrentUser();
@@ -33,6 +37,20 @@ export class AccountOverviewComponent {
       this.currentUser = JSON.parse(currentUserStr);
       this.userInitials = this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
     }
+
+    this.getRequestsCount();
+  }
+
+  getRequestsCount() {
+    this.requestService.getRequestsCount().subscribe({
+          next: (count: number) => {
+            this.requestsCount = count
+            this.hasRequests = count>0;
+          },
+          error: (err: any) => {
+            console.log(err);
+          }
+        })
   }
 
   resetChats() {
@@ -56,10 +74,11 @@ export class AccountOverviewComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(!!result) {
+      if (!!result) {
         this.authService.logout();
         this.router.navigate(['/']);
       }
     });
+
   }
 }

@@ -54,6 +54,14 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
+        [HttpGet("GetRequestsCount")]
+        [Authorize]
+        public int GetRequestsCount()
+        {
+            var result = _requestService.GetRequestsCount();
+            return result;
+        }
+
         [HttpPost("NewRequest")]
         [Authorize]
         public bool NewRequest(HttpRequestIdModel model)

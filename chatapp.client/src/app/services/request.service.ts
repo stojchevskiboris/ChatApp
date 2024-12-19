@@ -14,6 +14,7 @@ export class RequestService {
   private searchUsersEndpoint = '/Requests/SearchUsersToAdd';
   private getPendingRequestsEndpoint = '/Requests/GetPendingRequests';
   private getArchivedRequestsEndpoint = '/Requests/GetArchivedRequests';
+  private getRequestsCountEndpoint = '/Requests/GetRequestsCount';
   private newRequestEndpoint = '/Requests/NewRequest';
   private cancelRequestEndpoint = '/Requests/CancelRequest';
   private acceptRequestEndpoint = '/Requests/AcceptRequest';
@@ -50,6 +51,16 @@ export class RequestService {
       );
   }
 
+  getRequestsCount(){
+    return this.dataService
+      .get<number>(this.getRequestsCountEndpoint)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  
   newRequest(userId: number){
     return this.dataService
       .post<boolean>(this.newRequestEndpoint, { id: userId })
@@ -89,4 +100,5 @@ export class RequestService {
         })
       );
   }
+
 }

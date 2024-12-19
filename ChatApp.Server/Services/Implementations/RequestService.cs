@@ -101,6 +101,12 @@ namespace ChatApp.Server.Services.Implementations
             return new List<RequestDetailsModel>();
         }
 
+        public int GetRequestsCount()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            return _requestRepository.GetPendingRequests(currentUserId).Count();
+        }
+
         public bool NewRequest(int userToId)
         {
             var currentUserId = Context.GetCurrentUserId();

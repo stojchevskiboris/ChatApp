@@ -22,6 +22,8 @@ export class ContactsComponent implements OnInit {
   requestStatusEnum: typeof RequestStatusEnum = RequestStatusEnum;
   loading: boolean = false;
   hasContactsLoaded: boolean = false;
+  hasRequests: boolean = false;
+  requestsCount: number = 0;
 
   contacts: UserViewModel[] = [];
   requests: RequestDetailsModel[] = [];
@@ -41,6 +43,7 @@ export class ContactsComponent implements OnInit {
     this.getContacts();
     this.getPendingRequests();
     this.getArchivedRequests();
+    this.getRequestsCount();
   }
 
   getContacts() {
@@ -77,6 +80,18 @@ export class ContactsComponent implements OnInit {
         this.toastr.warning('An unexpected error has occurred');
       }
     })
+  }
+
+  getRequestsCount() {
+    this.requestService.getRequestsCount().subscribe({
+          next: (count: number) => {
+            this.requestsCount = count
+            this.hasRequests = count>0;
+          },
+          error: (err: any) => {
+            console.log(err);
+          }
+        })
   }
 
   addContacts() {
