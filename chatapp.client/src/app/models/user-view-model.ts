@@ -7,6 +7,7 @@ export class UserViewModel {
     dateOfBirth: string = '';
     phone: string = '';
     profilePicture: string = '';
+    contactsId: number[] = [];
     createdAt: string = '';
     modifiedAt: string = '';
 }

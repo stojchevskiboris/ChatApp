@@ -8,6 +8,7 @@ namespace ChatApp.Server.Services.Interfaces
         #region UserServices
         List<UserViewModel> GetAllUsers();
         UserViewModel GetUserById(int id);
+        UserViewModel GetCurrentUserDetails();
         List<UserViewModel> GetContacts();
         UserViewModel GetUserByEmail(string email);
         bool RemoveContact(int contactId);

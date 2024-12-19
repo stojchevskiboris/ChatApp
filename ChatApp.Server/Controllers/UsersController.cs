@@ -40,6 +40,14 @@ namespace ChatApp.Server.Controllers
             return _userService.GetUserById(model.Id);
         }
 
+        [HttpGet("GetCurrentUserDetails")]
+        [Authorize]
+        public UserViewModel GetCurrentUserDetails()
+        {
+            var result = _userService.GetCurrentUserDetails();
+            return result;
+        }
+
         [HttpGet("GetContacts")]
         [Authorize]
         public List<UserViewModel> GetContacts()

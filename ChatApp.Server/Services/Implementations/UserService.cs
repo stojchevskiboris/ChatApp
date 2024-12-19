@@ -42,6 +42,14 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
+        public UserViewModel GetCurrentUserDetails()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var user = GetUserDomainById(currentUserId);
+
+            return user.MapToViewModel();
+        }
+
         public List<UserViewModel> GetContacts()
         {
             var contacts = new List<UserViewModel>();

@@ -14,6 +14,7 @@ export class AuthService {
   private loginEndpoint = '/Users/Login';
   private sessionLoginEndpoint = '/Users/SessionLogin';
   private registerEndpoint = '/Users/Register';
+  private getCurrentUserDetailsEndpoint = '/Users/GetCurrentUserDetails';
   currentUser: string = '';
   token: string = '';
 
@@ -62,6 +63,16 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('userId', response.id);
           localStorage.setItem('currentUser', this.currentUser);
+        })
+      );
+  }
+
+  getCurrentUserDetails(): Observable<UserViewModel>{
+    return this.dataService
+      .get<any>(this.getCurrentUserDetailsEndpoint)
+      .pipe(
+        tap((response: UserViewModel) => {
+          return response;
         })
       );
   }
