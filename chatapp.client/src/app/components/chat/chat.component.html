@@ -15,7 +15,7 @@
       </div>
     </div>
   </div>
-  <ng-scrollbar class="messages" #scrollbarRef="ngScrollbar">
+  <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar">
     <div *ngFor="let message of messages" class="message"
       [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
       <div class="message-content">
