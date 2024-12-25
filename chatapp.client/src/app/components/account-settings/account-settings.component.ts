@@ -29,7 +29,7 @@ ngOnInit(): void {
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: [{ value: '', disabled: true }],
-      dob: ['', Validators.required],
+      dateOfBirth: ['', Validators.required],
       gender: ['', Validators.required], // Add gender control
     });
 

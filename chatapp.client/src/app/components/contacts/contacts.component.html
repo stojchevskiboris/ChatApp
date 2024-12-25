@@ -24,11 +24,18 @@
         <mat-tab label="Contacts">
             <div class="contacts-list mt-2">
 
-                <div class="flex-content-center mt-1" *ngIf="!hasContactsLoaded">
-                    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+                <div class="flex-content-center mt-1 h-50px" *ngIf="!hasContactsLoaded">
+                    <div class="load-wrapp">
+                        <div class="load-3">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>
                 </div>
-
-                <button mat-stroked-button class="archived-requests" (click)="addContacts()" *ngIf="contacts.length == 0 && hasContactsLoaded">
+                
+                <button mat-stroked-button class="archived-requests" (click)="addContacts()"
+                    *ngIf="contacts.length == 0 && hasContactsLoaded">
                     <mat-icon>person_add</mat-icon>Add Contacts
                 </button>
 
@@ -65,7 +72,8 @@
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px"
                             [src]="request.userFrom.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }} ({{request.userFrom.email}})</div>
+                        <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }}
+                            ({{request.userFrom.email}})</div>
                     </div>
                     <div class="actions">
                         <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
@@ -90,7 +98,8 @@
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px"
                             [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName }} ({{archivedRequest.userFrom.email}})</div>
+                        <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName
+                            }} ({{archivedRequest.userFrom.email}})</div>
                     </div>
                     <div class="actions">
                         {{ getRequestStatus(archivedRequest.requestStatus) }}

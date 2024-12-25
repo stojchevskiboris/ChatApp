@@ -47,14 +47,24 @@ export class ContactsComponent implements OnInit {
   }
 
   getContacts() {
+    var setFlag: boolean = true;
+    setTimeout(() => {
+      if (setFlag) {
+        this.hasContactsLoaded = false;
+      }
+    }, 200);
     this.userService.getContacts().subscribe({
       next: (model: UserViewModel[]) => {
-        this.contacts = model
+        setFlag = false;
+        this.contacts = model;
+        this.hasContactsLoaded = true;
       },
       error: (err: any) => {
-        console.log(err);
+        setFlag = false;
+        this.hasContactsLoaded = true;
       },
       complete: () => {
+        setFlag = false;
         this.hasContactsLoaded = true;
       }
     })
@@ -63,7 +73,7 @@ export class ContactsComponent implements OnInit {
   getPendingRequests() {
     this.requestService.getPendingRequests().subscribe({
       next: (model: RequestDetailsModel[]) => {
-        this.requests = model
+        this.requests = model;
       },
       error: (err: any) => {
         console.log(err);
@@ -74,24 +84,28 @@ export class ContactsComponent implements OnInit {
   getArchivedRequests() {
     this.requestService.getArchivedRequests().subscribe({
       next: (model: RequestDetailsModel[]) => {
-        this.archivedRequests = model
+        this.archivedRequests = model;
       },
       error: (err: any) => {
         this.toastr.warning('An unexpected error has occurred');
+      },
+      complete: () => {
       }
     })
   }
 
   getRequestsCount() {
     this.requestService.getRequestsCount().subscribe({
-          next: (count: number) => {
-            this.requestsCount = count
-            this.hasRequests = count>0;
-          },
-          error: (err: any) => {
-            console.log(err);
-          }
-        })
+      next: (count: number) => {
+        this.requestsCount = count
+        this.hasRequests = count > 0;
+      },
+      error: (err: any) => {
+        console.log(err);
+      },
+      complete: () => {
+      }
+    })
   }
 
   addContacts() {
@@ -106,14 +120,14 @@ export class ContactsComponent implements OnInit {
 
   removeContact(contact: UserViewModel): void {
     const dialogRef = this.dialog.open(RemoveContactDialogComponent, {
-      data:{
+      data: {
         contact
       },
       width: '50%',
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      if(!!result){
+      if (!!result) {
         this.loading = true;
         this.userService.removeContact(contact.id).subscribe({
           next: (response: any) => {

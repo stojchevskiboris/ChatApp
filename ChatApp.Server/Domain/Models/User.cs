@@ -27,6 +27,8 @@ namespace ChatApp.Server.Domain.Models
 
         public string Phone { get; set; }
 
+        // ToDo: Da se prosiri so bool Gender, 0=Female, 1=Male, add migration update db
+
         public Media? ProfilePicture { get; set; }
 
         public IList<UserContact> Contacts { get; set; } = new List<UserContact>();
