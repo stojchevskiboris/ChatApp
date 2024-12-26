@@ -6,6 +6,7 @@ export class UserViewModel {
     // password: string = '';
     dateOfBirth: string = '';
     phone: string = '';
+    gender: number;
     profilePicture: string = '';
     contactsId: number[] = [];
     createdAt: string = '';

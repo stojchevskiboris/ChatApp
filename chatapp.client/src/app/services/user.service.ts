@@ -11,6 +11,7 @@ export class UserService {
   private getUserEndpoint = '/Users/GetUserById';
   private getContactsEndpoint = '/Users/GetContacts';
   private removeContactEndpoint = '/Users/RemoveContact';
+  private updateUserEndpoint = '/Users/UpdateUser';
 
   constructor(private dataService: DataService) {}
 
@@ -37,6 +38,16 @@ export class UserService {
   removeContact(contactId: number): Observable<boolean> {
     return this.dataService
       .post<boolean>(this.removeContactEndpoint, { id: contactId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  
+  updateUser(model: UserViewModel): Observable<boolean> {
+    return this.dataService
+      .post<boolean>(this.updateUserEndpoint, model)
       .pipe(
         tap((response) => {
           return response;

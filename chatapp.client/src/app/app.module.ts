@@ -30,6 +30,7 @@ import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sig
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { RemoveContactDialogComponent } from './components/dialogs/remove-contact-dialog/remove-contact-dialog.component';
+import { DatePipe } from '@angular/common';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,6 +63,7 @@ import { RemoveContactDialogComponent } from './components/dialogs/remove-contac
     ToastrModule.forRoot(),
   ],
   providers: [
+    DatePipe,
     DataService,
     AuthService,
     UserService,

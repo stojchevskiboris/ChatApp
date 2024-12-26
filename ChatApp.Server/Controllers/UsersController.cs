@@ -86,7 +86,7 @@ namespace ChatApp.Server.Controllers
 
         [HttpPost("UpdateUser")]
         [Authorize]
-        public UserViewModel UpdateUser(UserViewModel model)
+        public UserViewModel UpdateUser(UpdateUserViewModel model)
         {
             return _userService.UpdateUser(model);
         }

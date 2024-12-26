@@ -54,7 +54,7 @@ namespace ChatApp.Server.Data
                 .HasOne(uc => uc.Contact)
                 .WithMany()
                 .HasForeignKey(uc => uc.ContactId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Requests relationships
             modelBuilder.Entity<Request>()

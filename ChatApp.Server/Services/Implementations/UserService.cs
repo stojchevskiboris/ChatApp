@@ -150,6 +150,7 @@ namespace ChatApp.Server.Services.Implementations
             user.LastName = model.LastName;
             user.Email = model.Email;
             user.Phone = model.Phone;
+            user.Gender = model.Gender;
             user.Password = PasswordHelper.HashPassword(model.Password);
             user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
             user.CreatedAt = DateTime.Now;
@@ -159,14 +160,16 @@ namespace ChatApp.Server.Services.Implementations
             return newUser.MapToViewModel();
         }
 
-        public UserViewModel UpdateUser(UserViewModel model)
+        public UserViewModel UpdateUser(UpdateUserViewModel model)
         {
-            var user = GetUserDomainById(model.Id);
+            var currentUserId = Context.GetCurrentUserId();
+            var user = GetUserDomainById(currentUserId);
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            user.Email = model.Email;
+            //user.Email = model.Email;
             user.Phone = model.Phone;
+            user.Gender = model.Gender;
             user.DateOfBirth = model.DateOfBirth;
             user.ModifiedAt = DateTime.Now;
 

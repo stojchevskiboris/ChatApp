@@ -13,7 +13,7 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel GetUserByEmail(string email);
         bool RemoveContact(int contactId);
         UserViewModel CreateUser(UserRegisterModel model);
-        UserViewModel UpdateUser(UserViewModel user);
+        UserViewModel UpdateUser(UpdateUserViewModel user);
         bool DeleteUser(int id);
         bool ChangePassword(PasswordViewModel user);
         #endregion

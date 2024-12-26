@@ -3,6 +3,9 @@ import { Router } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { UserViewModel } from '../../models/user-view-model';
+import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../../services/user.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-account-settings',
@@ -17,20 +20,30 @@ export class AccountSettingsComponent {
   passwordForm: FormGroup;
   minDate: Date = null;
   maxDate: Date = new Date();
+  gender: boolean = false;
+
+  public genders: any = [
+    { label: 'Male', value: 1, checked: false },
+    { label: 'Female', value: 0, checked: false }
+  ];
 
   constructor(
     private authService: AuthService,
+    private userService: UserService,
     private router: Router,
     private fb: FormBuilder,
+    private toastr: ToastrService,
+    private datePipe: DatePipe
   ) { }
 
-ngOnInit(): void {
+  ngOnInit(): void {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: [{ value: '', disabled: true }],
       dateOfBirth: ['', Validators.required],
-      gender: ['', Validators.required], // Add gender control
+      phone: [''],
+      gender: [1, Validators.required],
     });
 
     this.passwordForm = this.fb.group({
@@ -49,17 +62,25 @@ ngOnInit(): void {
         (response: UserViewModel) => {
           if (response) {
             this.userForm.patchValue(response);
+
+            this.setGenderChecks(this.getBoolean(response.gender));
           }
           this.loading = false;
         },
         (error) => {
           console.error('Error loading user data:', error);
           this.loading = false;
+          this.toastr.warning('An unexpected error has occurred');
         },
         () => {
           this.loading = false;
         }
       );
+  }
+
+  private setGenderChecks(check: boolean) {
+    this.genders[0].checked = check;
+    this.genders[1].checked = !check;
   }
 
   onFileSelected(event: Event): void {
@@ -79,6 +100,33 @@ ngOnInit(): void {
 
   updateUserDetails(): void {
     if (this.userForm.valid) {
+      const dateOfBirth = this.userForm.value.dateOfBirth;
+      this.userForm.controls['dateOfBirth'].setValue(this.datePipe.transform(dateOfBirth, 'yyyy-MM-dd'));
+
+      var genderBool = this.getBoolean(this.userForm.value.gender);
+      this.userForm.controls['gender'].setValue(genderBool);
+
+      this.userService.updateUser(this.userForm.value)
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.toastr.info('Succesfully updated account');
+              // this.setGenderChecks(genderBool);
+              this.loadUserData();
+            } else {
+              this.toastr.warning('An unexpected error has occurred');
+            }
+            this.loading = false;
+          },
+          error: () => {
+            this.toastr.warning('An unexpected error has occurred');
+            this.loading = false;
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
+
       console.log('Updating user details:', this.userForm.value);
     }
   }
@@ -93,5 +141,20 @@ ngOnInit(): void {
     const newPassword = group.get('newPassword')?.value;
     const confirmPassword = group.get('confirmPassword')?.value;
     return newPassword === confirmPassword ? null : { passwordMismatch: true };
+  }
+
+
+  getBoolean(value: any): boolean {
+    switch (value) {
+      case true:
+      case "true":
+      case 1:
+      case "1":
+      case "on":
+      case "yes":
+        return true;
+      default:
+        return false;
+    }
   }
 }

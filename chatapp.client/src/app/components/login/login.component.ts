@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { UserRegisterModel } from '../../models/user-register-model';
 import { UserLoginModel } from '../../models/user-login-model';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-login',
@@ -15,7 +16,8 @@ export class LoginComponent implements OnInit {
   constructor(
     private el: ElementRef,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private toastr: ToastrService
   ) { }
 
   loginModel = new UserLoginModel();
@@ -47,7 +49,8 @@ export class LoginComponent implements OnInit {
       this.registerModel.firstName.trim() === '' ||
       this.registerModel.lastName.trim() === '' ||
       this.registerModel.dateOfBirth.trim() === '' ||
-      this.registerModel.phone.trim() === ''
+      this.registerModel.phone.trim() === '' || 
+      this.registerModel.gender == undefined
     ) {
       this.errorMessage = 'All fields are required';
       return;
@@ -69,10 +72,9 @@ export class LoginComponent implements OnInit {
         this.login();
       },
       error: (err: HttpErrorResponse) => {
-        if (err.status === 400) {
-          this.errorMessage = 'Something went wrong, please try again later';
-          this.loading = false;
-        }
+        this.errorMessage = 'Something went wrong, please try again later';
+        this.loading = false;
+        this.toastr.warning('An unexpected error has occurred');
       },
       complete: () => {
         this.loading = false;

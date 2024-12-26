@@ -13,6 +13,8 @@
         //public string Password { get; set; }
 
         public DateTime DateOfBirth { get; set; }
+        
+        public bool Gender { get; set; }
 
         public string Phone { get; set; }
 

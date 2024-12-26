@@ -19,7 +19,7 @@
 
     <div class="row">
         <!-- Profile Picture Column -->
-        <div class="col-lg-4 d-flex flex-column align-items-center">
+        <div class="col-lg-4 d-flex flex-column align-items-center mb-5">
             <img [src]="profilePicture" alt="Profile Picture" class="rounded-circle mb-3"
                 style="width: 150px; height: 150px; object-fit: cover;">
             <button mat-raised-button color="primary" (click)="changePicture()">Change Picture</button>
@@ -29,7 +29,7 @@
         <!-- User Details Form Column -->
         <div class="col-lg-4">
             <form [formGroup]="userForm" (ngSubmit)="updateUserDetails()">
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>First Name</mat-label>
                     <input matInput formControlName="firstName" required>
                     <mat-error *ngIf="userForm.controls['firstName'].hasError('required')">
@@ -37,7 +37,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>Last Name</mat-label>
                     <input matInput formControlName="lastName" required>
                     <mat-error *ngIf="userForm.controls['lastName'].hasError('required')">
@@ -45,12 +45,12 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>Email</mat-label>
-                    <input matInput formControlName="email" readonly>
+                    <input readonly matInput formControlName="email">
                 </mat-form-field>
 
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>Date of Birth</mat-label>
                     <input matInput formControlName="dateOfBirth" [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
                         required />
@@ -62,22 +62,27 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-radio-group formControlName="gender" class="d-flex">
-                    <mat-radio-button value="male" class="me-3">Male</mat-radio-button>
-                    <mat-radio-button value="female">Female</mat-radio-button>
+                <mat-form-field class="w-100 mb-2">
+                    <mat-label>Phone</mat-label>
+                    <input matInput formControlName="phone">
+                </mat-form-field>
+
+                <mat-radio-group formControlName="gender" class="d-flex mb-2">
+                    <mat-radio-button *ngFor="let option of genders"
+                    [checked]="option.checked" value="{{option.value}}">{{option.label}}</mat-radio-button>
                 </mat-radio-group>
                 <mat-error *ngIf="userForm.controls['gender'].hasError('required')">
                     Gender is required
                 </mat-error>
-                <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">Update
-                    Details</button>
+                <button class="mb-5" mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+                    Update Details</button>
             </form>
         </div>
 
         <!-- Change Password Form Column -->
         <div class="col-lg-4">
             <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>Old Password</mat-label>
                     <input matInput formControlName="oldPassword" type="password" required>
                     <mat-error *ngIf="passwordForm.controls['oldPassword'].hasError('required')">
@@ -85,7 +90,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>New Password</mat-label>
                     <input matInput formControlName="newPassword" type="password" required>
                     <mat-error *ngIf="passwordForm.controls['newPassword'].hasError('required')">
@@ -93,7 +98,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field class="w-100">
+                <mat-form-field class="w-100 mb-2">
                     <mat-label>Confirm New Password</mat-label>
                     <input matInput formControlName="confirmPassword" type="password" required>
                     <mat-error *ngIf="passwordForm.controls['confirmPassword'].hasError('required')">

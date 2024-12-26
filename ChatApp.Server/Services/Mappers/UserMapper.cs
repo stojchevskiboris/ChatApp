@@ -17,6 +17,7 @@ namespace ChatApp.Server.Services.Mappers
                 LastName = user.LastName,
                 Email = user.Email,
                 Phone = user.Phone,
+                Gender = user.Gender,
                 DateOfBirth = user.DateOfBirth,
                 CreatedAt = user.CreatedAt,
                 ModifiedAt = user.ModifiedAt
