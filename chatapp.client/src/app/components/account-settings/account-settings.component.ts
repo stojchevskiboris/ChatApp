@@ -120,8 +120,32 @@ export class AccountSettingsComponent {
 
   changePassword(): void {
     if (this.passwordForm.valid) {
-      console.log('Changing password:', this.passwordForm.value);
+      this.userService.changePassword(this.passwordForm.value)
+        .subscribe({
+          next: (response: any) => {
+            if (response) {
+              this.toastr.info('Succesfully changed password');
+              this.passwordForm.reset();
+              // ToDo, Remove errors after reset
+            } else {
+              this.toastr.warning('An unexpected error has occurred');
+            }
+            this.loading = false;
+          },
+          error: () => {
+            this.toastr.warning('An unexpected error has occurred');
+            this.loading = false;
+          },
+          complete: () => {
+            this.loading = false;
+          }
+        });
     }
+  }
+
+  setClear(){
+    this.passwordForm.markAsUntouched();
+    this.passwordForm.markAsPristine();
   }
 
   private passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
@@ -130,4 +154,4 @@ export class AccountSettingsComponent {
     return newPassword === confirmPassword ? null : { passwordMismatch: true };
   }
 
-}
+} 

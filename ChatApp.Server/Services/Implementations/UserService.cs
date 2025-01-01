@@ -206,25 +206,32 @@ namespace ChatApp.Server.Services.Implementations
                 throw new CustomException("Invalid parameters");
             }
 
+            var currentUserId = Context.GetCurrentUserId();
+
+            var user = GetUserDomainById(currentUserId);
+
+            var hashedOldPassword = user.Password;
+            var hashedNewPassword = PasswordHelper.HashPassword(model.NewPassword);
+
+            if (PasswordHelper.HashPassword(model.OldPassword) != hashedOldPassword)
+            {
+                throw new CustomException("Old password is not correct!");
+            }
+
             if (model.NewPassword != model.ConfirmPassword)
             {
                 throw new CustomException("Passwords do not match!");
             }
 
-            if (!PasswordHelper.CheckPasswordStrength(model.NewPassword))
-            {
-                throw new CustomException("Passwords must contain at least 8 characters!");
-            }
-
-            var user = GetUserDomainById(model.UserId);
-
-            var hashedOldPassword = user.Password;
-            var hashedNewPassword = PasswordHelper.HashPassword(model.NewPassword);
-
             if (hashedOldPassword == hashedNewPassword)
             {
                 throw new CustomException("New password cannot be same as old password!");
             }
+
+            //if (!PasswordHelper.CheckPasswordStrength(model.NewPassword))
+            //{
+            //    throw new CustomException("Passwords must contain at least 8 characters!");
+            //}
 
             user.Password = hashedNewPassword;
             _userRepository.Update(user);

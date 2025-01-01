@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DataService } from './data.service';
 import { UserViewModel } from '../models/user-view-model';
+import { ChangePasswordModel } from '../models/user-view-model copy';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ export class UserService {
   private getContactsEndpoint = '/Users/GetContacts';
   private removeContactEndpoint = '/Users/RemoveContact';
   private updateUserEndpoint = '/Users/UpdateUser';
+  private changePasswordEndpoint = '/Users/ChangePassword';
 
   constructor(private dataService: DataService) {}
 
@@ -48,6 +50,16 @@ export class UserService {
   updateUser(model: UserViewModel): Observable<boolean> {
     return this.dataService
       .post<boolean>(this.updateUserEndpoint, model)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  
+  changePassword(model: ChangePasswordModel): Observable<boolean> {
+    return this.dataService
+      .post<boolean>(this.changePasswordEndpoint, model)
       .pipe(
         tap((response) => {
           return response;

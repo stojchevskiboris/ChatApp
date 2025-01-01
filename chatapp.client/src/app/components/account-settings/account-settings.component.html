@@ -52,8 +52,8 @@
 
                 <mat-form-field class="w-100 mb-2">
                     <mat-label>Date of Birth</mat-label>
-                    <input matInput formControlName="dateOfBirth" [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
-                        required />
+                    <input matInput formControlName="dateOfBirth" [min]="minDate" [max]="maxDate"
+                        [matDatepicker]="picker" required />
                     <mat-hint>MM/DD/YYYY</mat-hint>
                     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -111,7 +111,9 @@
 
                 <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">Change
                     Password</button>
+
             </form>
+            <button mat-raised-button color="primary" (click)="setClear()">Clear</button>
         </div>
     </div>
 </div>
