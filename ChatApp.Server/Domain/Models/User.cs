@@ -27,7 +27,7 @@ namespace ChatApp.Server.Domain.Models
 
         public string Phone { get; set; }
 
-        public bool Gender {  get; set; }
+        public int Gender {  get; set; }
 
         public Media? ProfilePicture { get; set; }
 

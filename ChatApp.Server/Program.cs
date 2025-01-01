@@ -10,7 +10,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
-AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb2");
+AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb");
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(AppParameters.ConnectionString));
 
@@ -39,7 +39,7 @@ builder.Host.UseSerilog((context, configuration) =>
     configuration.ReadFrom.Configuration(context.Configuration)
     .Enrich.FromLogContext() // Enrich logs with additional context data
         .WriteTo.Console() // Log to the console
-        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));;
+        .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day));
 
 // --- Swagger Configuration ---
 builder.Services.AddEndpointsApiExplorer();

@@ -68,8 +68,8 @@
                 </mat-form-field>
 
                 <mat-radio-group formControlName="gender" class="d-flex mb-2">
-                    <mat-radio-button *ngFor="let option of genders"
-                    [checked]="option.checked" value="{{option.value}}">{{option.label}}</mat-radio-button>
+                    <mat-radio-button value="0">Male</mat-radio-button>
+                    <mat-radio-button value="1">Female</mat-radio-button>
                 </mat-radio-group>
                 <mat-error *ngIf="userForm.controls['gender'].hasError('required')">
                     Gender is required

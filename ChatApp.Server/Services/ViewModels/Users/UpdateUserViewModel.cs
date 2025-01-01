@@ -8,7 +8,7 @@
 
         public DateTime DateOfBirth { get; set; }
         
-        public bool Gender { get; set; }
+        public int Gender { get; set; }
 
         public string Phone { get; set; }
     }

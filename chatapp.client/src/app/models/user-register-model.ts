@@ -6,5 +6,5 @@ export class UserRegisterModel {
     confirmPassword: string = '';
     dateOfBirth: string = '';
     phone: string = '';
-    gender: boolean;
+    gender: number;
 }

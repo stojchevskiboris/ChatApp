@@ -10,7 +10,7 @@
 
         public string Password { get; set; }
 
-        public bool Gender {  get; set; }
+        public int Gender {  get; set; }
 
         public string ConfirmPassword { get; set; }
 

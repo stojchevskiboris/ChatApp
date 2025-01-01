@@ -20,12 +20,7 @@ export class AccountSettingsComponent {
   passwordForm: FormGroup;
   minDate: Date = null;
   maxDate: Date = new Date();
-  gender: boolean = false;
-
-  public genders: any = [
-    { label: 'Male', value: 1, checked: false },
-    { label: 'Female', value: 0, checked: false }
-  ];
+  gender: number;
 
   constructor(
     private authService: AuthService,
@@ -43,7 +38,7 @@ export class AccountSettingsComponent {
       email: [{ value: '', disabled: true }],
       dateOfBirth: ['', Validators.required],
       phone: [''],
-      gender: [1, Validators.required],
+      gender: [0, Validators.required],
     });
 
     this.passwordForm = this.fb.group({
@@ -61,9 +56,10 @@ export class AccountSettingsComponent {
       .subscribe(
         (response: UserViewModel) => {
           if (response) {
-            this.userForm.patchValue(response);
-
-            this.setGenderChecks(this.getBoolean(response.gender));
+            this.userForm.patchValue({
+              ...response,
+              gender: response.gender.toString()
+            });
           }
           this.loading = false;
         },
@@ -76,11 +72,6 @@ export class AccountSettingsComponent {
           this.loading = false;
         }
       );
-  }
-
-  private setGenderChecks(check: boolean) {
-    this.genders[0].checked = check;
-    this.genders[1].checked = !check;
   }
 
   onFileSelected(event: Event): void {
@@ -103,15 +94,11 @@ export class AccountSettingsComponent {
       const dateOfBirth = this.userForm.value.dateOfBirth;
       this.userForm.controls['dateOfBirth'].setValue(this.datePipe.transform(dateOfBirth, 'yyyy-MM-dd'));
 
-      var genderBool = this.getBoolean(this.userForm.value.gender);
-      this.userForm.controls['gender'].setValue(genderBool);
-
       this.userService.updateUser(this.userForm.value)
         .subscribe({
           next: (response: any) => {
             if (response) {
               this.toastr.info('Succesfully updated account');
-              // this.setGenderChecks(genderBool);
               this.loadUserData();
             } else {
               this.toastr.warning('An unexpected error has occurred');
@@ -143,18 +130,4 @@ export class AccountSettingsComponent {
     return newPassword === confirmPassword ? null : { passwordMismatch: true };
   }
 
-
-  getBoolean(value: any): boolean {
-    switch (value) {
-      case true:
-      case "true":
-      case 1:
-      case "1":
-      case "on":
-      case "yes":
-        return true;
-      default:
-        return false;
-    }
-  }
 }
