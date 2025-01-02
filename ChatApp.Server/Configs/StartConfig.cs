@@ -4,6 +4,8 @@ using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Validators;
 using FluentValidation;
+using Google.Cloud.Firestore;
+using Google.Cloud.Storage.V1;
 using Microsoft.OpenApi.Models;
 
 namespace ChatApp.Server.Configs
@@ -30,6 +32,8 @@ namespace ChatApp.Server.Configs
 
             services.AddHttpClient<IGiphyService, GiphyService>();
             services.AddHttpContextAccessor();
+
+            services.AddSingleton<IFirebaseStorageService>(s => new FirebaseStorageService(StorageClient.Create()));
         }
 
         public static void ConfigureValidators(this IServiceCollection services)

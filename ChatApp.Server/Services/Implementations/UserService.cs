@@ -20,12 +20,14 @@ namespace ChatApp.Server.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IRequestRepository _requestRepository;
         private readonly AppSettings _appSettings;
+        private readonly IFirebaseStorageService _firebaseStorageService;
 
-        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IOptions<AppSettings> appSettings)
+        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IOptions<AppSettings> appSettings, IFirebaseStorageService firebaseStorageService)
         {
             _userRepository = userRepository;
             _requestRepository = requestRepository;
             _appSettings = appSettings.Value;
+            _firebaseStorageService = firebaseStorageService;
         }
 
         public List<UserViewModel> GetAllUsers()
@@ -46,6 +48,8 @@ namespace ChatApp.Server.Services.Implementations
         {
             var currentUserId = Context.GetCurrentUserId();
             var user = GetUserDomainById(currentUserId);
+
+            _firebaseStorageService.ListAllFilesAsync();
 
             return user.MapToViewModel();
         }
