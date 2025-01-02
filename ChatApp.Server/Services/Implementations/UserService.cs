@@ -7,6 +7,7 @@ using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels.Users;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -19,15 +20,16 @@ namespace ChatApp.Server.Services.Implementations
     {
         private readonly IUserRepository _userRepository;
         private readonly IRequestRepository _requestRepository;
-        private readonly AppSettings _appSettings;
-        private readonly IFirebaseStorageService _firebaseStorageService;
+        private readonly IMediaRepository _mediaRepository;
 
-        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IOptions<AppSettings> appSettings, IFirebaseStorageService firebaseStorageService)
+        private readonly AppSettings _appSettings;
+
+        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IMediaRepository mediaRepository, IOptions<AppSettings> appSettings)
         {
             _userRepository = userRepository;
             _requestRepository = requestRepository;
+            _mediaRepository = mediaRepository;
             _appSettings = appSettings.Value;
-            _firebaseStorageService = firebaseStorageService;
         }
 
         public List<UserViewModel> GetAllUsers()
@@ -48,8 +50,6 @@ namespace ChatApp.Server.Services.Implementations
         {
             var currentUserId = Context.GetCurrentUserId();
             var user = GetUserDomainById(currentUserId);
-
-            _firebaseStorageService.ListAllFilesAsync();
 
             return user.MapToViewModel();
         }
@@ -241,6 +241,34 @@ namespace ChatApp.Server.Services.Implementations
             _userRepository.Update(user);
 
             return true;
+        }
+
+        public bool UpdateProfilePicture(int userId, string imageUrl)
+        {
+            try
+            {
+                var user = GetUserDomainById(userId);
+
+                Media media = new Media()
+                {
+                    Url = imageUrl,
+                    FileType = "",
+                    FileSize = 10,
+                    CreatedAt = DateTime.Now,
+                    ModifiedAt = DateTime.Now,
+                };
+
+                _mediaRepository.Create(media);
+
+                user.ProfilePicture = media;
+
+                _userRepository.Update(user);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)

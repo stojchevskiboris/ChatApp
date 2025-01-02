@@ -22,7 +22,7 @@
         <div class="col-lg-4 d-flex flex-column align-items-center mb-5">
             <img [src]="profilePicture" alt="Profile Picture" class="rounded-circle mb-3"
                 style="width: 150px; height: 150px; object-fit: cover;">
-            <button mat-raised-button color="primary" (click)="changePicture()">Change Picture</button>
+            <button mat-raised-button color="primary" (click)="fileInput.click()">Change Picture</button>
             <input type="file" hidden #fileInput (change)="onFileSelected($event)">
         </div>
 

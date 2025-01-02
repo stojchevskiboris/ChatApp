@@ -74,17 +74,31 @@ export class AccountSettingsComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-      const file = input.files[0];
-      this.changePicture(file);
+        const file = input.files[0];
+        this.changePicture(file);
     }
-  }
+}
 
-  changePicture(file?: File): void {
-    if (file) {
-      // Logic to upload and update the profile picture
-      console.log('Picture uploaded:', file);
-    }
-  }
+changePicture(file: File): void {
+    this.loading = true;
+    const formData = new FormData();
+    formData.append('file', file);
+
+    this.userService.uploadProfilePicture(formData).subscribe({
+        next: (url: any) => {
+            this.profilePicture = url; // Update the displayed profile picture
+            this.toastr.success('Profile picture updated successfully');
+            // TODO, CATCH RESPONSE
+        },
+        error: () => {
+            this.toastr.error('Failed to upload profile picture');
+            this.loading = false;
+        },
+        complete: () => {
+            this.loading = false;
+        },
+    });
+}
 
   updateUserDetails(): void {
     if (this.userForm.valid) {

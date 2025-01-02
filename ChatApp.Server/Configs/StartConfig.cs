@@ -19,6 +19,7 @@ namespace ChatApp.Server.Configs
             services.AddScoped<IGroupRepository, GroupRepository>();
             services.AddScoped<IGroupUserRepository, GroupUserRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
+            services.AddScoped<IMediaRepository, MediaRepository>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)

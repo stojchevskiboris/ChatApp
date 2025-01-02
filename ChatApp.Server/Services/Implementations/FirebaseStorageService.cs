@@ -24,15 +24,6 @@ namespace ChatApp.Server.Services.Implementations
             return photoUri;
         }
 
-        public async void GetAllPhotoUris()
-        {
-            var a = await _storageClient.GetBucketAsync(BucketName);
-            var b = _storageClient.ListBuckets(ProjectName);
-            var b2= b.ToList();
-
-            var c = 2;
-        }
-
         public async Task<List<Uri>> ListAllFilesAsync()
         {
             var fileUris = new List<Uri>();
@@ -48,6 +39,26 @@ namespace ChatApp.Server.Services.Implementations
             }
 
             return fileUris;
+        }
+
+        public async Task<string> UploadFileAsync(string filePath, IFormFile file)
+        {
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            var storageObject = await _storageClient.UploadObjectAsync(
+                BucketName,
+                filePath,
+                file.ContentType,
+                stream);
+
+            return $"https://firebasestorage.googleapis.com/v0/b/{BucketName}/o/{Uri.EscapeDataString(filePath)}?alt=media";
+
+        }
+
+        public void GetAllPhotoUris()
+        {
+            throw new NotImplementedException();
         }
     }
 }

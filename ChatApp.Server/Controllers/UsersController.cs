@@ -1,9 +1,11 @@
 ﻿using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace ChatApp.Server.Controllers
 {
@@ -12,12 +14,14 @@ namespace ChatApp.Server.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
+        private readonly IFirebaseStorageService _firebaseStorageService;
         private readonly ILogger<UsersController> _logger;
 
-        public UsersController(IUserService userService, ILogger<UsersController> logger)
+        public UsersController(IUserService userService, ILogger<UsersController> logger, IFirebaseStorageService firebaseStorageService)
         {
             _userService = userService;
             _logger = logger;
+            _firebaseStorageService = firebaseStorageService;
         }
 
         [HttpGet("GetAllUsers")]
@@ -89,6 +93,26 @@ namespace ChatApp.Server.Controllers
         public UserViewModel UpdateUser(UpdateUserViewModel model)
         {
             return _userService.UpdateUser(model);
+        }
+
+        [HttpPost("UploadProfilePicture")]
+        [Authorize]
+        public async Task<IActionResult> UploadProfilePicture([FromForm] IFormFile file)
+        {
+            if (file == null || file.Length == 0)
+                return BadRequest("No file uploaded");
+
+            var userId = Context.GetCurrentUserId();
+            var fileName = $"{userId}/avatars/{Guid.NewGuid()}_{file.FileName}";
+
+            var imageUrl = await _firebaseStorageService.UploadFileAsync(fileName, file);
+            if (string.IsNullOrEmpty(imageUrl))
+                return StatusCode(500, "Failed to upload profile picture");
+
+            // Optionally save the imageUrl to the database for the user
+            var result = _userService.UpdateProfilePicture(userId, imageUrl);
+
+            return Ok(imageUrl);
         }
 
         #region Authorization

@@ -15,6 +15,7 @@ export class UserService {
   private removeContactEndpoint = '/Users/RemoveContact';
   private updateUserEndpoint = '/Users/UpdateUser';
   private changePasswordEndpoint = '/Users/ChangePassword';
+  private uploadProfilePictureEndpoint = '/Users/UploadProfilePicture';
 
   constructor(private dataService: DataService) {}
 
@@ -71,6 +72,14 @@ export class UserService {
   changePassword(model: ChangePasswordModel): Observable<boolean> {
     return this.dataService
       .post<boolean>(this.changePasswordEndpoint, model)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  uploadProfilePicture(data: FormData): Observable<any> {
+    return this.dataService.post<any>(this.uploadProfilePictureEndpoint , data)
       .pipe(
         tap((response) => {
           return response;
