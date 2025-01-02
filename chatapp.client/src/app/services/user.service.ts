@@ -10,6 +10,7 @@ import { ChangePasswordModel } from '../models/user-view-model copy';
 })
 export class UserService {
   private getUserEndpoint = '/Users/GetUserById';
+  private getCurrentUserDetailsEndpoint = '/Users/GetCurrentUserDetails';
   private getContactsEndpoint = '/Users/GetContacts';
   private removeContactEndpoint = '/Users/RemoveContact';
   private updateUserEndpoint = '/Users/UpdateUser';
@@ -22,6 +23,16 @@ export class UserService {
       .post<UserViewModel>(this.getUserEndpoint, { id: userId })
       .pipe(
         tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getCurrentUserDetails(): Observable<UserViewModel>{
+    return this.dataService
+      .get<any>(this.getCurrentUserDetailsEndpoint)
+      .pipe(
+        tap((response: UserViewModel) => {
           return response;
         })
       );

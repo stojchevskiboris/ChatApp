@@ -1,11 +1,9 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { AuthService } from '../../services/auth.service';
+import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { UserViewModel } from '../../models/user-view-model';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
-import { DatePipe } from '@angular/common';
+import { UserViewModel } from '../../models/user-view-model';
 
 @Component({
   selector: 'app-account-settings',
@@ -18,14 +16,13 @@ export class AccountSettingsComponent {
   profilePicture: string = 'assets/img/default-avatar.png'; // Placeholder image path
   userForm: FormGroup;
   passwordForm: FormGroup;
-  minDate: Date = null;
-  maxDate: Date = new Date();
+  minDate: Date = new Date(new Date().setFullYear(1900));
+  maxDate: Date = new Date(new Date().setFullYear(new Date().getFullYear() - 10));
   gender: number;
+  passwordFormNotEmpty: boolean = true;
 
   constructor(
-    private authService: AuthService,
     private userService: UserService,
-    private router: Router,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private datePipe: DatePipe
@@ -52,7 +49,7 @@ export class AccountSettingsComponent {
 
   loadUserData(): void {
     this.loading = true;
-    this.authService.getCurrentUserDetails()
+    this.userService.getCurrentUserDetails()
       .subscribe(
         (response: UserViewModel) => {
           if (response) {
@@ -119,19 +116,14 @@ export class AccountSettingsComponent {
   }
 
   changePassword(): void {
-    if (this.passwordForm.valid) {
+    if (this.passwordFormHasData) {
       this.userService.changePassword(this.passwordForm.value)
         .subscribe({
           next: (response: any) => {
             if (response) {
               this.toastr.info('Succesfully changed password');
               this.passwordForm.reset();
-              Object.keys(this.passwordForm.controls).forEach((controlName) => {
-                const control = this.passwordForm.controls[controlName];
-                if (control.errors) {
-                  control.setErrors(null);
-                }
-              });
+              this.setClear()
             } else {
               this.toastr.warning('An unexpected error has occurred');
             }
@@ -148,9 +140,38 @@ export class AccountSettingsComponent {
     }
   }
 
-  setClear(){
-    this.passwordForm.markAsUntouched();
-    this.passwordForm.markAsPristine();
+  onPwFormChange() {
+    var isFormClear = this.passwordFormHasData();
+    
+
+    if (isFormClear) {
+      this.passwordFormNotEmpty = false;
+      this.setClear();
+    } else {
+      this.passwordFormNotEmpty = true;
+      this.passwordForm.setValidators(this.passwordMatchValidator);
+    }
+  }
+
+  setClear() {
+    Object.keys(this.passwordForm.controls).forEach((controlName) => {
+      const control = this.passwordForm.controls[controlName];
+      if (control.errors) {
+        control.setErrors(null);
+      }
+    });
+  }
+
+  passwordFormHasData(): boolean {
+    var isFormClear = true;
+    Object.keys(this.passwordForm.controls).forEach((controlName) => {
+      const control = this.passwordForm.controls[controlName];
+      if (control.value != null && control.value != undefined && control.value != "") {
+        isFormClear = false;
+      }
+    });
+
+    return !isFormClear;
   }
 
   private passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {
