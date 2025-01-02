@@ -141,9 +141,8 @@ export class AccountSettingsComponent {
   }
 
   onPwFormChange() {
-    var isFormClear = this.passwordFormHasData();
+    var isFormClear = !this.passwordFormHasData();
     
-
     if (isFormClear) {
       this.passwordFormNotEmpty = false;
       this.setClear();

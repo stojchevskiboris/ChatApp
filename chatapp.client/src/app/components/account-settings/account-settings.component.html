@@ -105,7 +105,7 @@
                 <mat-error *ngIf="passwordForm.hasError('passwordMismatch')">
                     Passwords do not match
                 </mat-error>
-                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid && passwordFormNotEmpty">
+                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid || !passwordFormNotEmpty">
                     Change Password
                 </button>
             </form>
