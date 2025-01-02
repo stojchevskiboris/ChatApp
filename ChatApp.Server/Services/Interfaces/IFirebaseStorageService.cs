@@ -4,6 +4,6 @@
     {
         public void GetAllPhotoUris();
         public Task<List<Uri>> ListAllFilesAsync();
-        public Task<string> UploadFileAsync(string filePath, IFormFile file);
+        public Task<string> UploadFileAsync(IFormFile file);
     }
 }

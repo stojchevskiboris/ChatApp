@@ -10,7 +10,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
-AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb2");
+AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb");
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(AppParameters.ConnectionString));
 
@@ -45,9 +45,8 @@ builder.Host.UseSerilog((context, configuration) =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-var credentialsPath = Path.Combine(AppContext.BaseDirectory,
-    "Configs", "Firebase", "chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json");
-
+// --- Firebase Configuration ---
+var credentialsPath = Path.Combine(AppContext.BaseDirectory, "Configs", "Firebase", "chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json");
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
 
 var app = builder.Build();

@@ -16,6 +16,7 @@ export class UserService {
   private updateUserEndpoint = '/Users/UpdateUser';
   private changePasswordEndpoint = '/Users/ChangePassword';
   private uploadProfilePictureEndpoint = '/Users/UploadProfilePicture';
+  private removeProfilePictureEndpoint = '/Users/RemoveProfilePicture';
 
   constructor(private dataService: DataService) {}
 
@@ -64,6 +65,7 @@ export class UserService {
       .post<boolean>(this.updateUserEndpoint, model)
       .pipe(
         tap((response) => {
+          localStorage.setItem('currentUser', JSON.stringify(model));
           return response;
         })
       );
@@ -78,8 +80,20 @@ export class UserService {
         })
       );
   }
+
   uploadProfilePicture(data: FormData): Observable<any> {
-    return this.dataService.post<any>(this.uploadProfilePictureEndpoint , data)
+    return this.dataService
+      .post<any>(this.uploadProfilePictureEndpoint, data)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  removeProfilePicture(): Observable<any> {
+    return this.dataService
+      .post<any>(this.removeProfilePictureEndpoint, {})
       .pipe(
         tap((response) => {
           return response;

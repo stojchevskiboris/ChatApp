@@ -23,7 +23,8 @@
             <img [src]="profilePicture" alt="Profile Picture" class="rounded-circle mb-3"
                 style="width: 150px; height: 150px; object-fit: cover;">
             <button mat-raised-button color="primary" (click)="fileInput.click()">Change Picture</button>
-            <input type="file" hidden #fileInput (change)="onFileSelected($event)">
+            <input type="file" hidden #fileInput accept="image/*" (change)="onFileSelected($event)">
+            <button *ngIf="hasProfilePicture" class="mt-2" mat-raised-button color="warn" (click)="removePicture()">Remove Picture</button>
         </div>
 
         <!-- User Details Form Column -->

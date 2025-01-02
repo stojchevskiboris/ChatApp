@@ -243,17 +243,18 @@ namespace ChatApp.Server.Services.Implementations
             return true;
         }
 
-        public bool UpdateProfilePicture(int userId, string imageUrl)
+        public bool UpdateProfilePicture(string imageUrl, long fileLength, string contentType)
         {
             try
             {
-                var user = GetUserDomainById(userId);
+                var currentUserId = Context.GetCurrentUserId();
+                var user = GetUserDomainById(currentUserId);
 
                 Media media = new Media()
                 {
                     Url = imageUrl,
-                    FileType = "",
-                    FileSize = 10,
+                    FileType = contentType,
+                    FileSize = (int)fileLength,
                     CreatedAt = DateTime.Now,
                     ModifiedAt = DateTime.Now,
                 };
@@ -261,6 +262,26 @@ namespace ChatApp.Server.Services.Implementations
                 _mediaRepository.Create(media);
 
                 user.ProfilePicture = media;
+
+                _userRepository.Update(user);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool RemoveCurrentProfilePicture()
+        {
+            try
+            {
+                var currentUserId = Context.GetCurrentUserId();
+                var user = GetUserDomainById(currentUserId);
+
+                var mediaToRemove = user.ProfilePicture;
+
+                user.ProfilePicture = null;
 
                 _userRepository.Update(user);
                 return true;

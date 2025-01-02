@@ -102,17 +102,34 @@ namespace ChatApp.Server.Controllers
             if (file == null || file.Length == 0)
                 return BadRequest("No file uploaded");
 
-            var userId = Context.GetCurrentUserId();
-            var fileName = $"{userId}/avatars/{Guid.NewGuid()}_{file.FileName}";
-
-            var imageUrl = await _firebaseStorageService.UploadFileAsync(fileName, file);
+            var imageUrl = await _firebaseStorageService.UploadFileAsync(file);
             if (string.IsNullOrEmpty(imageUrl))
+            {
                 return StatusCode(500, "Failed to upload profile picture");
+            }
 
-            // Optionally save the imageUrl to the database for the user
-            var result = _userService.UpdateProfilePicture(userId, imageUrl);
+            var isImageSaved = _userService.UpdateProfilePicture(imageUrl, file.Length, file.ContentType);
+            if (isImageSaved)
+            {
+                return Ok(new { url = imageUrl });
+            }
 
-            return Ok(imageUrl);
+            return StatusCode(500, "Image uploaded, but failed to save image url to database");
+        }
+
+        [HttpPost("RemoveProfilePicture")]
+        [Authorize]
+        public async Task<IActionResult> RemoveProfilePicture()
+        {
+            // ToDo firebase remove current user profile picture
+
+            var isImageRemoved = _userService.RemoveCurrentProfilePicture();
+            if (isImageRemoved)
+            {
+                return Ok();
+            }
+
+            return StatusCode(500);
         }
 
         #region Authorization

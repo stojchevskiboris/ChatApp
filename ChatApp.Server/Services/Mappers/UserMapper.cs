@@ -28,6 +28,11 @@ namespace ChatApp.Server.Services.Mappers
                 model.ContactsId = user.Contacts.Select(x => x.ContactId).ToList();
             }
 
+            if (user.ProfilePicture != null)
+            {
+                model.ProfilePicture = user.ProfilePicture.Url;
+            }
+
             return model;
         }
 

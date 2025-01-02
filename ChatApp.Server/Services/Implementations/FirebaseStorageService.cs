@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Services.Interfaces;
+﻿using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.Interfaces;
 using Google.Cloud.Firestore;
 using Google.Cloud.Storage.V1;
 
@@ -41,18 +42,21 @@ namespace ChatApp.Server.Services.Implementations
             return fileUris;
         }
 
-        public async Task<string> UploadFileAsync(string filePath, IFormFile file)
+        public async Task<string> UploadFileAsync(IFormFile file)
         {
+            var userId = Context.GetCurrentUserId();
+            var fileName = $"avatars/{userId}/{Guid.NewGuid()}_{file.FileName}";
+
             using var stream = new MemoryStream();
             await file.CopyToAsync(stream);
 
             var storageObject = await _storageClient.UploadObjectAsync(
                 BucketName,
-                filePath,
+                fileName,
                 file.ContentType,
                 stream);
 
-            return $"https://firebasestorage.googleapis.com/v0/b/{BucketName}/o/{Uri.EscapeDataString(filePath)}?alt=media";
+            return $"https://firebasestorage.googleapis.com/v0/b/{BucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
 
         }
 

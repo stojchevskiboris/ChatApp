@@ -14,6 +14,7 @@ export class AccountSettingsComponent {
 
   loading: boolean = false;
   profilePicture: string = 'assets/img/default-avatar.png'; // Placeholder image path
+  hasProfilePicture: boolean = false;
   userForm: FormGroup;
   passwordForm: FormGroup;
   minDate: Date = new Date(new Date().setFullYear(1900));
@@ -57,6 +58,10 @@ export class AccountSettingsComponent {
               ...response,
               gender: response.gender.toString()
             });
+            if (response.profilePicture) {
+              this.profilePicture = response.profilePicture;
+              this.hasProfilePicture = true;
+            }
           }
           this.loading = false;
         },
@@ -74,31 +79,53 @@ export class AccountSettingsComponent {
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;
     if (input.files?.length) {
-        const file = input.files[0];
-        this.changePicture(file);
+      const file = input.files[0];
+      this.changePicture(file);
     }
-}
+  }
 
-changePicture(file: File): void {
+  changePicture(file: File): void {
     this.loading = true;
     const formData = new FormData();
     formData.append('file', file);
 
     this.userService.uploadProfilePicture(formData).subscribe({
-        next: (url: any) => {
-            this.profilePicture = url; // Update the displayed profile picture
-            this.toastr.success('Profile picture updated successfully');
-            // TODO, CATCH RESPONSE
-        },
-        error: () => {
-            this.toastr.error('Failed to upload profile picture');
-            this.loading = false;
-        },
-        complete: () => {
-            this.loading = false;
-        },
+      next: (response) => {
+        if (response.url) {
+        this.hasProfilePicture = true;
+          this.profilePicture = response.url;
+          this.toastr.info('Profile picture updated successfully');
+        }
+      },
+      error: (err) => {
+        console.log(err)
+        this.toastr.error('Failed to upload profile picture');
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      },
     });
-}
+  }
+
+  removePicture(): void {
+    this.loading = true;
+    this.userService.removeProfilePicture().subscribe({
+      next: () => {
+        this.profilePicture = 'assets/img/default-avatar.png'; // Set to the default placeholder
+        this.hasProfilePicture = false;
+        this.toastr.info('Profile picture removed successfully');
+      },
+      error: (err) => {
+        this.loading = false;
+        console.error('Error removing profile picture:', err);
+        this.toastr.error('Failed to remove profile picture');
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    });
+  }
 
   updateUserDetails(): void {
     if (this.userForm.valid) {
@@ -156,7 +183,7 @@ changePicture(file: File): void {
 
   onPwFormChange() {
     var isFormClear = !this.passwordFormHasData();
-    
+
     if (isFormClear) {
       this.passwordFormNotEmpty = false;
       this.setClear();

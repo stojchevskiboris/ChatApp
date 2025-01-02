@@ -74,6 +74,10 @@ namespace ChatApp.Server.Data
                 .Navigation(u => u.Contacts)
                 .AutoInclude();
 
+            modelBuilder.Entity<User>()
+                .Navigation(u => u.ProfilePicture)
+                .AutoInclude();
+
             modelBuilder.Entity<GroupUser>()
                 .Navigation(gu => gu.User)
                 .AutoInclude();
