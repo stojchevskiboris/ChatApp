@@ -2,7 +2,7 @@
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<div class="container-fluid fadeInAnimation ">
+<div class="container-fluid fadeInAnimation account-settings">
     <div class="row mb-5">
         <div class="col-2 d-flex justify-content-start align-items-center">
             <button mat-mini-fab color="secondary" routerLink="/home">
@@ -109,11 +109,10 @@
                     </mat-error>
                 </mat-form-field>
 
-                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">Change
-                    Password</button>
-
+                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid">
+                    Change Password
+                </button>
             </form>
-            <button mat-raised-button color="primary" (click)="setClear()">Clear</button>
         </div>
     </div>
 </div>

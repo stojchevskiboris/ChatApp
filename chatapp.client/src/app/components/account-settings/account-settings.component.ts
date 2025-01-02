@@ -126,7 +126,12 @@ export class AccountSettingsComponent {
             if (response) {
               this.toastr.info('Succesfully changed password');
               this.passwordForm.reset();
-              // ToDo, Remove errors after reset
+              Object.keys(this.passwordForm.controls).forEach((controlName) => {
+                const control = this.passwordForm.controls[controlName];
+                if (control.errors) {
+                  control.setErrors(null);
+                }
+              });
             } else {
               this.toastr.warning('An unexpected error has occurred');
             }
