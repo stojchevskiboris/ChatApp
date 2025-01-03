@@ -346,3 +346,15 @@ body {
   background-image: url('https://material.angular.io/assets/img/examples/shiba1.jpg');
   background-size: cover;
 }
+
+.profile-pic-home{
+  width: 50px; 
+  height: 50px; 
+  object-fit: cover;
+}
+
+.profile-pic-settings{
+  width: 150px; 
+  height: 150px; 
+  object-fit: cover;
+}

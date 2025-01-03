@@ -20,8 +20,7 @@
     <div class="row">
         <!-- Profile Picture Column -->
         <div class="col-lg-4 d-flex flex-column align-items-center mb-5">
-            <img [src]="profilePicture" alt="Profile Picture" class="rounded-circle mb-3"
-                style="width: 150px; height: 150px; object-fit: cover;">
+            <img [src]="profilePicture" alt="Profile Picture" class="rounded-circle mb-3 profile-pic-settings">
             <button mat-raised-button color="primary" (click)="fileInput.click()">Change Picture</button>
             <input type="file" hidden #fileInput accept="image/*" (change)="onFileSelected($event)">
             <button *ngIf="hasProfilePicture" class="mt-2" mat-raised-button color="warn" (click)="removePicture()">Remove Picture</button>
@@ -106,7 +105,7 @@
                 <mat-error *ngIf="passwordForm.hasError('passwordMismatch')">
                     Passwords do not match
                 </mat-error>
-                <button mat-raised-button color="primary" type="submit" [disabled]="passwordForm.invalid || !passwordFormNotEmpty">
+                <button mat-raised-button color="primary" type="submit" [disabled]="!passwordFormNotEmpty || passwordForm.invalid ">
                     Change Password
                 </button>
             </form>

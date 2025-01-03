@@ -92,7 +92,7 @@ export class AccountSettingsComponent {
     this.userService.uploadProfilePicture(formData).subscribe({
       next: (response) => {
         if (response.url) {
-        this.hasProfilePicture = true;
+          this.hasProfilePicture = true;
           this.profilePicture = response.url;
           this.toastr.info('Profile picture updated successfully');
         }
@@ -182,7 +182,7 @@ export class AccountSettingsComponent {
   }
 
   onPwFormChange() {
-    var isFormClear = !this.passwordFormHasData();
+    var isFormClear = this.isPasswordFormClear();
 
     if (isFormClear) {
       this.passwordFormNotEmpty = false;
@@ -212,6 +212,12 @@ export class AccountSettingsComponent {
     });
 
     return !isFormClear;
+  }
+
+  isPasswordFormClear(): boolean {
+    return this.passwordForm.get('oldPassword')?.value === ''
+      && this.passwordForm.get('newPassword')?.value === ''
+      && this.passwordForm.get('confirmPassword')?.value === '';
   }
 
   private passwordMatchValidator(group: FormGroup): { [key: string]: boolean } | null {

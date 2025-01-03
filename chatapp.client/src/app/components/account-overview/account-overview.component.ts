@@ -6,6 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { SignOutDialogComponent } from '../dialogs/sign-out-dialog/sign-out-dialog.component';
 import { RequestService } from '../../services/request.service';
+import { UserService } from '../../services/user.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-account-overview',
@@ -15,6 +17,8 @@ import { RequestService } from '../../services/request.service';
 export class AccountOverviewComponent {
   constructor(
     private authService: AuthService,
+    private userService: UserService,
+    private toastr: ToastrService,
     private requestService: RequestService,
     private router: Router
   ) { }
@@ -25,6 +29,8 @@ export class AccountOverviewComponent {
   dialog = inject(MatDialog);
   loading: boolean = false;
   hasRequests: boolean = false;
+  profilePicture: string = 'assets/img/default-avatar.png';
+  hasProfilePicture: boolean = false;
   requestsCount: number = 0;
 
   ngOnInit(): void {
@@ -36,7 +42,27 @@ export class AccountOverviewComponent {
     else {
       this.currentUser = JSON.parse(currentUserStr);
       this.userInitials = this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
-    }
+      this.userService.getCurrentUserDetails()
+      .subscribe(
+        (response: UserViewModel) => {
+          if (response) {
+            this.currentUser = response;
+            if (response.profilePicture) {
+              this.profilePicture = response.profilePicture;
+              this.hasProfilePicture = true;
+            }
+          }
+          this.loading = false;
+        },
+        (error) => {
+          console.error('Error loading user data:', error);
+          this.loading = false;
+          this.toastr.warning('An unexpected error has occurred');
+        },
+        () => {
+          this.loading = false;
+        }
+      );    }
 
     this.getRequestsCount();
   }
