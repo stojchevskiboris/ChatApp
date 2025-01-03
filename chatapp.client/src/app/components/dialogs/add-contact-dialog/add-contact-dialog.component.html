@@ -30,17 +30,36 @@
         <mat-list-item *ngFor="let user of searchResults">
           <div class="d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-              <img matListAvatar class="w-40px h-40px" [src]="user.profilePicture || 'img/default-avatar.png'" />
-              <div class="ms-2">{{ user.firstName }} {{ user.lastName }}</div>
+              <img matListAvatar class="w-40px h-40px user-profile-picture"
+                [src]="user.profilePicture || 'img/default-avatar.png'" />
+              <div class="ms-2 d-flex flex-column">
+                <span>{{ user.firstName }} {{ user.lastName }}</span>
+                <span *ngIf="user.hasRequestedBack" class="has-requested-back-text">Has requested to connect with you</span>
+              </div>
             </div>
-
-            <button mat-flat-button (click)="newRequest(user)" *ngIf="!user.isAdded">
-              Add
+            <div *ngIf="!user.hasRequestedBack">
+              <button mat-flat-button (click)="newRequest(user)" *ngIf="!user.isAdded">
+                Add
+              </button>
+              <button mat-stroked-button (click)="cancelRequest(user)" *ngIf="user.isAdded">
+                Requested
+              </button>
+            </div>
+            <div *ngIf="user.hasRequestedBack">
+              <button mat-stroked-button [matMenuTriggerFor]="menu">
+                Respond back
+              </button>
+            </div>
+            <mat-menu #menu="matMenu">
+              <button mat-menu-item (click)="acceptRequest(user.requestId)">
+                  <mat-icon>check</mat-icon>
+                  <span>Accept</span>
+              </button>
+              <button mat-menu-item (click)="rejectRequest(user.requestId)">
+                <mat-icon>clear</mat-icon>
+                <span>Reject</span>
             </button>
-            <button mat-stroked-button (click)="cancelRequest(user)" *ngIf="user.isAdded">
-              Requested
-            </button>
-
+          </mat-menu>
           </div>
         </mat-list-item>
       </mat-list>

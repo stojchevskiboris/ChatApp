@@ -358,3 +358,14 @@ body {
   height: 150px; 
   object-fit: cover;
 }
+
+.user-profile-picture{
+  border-radius: 50px;
+  object-fit: cover;
+}
+
+.has-requested-back-text{
+  line-height: 5px;
+  font-size: 10px;
+  color: gray;
+}

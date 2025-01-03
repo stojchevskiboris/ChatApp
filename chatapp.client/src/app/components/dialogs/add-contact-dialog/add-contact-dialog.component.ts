@@ -3,6 +3,7 @@ import { Component, OnInit } from '@angular/core';
 import { AddContactModel } from '../../../models/add-contact-model';
 import { AuthService } from '../../../services/auth.service';
 import { RequestService } from '../../../services/request.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-add-contact-dialog',
@@ -13,7 +14,8 @@ export class AddContactDialogComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private requestService: RequestService
+    private requestService: RequestService,
+    private toastr: ToastrService,
   ) { }
 
   query: string = '';
@@ -97,4 +99,62 @@ export class AddContactDialogComponent implements OnInit {
         }
       });
   }
+
+  acceptRequest(requestId: number): void {
+    if (requestId == 0) {
+      this.toastr.warning('An unexpected error has occurred');
+      return;
+    }
+
+    this.loading = true;
+    this.requestService.acceptRequest(requestId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.onSearch();
+            this.toastr.info('Request accepted');
+          } else {
+            this.toastr.warning('An unexpected error has occurred');
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.toastr.warning('An unexpected error has occurred');
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
+  }
+
+  
+  rejectRequest(requestId: number): void {
+    if (requestId == 0) {
+      this.toastr.warning('An unexpected error has occurred');
+      return;
+    }
+
+    this.loading = true;
+    this.requestService.rejectRequest(requestId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.onSearch();
+            this.toastr.info('Request rejected');
+          } else {
+            this.toastr.warning('An unexpected error has occurred');
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.toastr.warning('An unexpected error has occurred');
+          this.loading = false;
+        },
+        complete: () => {
+          this.loading = false;
+        }
+      });
+  }
+
 }

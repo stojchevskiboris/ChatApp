@@ -41,7 +41,7 @@
 
                 <div *ngFor="let contact of contacts" class="contact-item">
                     <div class="d-flex align-items-center">
-                        <img matListAvatar class="w-40px h-40px"
+                        <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="contact.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} ({{contact.email}})</div>
                     </div>
@@ -70,7 +70,7 @@
 
                 <div *ngFor="let request of requests" class="request-item">
                     <div class="d-flex align-items-center">
-                        <img matListAvatar class="w-40px h-40px"
+                        <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="request.userFrom.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }}
                             ({{request.userFrom.email}})</div>
@@ -96,7 +96,7 @@
                 </button>
                 <div *ngFor="let archivedRequest of archivedRequests" class="request-item">
                     <div class="d-flex align-items-center">
-                        <img matListAvatar class="w-40px h-40px"
+                        <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName
                             }} ({{archivedRequest.userFrom.email}})</div>

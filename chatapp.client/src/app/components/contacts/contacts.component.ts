@@ -171,6 +171,7 @@ export class ContactsComponent implements OnInit {
         },
         error: () => {
           this.toastr.warning('An unexpected error has occurred');
+          this.loading = false;
         },
         complete: () => {
           this.loading = false;

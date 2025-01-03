@@ -12,6 +12,10 @@
 
         public bool IsAdded { get; set; }
 
+        public bool HasRequestedBack { get; set; }
+
+        public int? RequestId { get; set; }
+
         public string Email { get; set; }
 
         //public DateTime DateOfBirth { get; set; }

@@ -52,6 +52,7 @@ namespace ChatApp.Server.Services.Mappers
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
+                ProfilePicture = user.ProfilePicture?.Url
                 //Phone = user.Phone,
                 //DateOfBirth = user.DateOfBirth
             };
