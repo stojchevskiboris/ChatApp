@@ -1,0 +1,8 @@
+<h2 mat-dialog-title>Remove profile picture</h2>
+<mat-dialog-content>
+  Are you sure you want to remove the profile picture?
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button (click)="remove(false)">No</button>
+  <button mat-button (click)="remove(true)" cdkFocusInitial>Remove</button>
+</mat-dialog-actions>

@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
+import { MatDialog } from '@angular/material/dialog';
+import { RemoveMediaDialogComponent } from '../dialogs/remove-media-dialog/remove-media-dialog.component';
 
 @Component({
   selector: 'app-account-settings',
@@ -12,6 +14,7 @@ import { UserViewModel } from '../../models/user-view-model';
 })
 export class AccountSettingsComponent {
 
+  dialog = inject(MatDialog);
   loading: boolean = false;
   profilePicture: string = 'assets/img/default-avatar.png'; // Placeholder image path
   hasProfilePicture: boolean = false;
@@ -109,22 +112,31 @@ export class AccountSettingsComponent {
   }
 
   removePicture(): void {
-    this.loading = true;
-    this.userService.removeProfilePicture().subscribe({
-      next: () => {
-        this.profilePicture = 'assets/img/default-avatar.png'; // Set to the default placeholder
-        this.hasProfilePicture = false;
-        this.toastr.info('Profile picture removed successfully');
-      },
-      error: (err) => {
-        this.loading = false;
-        console.error('Error removing profile picture:', err);
-        this.toastr.error('Failed to remove profile picture');
-      },
-      complete: () => {
-        this.loading = false;
-      },
+    const dialogRef = this.dialog.open(RemoveMediaDialogComponent, {
+      width: '50%',
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (!!result) {
+        this.loading = true;
+        this.userService.removeProfilePicture().subscribe({
+          next: () => {
+            this.profilePicture = 'assets/img/default-avatar.png'; // Set to the default placeholder
+            this.hasProfilePicture = false;
+            this.toastr.info('Profile picture removed successfully');
+          },
+          error: (err) => {
+            this.loading = false;
+            console.error('Error removing profile picture:', err);
+            this.toastr.error('Failed to remove profile picture');
+          },
+          complete: () => {
+            this.loading = false;
+          },
+        });
+      }
+    });
+
   }
 
   updateUserDetails(): void {

@@ -105,6 +105,5 @@ export class AccountOverviewComponent {
         this.router.navigate(['/']);
       }
     });
-
   }
 }
