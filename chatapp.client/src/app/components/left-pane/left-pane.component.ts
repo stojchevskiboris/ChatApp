@@ -1,6 +1,8 @@
 import { Component, ElementRef, EventEmitter, inject, Input, Output, SimpleChange, ViewChild } from '@angular/core';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { UserViewModel } from '../../models/user-view-model';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-left-pane',
@@ -9,20 +11,28 @@ import { MatDialog } from '@angular/material/dialog';
 })
 export class LeftPaneComponent {
 
-  constructor() { }
+  constructor(
+        private userService: UserService,
+  ) { }
 
   dialog = inject(MatDialog);
   @ViewChild('searchInput') searchInput: ElementRef;
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
   selectedChatId: number = null;
+  
   messagesList: any[] = [];
-  contactsList: any[] = [];
+  contactsList: UserViewModel[] = [];
   selectedTabIndex: number = 0;
+
+  hasContactsLoaded: boolean = false;
+
 
   ngOnInit(): void {
     // test data
     this.testData();
+    this.getContacts();
+
   }
 
   // ngAfterViewInit(): void {
@@ -87,9 +97,34 @@ export class LeftPaneComponent {
       });
   
       dialogRef.afterClosed().subscribe(result => {
+        this.getContacts();
         console.log(`Dialog result: ${result}`);
       });
   
+  }
+
+  getContacts() {
+    var setFlag: boolean = true;
+    setTimeout(() => {
+      if (setFlag) {
+        this.hasContactsLoaded = false;
+      }
+    }, 200);
+    this.userService.getContacts().subscribe({
+      next: (model: UserViewModel[]) => {
+        setFlag = false;
+        this.contactsList = model;
+        this.hasContactsLoaded = true;
+      },
+      error: (err: any) => {
+        setFlag = false;
+        this.hasContactsLoaded = true;
+      },
+      complete: () => {
+        setFlag = false;
+        this.hasContactsLoaded = true;
+      }
+    })
   }
 
   testData() {
@@ -180,70 +215,70 @@ export class LeftPaneComponent {
 
     j = 1;
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getTime() - 3 * 60 * 1000) // 3 minutes ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getTime() - 3 * 60 * 1000) // 3 minutes ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
 
-    this.contactsList.push({
-      name: names[Math.floor(Math.random() * names.length)],
-      recipientId: j++,
-      lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-    });
+    // this.contactsList.push({
+    //   name: names[Math.floor(Math.random() * names.length)],
+    //   recipientId: j++,
+    //   lastActive: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
+    // });
   }
 }

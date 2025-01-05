@@ -1,6 +1,6 @@
 <div class="left-pane d-flex flex-column h-100">
     <div class="acc-overview mb-2">
-        <app-account-overview (resetChat)="handleSelectedChat($event)"></app-account-overview>
+        <app-account-overview (resetChat)="handleSelectedChat($event)" (contactsEmitter)="getContacts()"></app-account-overview>
     </div>
 
     <div class="search-bar mb-2">
@@ -12,7 +12,7 @@
             </button>
         </mat-form-field>
     </div>
-
+    add last active prop to user 
     <div class="tab-group-container flex-grow-1 overflow-hidden">
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
@@ -22,7 +22,7 @@
                             [ngClass]="{'selected': message.recipientId==selectedChatId}"
                             (click)="openChat(message.recipientId)">
                             <div class="message-card d-flex align-items-center">
-                                <div mat-card-avatar class="me-2 example-header-image w-50px h-50px"></div>
+                                <div mat-card-avatar class="me-2 example-header-image w-50px h-50px rounded-circle"></div>
                                 <div>
                                     <span matListItemTitle>{{ message.name }}</span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
@@ -49,23 +49,35 @@
             </mat-tab>
 
             <mat-tab label="Contacts">
+                <div class="flex-content-center mt-1 h-50px" *ngIf="!hasContactsLoaded">
+                    <div class="load-wrapp">
+                        <div class="load-3">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                </div>
                 <ng-scrollbar *ngIf="contactsList.length > 0; else noContactsPage">
                     <mat-selection-list>
                         <mat-list-item *ngFor="let contact of contactsList; index as i" class="contacts-list"
-                            [ngClass]="{'selected': contact.recipientId==selectedChatId}"
-                            (click)="openChat(contact.recipientId)">
+                            [ngClass]="{'selected': contact.id==selectedChatId}"
+                            (click)="openChat(contact.id)">
                             <mat-card class="contact-card bg-none">
                                 <mat-card-header>
-                                    <div mat-card-avatar class="example-header-image"></div>
-                                    <mat-card-title>{{contact.name}}</mat-card-title>
+                                    <div mat-card-avatar>
+                                        <img matListAvatar class="w-40px h-40px user-profile-picture"
+                                            [src]="contact.profilePicture || 'img/default-avatar.png'" />
+                                    </div>
+                                    <mat-card-title>{{contact.firstName}} {{contact.lastName}}</mat-card-title>
                                     <mat-card-subtitle class="d-flex align-items-center mt-1">
                                         <ng-container
-                                            *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
+                                            *ngIf="isLessThan5min(contact.createdAt); else lastActiveTemplate">
                                             <mat-icon class="active-icon">circle</mat-icon>
-                                            Active now
+                                            Active now (ToDo: add last active in backend)1
                                         </ng-container>
                                         <ng-template #lastActiveTemplate>
-                                            {{ contact.lastActive | lastActive }}
+                                            {{ contact.createdAt | lastActive }}  (ToDo: add last active in backend)2
                                         </ng-template>
                                     </mat-card-subtitle>
                                 </mat-card-header>

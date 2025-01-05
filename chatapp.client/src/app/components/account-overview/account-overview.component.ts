@@ -24,6 +24,7 @@ export class AccountOverviewComponent {
   ) { }
 
   @Output() resetChat = new EventEmitter<number>();
+  @Output() contactsEmitter = new EventEmitter();
   userInitials: string = '';
   currentUser: UserViewModel = new UserViewModel();
   dialog = inject(MatDialog);
@@ -89,6 +90,7 @@ export class AccountOverviewComponent {
     });
 
     dialogRef.afterClosed().subscribe(result => {
+      this.contactsEmitter.emit();
       console.log(`Dialog result: ${result}`);
     });
 
