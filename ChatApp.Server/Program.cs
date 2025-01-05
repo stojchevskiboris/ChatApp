@@ -10,7 +10,7 @@ using Serilog;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
-AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb2");
+AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb") ?? "";
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(AppParameters.ConnectionString));
 
@@ -50,6 +50,13 @@ var credentialsPath = Path.Combine(AppContext.BaseDirectory, "Configs", "Firebas
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
 
 var app = builder.Build();
+
+if (string.IsNullOrEmpty(AppParameters.ConnectionString))
+{
+    Log.Error("AppParameters.ConnectionString is null or empty.");
+    return;
+}
+
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<ChatAppDbContext>();

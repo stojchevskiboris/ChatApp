@@ -65,6 +65,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
       this.setRecipient();
       this.generateTestData();
       this.scrollToBottom();
+      this.newMessage = '';
       this.messageInput.nativeElement.focus();
     }
   }
