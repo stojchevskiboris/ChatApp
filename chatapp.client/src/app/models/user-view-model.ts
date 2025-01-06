@@ -9,6 +9,7 @@ export class UserViewModel {
     gender: number;
     profilePicture: string = '';
     contactsId: number[] = [];
+    lastActive: string = '';
     createdAt: string = '';
     modifiedAt: string = '';
 }

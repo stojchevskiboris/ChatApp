@@ -33,6 +33,8 @@ namespace ChatApp.Server.Domain.Models
 
         public IList<UserContact> Contacts { get; set; } = new List<UserContact>();
 
+        public DateTime LastActive { get; set; }
+
         [Required]
         public DateTime CreatedAt { get; set; }
 

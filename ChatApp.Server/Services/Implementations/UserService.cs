@@ -292,6 +292,17 @@ namespace ChatApp.Server.Services.Implementations
             }
         }
 
+        public void UpdateLastActive()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var user = GetUserDomainById(currentUserId);
+
+            user.LastActive = DateTime.Now;
+            _userRepository.Update(user);
+
+            return;
+        }
+
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _userRepository.GetByEmail(model.Username);

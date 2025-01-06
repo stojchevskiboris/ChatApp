@@ -22,6 +22,8 @@
 
         public List<int> ContactsId { get; set; } = new List<int>();
 
+        public DateTime LastActive { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime ModifiedAt { get; set; }

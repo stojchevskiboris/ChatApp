@@ -12,7 +12,6 @@
             </button>
         </mat-form-field>
     </div>
-    add last active prop to user 
     <div class="tab-group-container flex-grow-1 overflow-hidden">
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
@@ -72,12 +71,12 @@
                                     <mat-card-title>{{contact.firstName}} {{contact.lastName}}</mat-card-title>
                                     <mat-card-subtitle class="d-flex align-items-center mt-1">
                                         <ng-container
-                                            *ngIf="isLessThan5min(contact.createdAt); else lastActiveTemplate">
+                                            *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
                                             <mat-icon class="active-icon">circle</mat-icon>
-                                            Active now (ToDo: add last active in backend)1
+                                            Active now
                                         </ng-container>
                                         <ng-template #lastActiveTemplate>
-                                            {{ contact.createdAt | lastActive }}  (ToDo: add last active in backend)2
+                                            {{ contact.lastActive | lastActive }}
                                         </ng-template>
                                     </mat-card-subtitle>
                                 </mat-card-header>

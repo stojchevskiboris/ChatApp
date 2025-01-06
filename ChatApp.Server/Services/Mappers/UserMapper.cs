@@ -19,6 +19,7 @@ namespace ChatApp.Server.Services.Mappers
                 Phone = user.Phone,
                 Gender = user.Gender,
                 DateOfBirth = user.DateOfBirth,
+                LastActive = user.LastActive,
                 CreatedAt = user.CreatedAt,
                 ModifiedAt = user.ModifiedAt
             };

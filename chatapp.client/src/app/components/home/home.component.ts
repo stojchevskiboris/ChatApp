@@ -4,6 +4,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { AuthService } from '../../services/auth.service';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -24,12 +25,22 @@ export class HomeComponent implements OnInit {
   currentUser: UserViewModel = new UserViewModel();
   isChatSettingsEnabled: boolean = true;
   startChatEvent: boolean = false;
+  lastActiveSubscription: Subscription;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
     if (this.userId) {
       this.getUserDetails();
     }
+
+    this.updateLastActive();
+    this.lastActiveSubscription = interval(60000).subscribe(x => {
+      this.updateLastActive();
+    });
+  }
+
+  ngOnDestroy(){
+    this.lastActiveSubscription.unsubscribe();
   }
 
   getUserDetails() {
@@ -64,5 +75,13 @@ export class HomeComponent implements OnInit {
 
   startChat() {
     this.startChatEvent = !this.startChatEvent;
+  }
+
+  updateLastActive() {
+    this.userService.updateLastActive()
+      .subscribe({
+        next: () => console.log('Last active updated'),
+        error: (err: HttpErrorResponse) => console.log('Error updating last active', err),
+      });
   }
 }

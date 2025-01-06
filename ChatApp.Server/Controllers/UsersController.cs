@@ -132,6 +132,14 @@ namespace ChatApp.Server.Controllers
             return StatusCode(500);
         }
 
+        [HttpPost("UpdateLastActive")]
+        [Authorize]
+        public void UpdateLastActive()
+        {
+            this._userService.UpdateLastActive();
+            return;
+        }
+
         #region Authorization
         [HttpPost("ChangePassword")]
         [Authorize]
