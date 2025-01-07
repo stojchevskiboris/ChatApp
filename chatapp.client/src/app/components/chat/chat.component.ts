@@ -3,6 +3,9 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { AuthService } from '../../services/auth.service';
 import { MessageViewModel } from '../../models/message-view-model';
+import { UserViewModel } from '../../models/user-view-model';
+import { UserService } from '../../services/user.service';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   selector: 'app-chat',
@@ -20,7 +23,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   currentUserId: number = 0;
-  recipient: { firstName: string, lastName: string, isActive: boolean, lastActive: string, id: number } | null = null;
+  recipient: UserViewModel = null;
   messages: MessageViewModel[] = [];
 
   hasScrolledToBottom: boolean = false;
@@ -31,8 +34,12 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   selectedMedia: { file: File, preview: string, type: string }[] = [];
   maxFileSizeMB: number = 20; // Maximum file size limit in MB
   errorMessage: string | null = null;
+  loading: boolean = false;
 
-  constructor(private authService: AuthService) {
+  constructor(
+    private authService: AuthService,
+    private userService: UserService
+  ) {
     this.currentUserId = +this.authService.getUserId();
   }
 
@@ -209,13 +216,19 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   }
 
   setRecipient() {
-    this.recipient = {
-      firstName: 'John',
-      lastName: 'Doe',
-      isActive: true,
-      lastActive: new Date().toDateString(),
-      id: this.recipientId
-    };
+    this.loading = true;
+    this.userService.getUserDetails(this.recipientId).subscribe({
+          next: (model: UserViewModel) => {
+            this.recipient = model
+          },
+          error: (err: HttpErrorResponse) => {
+            console.log(err);
+            this.loading = false;
+          },
+          complete: () => {
+            this.loading = false;
+          },
+        })
   }
 
   scrollToBottom() {
@@ -225,6 +238,18 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   toggleSettings() {
     this.showGifSearch = false;
     this.toggleChatSettings.emit()
+  }
+
+  isLessThan5min(date: any): boolean {
+    if (!date || isNaN(new Date(date).getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastActiveDate = new Date(date);
+    const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
+
+    return diffInMinutes < 5;
   }
 
   generateTestData() {

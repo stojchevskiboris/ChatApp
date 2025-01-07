@@ -12,7 +12,7 @@ import { UserService } from '../../services/user.service';
 export class LeftPaneComponent {
 
   constructor(
-        private userService: UserService,
+    private userService: UserService,
   ) { }
 
   dialog = inject(MatDialog);
@@ -20,7 +20,7 @@ export class LeftPaneComponent {
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
   selectedChatId: number = null;
-  
+
   messagesList: any[] = [];
   contactsList: UserViewModel[] = [];
   selectedTabIndex: number = 0;
@@ -37,7 +37,7 @@ export class LeftPaneComponent {
 
   // ngAfterViewInit(): void {
   //   this.changeBackgroundColor();
-    
+
   // }
   // changeActiveTab(): void {
   //   this.removePreviousActiveTabClass();
@@ -80,27 +80,27 @@ export class LeftPaneComponent {
   }
 
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
-    let change: SimpleChange = changes['startChat']; 
-    if(!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/){
+    let change: SimpleChange = changes['startChat'];
+    if (!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
       this.selectedTabIndex = 0;
       this.searchInput.nativeElement.focus();
     }
-}
+  }
 
   goToContactsTab() {
     this.selectedTabIndex = 1;
   }
 
   addContacts() {
-      const dialogRef = this.dialog.open(AddContactDialogComponent, {
-        width: '50%',
-      });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        this.getContacts();
-        console.log(`Dialog result: ${result}`);
-      });
-  
+    const dialogRef = this.dialog.open(AddContactDialogComponent, {
+      width: '50%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getContacts();
+      console.log(`Dialog result: ${result}`);
+    });
+
   }
 
   getContacts() {
@@ -128,11 +128,31 @@ export class LeftPaneComponent {
   }
 
   testData() {
-    const names = [
-      'Alice Foden', 'Bob Maguire', 'Charlie Scott', 'Diana Frank',
-      'Edward Snowden', 'Fiona Isaac', 'Grace Foden', 'Chris Allen',
-      'Bryan Green', 'George Allen'
+    const firstNames = [
+      'Alice',
+      'Bob',
+      'Charlie',
+      'Diana',
+      'Edward',
+      'Fiona',
+      'Grace',
+      'Chris',
+      'Bryan',
+      'George',
     ];
+
+    const lastNames = [
+      'Foden',
+      'Maguire',
+      'Scott',
+      'Frank',
+      'Snowden',
+      'Isaac',
+      'Foden',
+      'Allen',
+      'Green',
+      'Allen'
+    ]
 
     const messages = [
       'Just checking in!', 'Can we reschedule our meeting?',
@@ -147,7 +167,8 @@ export class LeftPaneComponent {
 
     // Case 1: Within the last 5 minutes
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 3 * 60 * 1000), // 3 minutes ago
       isSeen: false,
@@ -156,7 +177,8 @@ export class LeftPaneComponent {
 
     // Case 2: 5 to 30 minutes ago
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
       isSeen: false,
@@ -165,7 +187,8 @@ export class LeftPaneComponent {
 
     // Case 3: Same day, more than 30 minutes ago
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
       isSeen: true,
@@ -174,7 +197,8 @@ export class LeftPaneComponent {
 
     // Case 4: Within the last 7 days
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       isSeen: true,
@@ -183,7 +207,8 @@ export class LeftPaneComponent {
 
     // Case 5: More than 7 days ago, within the same year
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
       isSeen: true,
@@ -192,7 +217,8 @@ export class LeftPaneComponent {
 
     // Case 6: Previous years
     this.messagesList.push({
-      name: names[Math.floor(Math.random() * names.length)],
+      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
+      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
       isSeen: false,
@@ -201,11 +227,13 @@ export class LeftPaneComponent {
 
     // Adding some extra random data
     for (let i = 6; i < 20; i++) {
-      const randomName = names[Math.floor(Math.random() * names.length)];
+      const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
       const randomMessage = messages[Math.floor(Math.random() * messages.length)];
 
       this.messagesList.push({
-        name: randomName,
+        firstName: randomFirstName,
+        lastName: randomLastName,
         recentMessage: randomMessage,
         lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()),
         isSeen: true,

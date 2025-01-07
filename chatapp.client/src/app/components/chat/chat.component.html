@@ -1,12 +1,19 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
 <div class="chat-window">
   <div class="h-100px card p-3 mb-3">
     <div class="d-flex justify-content-between">
       <div>
         <h2>{{recipientId}}{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
-        <p *ngIf="recipient?.isActive" class="d-flex align-items-center">
-          <mat-icon class="active-icon">circle</mat-icon> Active Now
-        </p>
-        <p *ngIf="!recipient?.isActive">Last active: {{ recipient?.lastActive }}</p>
+        <ng-container *ngIf="isLessThan5min(recipient.lastActive); else lastActiveTemplate">
+          <mat-icon class="active-icon">circle</mat-icon>
+          Active now
+        </ng-container>
+        <ng-template #lastActiveTemplate>
+          {{ recipient.lastActive | lastActive }}
+        </ng-template>
       </div>
       <div>
         <button mat-icon-button (click)="toggleSettings()">
@@ -25,7 +32,8 @@
 
         <!-- Media -->
         <div *ngIf="message.hasMedia" class="media-preview">
-          <ng-container *ngIf="message.content.startsWith('data:image') || containsGiphy(message.content); else videoPreview">
+          <ng-container
+            *ngIf="message.content.startsWith('data:image') || containsGiphy(message.content); else videoPreview">
             <img [src]="message.content" alt="Preview" class="media-chat">
           </ng-container>
           <ng-template #videoPreview>
@@ -42,19 +50,9 @@
 
   <div class="input-container d-flex align-items-end p-2">
     <div class="w-100 d-flex align-items-end">
-      <textarea 
-        *ngIf="!isMediaSelected" 
-        class="w-100 messageTextArea" 
-        placeholder="Message..."
-        matInput 
-        #messageInput 
-        (focus)="hideGifSearch()"
-        [(ngModel)]="newMessage"
-        cdkTextareaAutosize 
-        #autosize="cdkTextareaAutosize" 
-        cdkAutosizeMinRows="1" 
-        cdkAutosizeMaxRows="5"
-        (keydown.enter)="sendMessage()">
+      <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" placeholder="Message..." matInput #messageInput
+        (focus)="hideGifSearch()" [(ngModel)]="newMessage" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()">
       </textarea>
 
       <div id="selectedMediaInput" class="w-100" *ngIf="isMediaSelected">
@@ -78,9 +76,7 @@
         <button mat-icon-button (click)="toggleGifSearch()" [ngClass]="{'active-btn': showGifSearch}">
           <mat-icon>gif</mat-icon>
         </button>
-        <app-gif-search 
-          *ngIf="showGifSearch" 
-          (gifSelected)="handleGifSelected($event)">
+        <app-gif-search *ngIf="showGifSearch" (gifSelected)="handleGifSelected($event)">
         </app-gif-search>
         <input type="file" accept="image/*,video/*" multiple hidden #fileInput (change)="handleMediaUpload($event)">
         <button mat-icon-button (click)="onImageUploadClick()" [ngClass]="{'active-btn': isMediaSelected}">
