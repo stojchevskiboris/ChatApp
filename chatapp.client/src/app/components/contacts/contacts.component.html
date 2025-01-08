@@ -43,7 +43,7 @@
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="contact.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} ({{contact.email}})</div>
+                        <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} ({{contact.username}})</div>
                     </div>
                     <button mat-icon-button [matMenuTriggerFor]="contactMenu">
                         <mat-icon>more_vert</mat-icon>
@@ -73,7 +73,7 @@
                         <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="request.userFrom.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }}
-                            ({{request.userFrom.email}})</div>
+                            ({{request.userFrom.username}})</div>
                     </div>
                     <div class="actions">
                         <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
@@ -99,7 +99,7 @@
                         <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName
-                            }} ({{archivedRequest.userFrom.email}})</div>
+                            }} ({{archivedRequest.userFrom.username}})</div>
                     </div>
                     <div class="actions">
                         {{ getRequestStatus(archivedRequest.requestStatus) }}

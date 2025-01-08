@@ -15,7 +15,7 @@ namespace ChatApp.Server.Configs.Authentication
             Id = user.Id;
             FirstName = user.FirstName;
             LastName = user.LastName;
-            Username = user.Email;
+            Username = user.Username;
             Token = token;
         }
     }

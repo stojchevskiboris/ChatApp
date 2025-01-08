@@ -36,7 +36,7 @@ export class AccountSettingsComponent {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      email: [{ value: '', disabled: true }],
+      username: [{ value: '', disabled: true }],
       dateOfBirth: ['', Validators.required],
       phone: [''],
       gender: [0, Validators.required],

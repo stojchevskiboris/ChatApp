@@ -10,7 +10,7 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel GetUserById(int id);
         UserViewModel GetCurrentUserDetails();
         List<UserViewModel> GetContacts();
-        UserViewModel GetUserByEmail(string email);
+        UserViewModel GetUserByUsername(string username);
         bool RemoveContact(int contactId);
         bool UpdateProfilePicture(string imageUrl, long fileLength, string contentType);
         bool RemoveCurrentProfilePicture();

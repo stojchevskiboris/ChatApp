@@ -15,9 +15,9 @@ namespace ChatApp.Server.Domain.Models
         public string LastName { get; set; }
 
         [Required]
-        [EmailAddress]
+        //[EmailAddress]
         [MaxLength(255)]
-        public string Email { get; set; }
+        public string Username { get; set; }
 
         [Required]
         public string Password { get; set; }

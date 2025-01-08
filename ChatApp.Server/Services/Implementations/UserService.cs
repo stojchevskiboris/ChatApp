@@ -82,12 +82,12 @@ namespace ChatApp.Server.Services.Implementations
             return contacts;
         }
 
-        public UserViewModel GetUserByEmail(string email)
+        public UserViewModel GetUserByUsername(string username)
         {
-            var user = _userRepository.GetByEmail(email.Trim());
+            var user = _userRepository.GetByUsername(username.Trim());
             if (user == null)
             {
-                throw new CustomException($"No user found with email: {email}");
+                throw new CustomException($"No user found with username: {username}");
             }
 
             return user.MapToViewModel();
@@ -139,9 +139,9 @@ namespace ChatApp.Server.Services.Implementations
 
         public UserViewModel CreateUser(UserRegisterModel model)
         {
-            if (_userRepository.GetAll().Where(x => x.Email == model.Email).Any())
+            if (_userRepository.GetAll().Where(x => x.Username == model.Username).Any())
             {
-                throw new CustomException("There is already registered user with the provided Email");
+                throw new CustomException("There is already registered user with the provided username");
             }
 
             if (model.Password != model.ConfirmPassword)
@@ -152,7 +152,7 @@ namespace ChatApp.Server.Services.Implementations
             User user = new User();
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            user.Email = model.Email;
+            user.Username = model.Username;
             user.Phone = model.Phone;
             user.Gender = model.Gender;
             user.Password = PasswordHelper.HashPassword(model.Password);
@@ -171,7 +171,7 @@ namespace ChatApp.Server.Services.Implementations
 
             user.FirstName = model.FirstName;
             user.LastName = model.LastName;
-            //user.Email = model.Email;
+            //user.Username = model.Username;
             user.Phone = model.Phone;
             user.Gender = model.Gender;
             user.DateOfBirth = model.DateOfBirth;
@@ -329,10 +329,10 @@ namespace ChatApp.Server.Services.Implementations
 
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
-            var user = _userRepository.GetByEmail(model.Username);
+            var user = _userRepository.GetByUsername(model.Username);
             if (user == null)
             {
-                return null; // Nonexisting email
+                return null; // Nonexisting Username
             }
 
             var checkPassword = PasswordHelper.HashPassword(model.Password);

@@ -17,9 +17,9 @@ namespace ChatApp.Server.Data.Implementations
             _context = context;
         }
 
-        public User GetByEmail(string email)
+        public User GetByUsername(string username)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return _context.Users.FirstOrDefault(u => u.Username == username);
         }
 
         public List<int> GetContactsByUserId(int currentUserId)

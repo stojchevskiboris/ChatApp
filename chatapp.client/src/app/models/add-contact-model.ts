@@ -6,7 +6,7 @@ export class AddContactModel {
     isAdded: boolean = false;
     hasRequestedBack: boolean = false;
     requestId: number;
-    email: string = '';
+    username: string = '';
     // dateOfBirth: string = '';
     // phone: string = '';
     createdAt: string = '';

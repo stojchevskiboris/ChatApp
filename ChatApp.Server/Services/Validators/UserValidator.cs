@@ -7,7 +7,7 @@ namespace ChatApp.Server.Services.Validators
     {
         public UserValidator()
         {
-            RuleFor(x => x.Email).EmailAddress();
+            //RuleFor(x => x.Email).EmailAddress();
         }
     }
 }

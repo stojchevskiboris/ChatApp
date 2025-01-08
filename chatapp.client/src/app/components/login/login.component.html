@@ -9,7 +9,7 @@
                 name="firstName" required />
             <input type="text" placeholder="Last name" id="lastName" [(ngModel)]="registerModel.lastName"
                 name="lastName" required />
-            <input type="email" placeholder="Email" id="email" [(ngModel)]="registerModel.email" name="email" required
+            <input type="username" placeholder="Username" id="username" [(ngModel)]="registerModel.username" name="username" required
                 autocomplete="off" />
             <input type="password" placeholder="Password" id="password" [(ngModel)]="registerModel.password"
                 name="password" required autocomplete="off" />
@@ -38,7 +38,7 @@
     <div class="form-container sign-in-container">
         <form>
             <h1>Sign In</h1> <!-- EXISTING USER -->
-            <input type="email" placeholder="Email" id="username" [(ngModel)]="loginModel.username" name="username"
+            <input type="username" placeholder="Username" id="username" [(ngModel)]="loginModel.username" name="username"
                 required />
             <input type="password" placeholder="Password" id="password" [(ngModel)]="loginModel.password"
                 name="password" required />

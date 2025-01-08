@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
   register() {
     this.isModelInvalid = false;
     if (
-      this.registerModel.email.trim() === '' ||
+      this.registerModel.username.trim() === '' ||
       this.registerModel.password.trim() === '' ||
       this.registerModel.confirmPassword.trim() === '' ||
       this.registerModel.firstName.trim() === '' ||
@@ -67,7 +67,7 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.register(this.registerModel).subscribe({
       next: (r) => {
-        this.loginModel.username = this.registerModel.email;
+        this.loginModel.username = this.registerModel.username;
         this.loginModel.password = this.registerModel.password;
         this.login();
       },

@@ -2,7 +2,7 @@ export class UserViewModel {
     id: number = 0;
     firstName: string = '';
     lastName: string = '';
-    email: string = '';
+    username: string = '';
     // password: string = '';
     dateOfBirth: string = '';
     phone: string = '';

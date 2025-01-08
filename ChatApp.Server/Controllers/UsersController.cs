@@ -59,15 +59,15 @@ namespace ChatApp.Server.Controllers
             return _userService.GetContacts();
         }
 
-        [HttpPost("GetUserByEmail")]
+        [HttpPost("GetUserByUsername")]
         [Authorize]
-        public UserViewModel GetUserByEmail(string email)
+        public UserViewModel GetUserByUsername(string username)
         {
-            if (string.IsNullOrEmpty(email))
+            if (string.IsNullOrEmpty(username))
             {
                 throw new CustomException("Invalid parameters");
             }
-            return _userService.GetUserByEmail(email);
+            return _userService.GetUserByUsername(username);
         }
 
         [HttpPost("RemoveContact")]
