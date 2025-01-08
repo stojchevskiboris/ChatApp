@@ -21,13 +21,13 @@ export class LastActivePipe implements PipeTransform {
     }
 
     // If within 5 to 55 minutes
-    if (diffInMinutes >= 5 && diffInMinutes <= 55) {
+    if (diffInMinutes >= 5 && diffInMinutes <= 59) {
       // const roundedMinutes = Math.ceil(diffInMinutes / 5) * 5;
       return `${diffInMinutes}m ago`;
     }
 
     // If within 1 hour to 24 hours
-    if (diffInMinutes > 55 && diffInMinutes <= 24 * 60) {
+    if (diffInMinutes > 59 && diffInMinutes <= 24 * 60) {
       return `${diffInHours}h ago`;
     }
 

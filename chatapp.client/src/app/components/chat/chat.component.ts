@@ -6,6 +6,7 @@ import { MessageViewModel } from '../../models/message-view-model';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { interval, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chat',
@@ -27,14 +28,16 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   messages: MessageViewModel[] = [];
 
   hasScrolledToBottom: boolean = false;
-
+  defaultAvatar = 'img/default-avatar.png';
   newMessage: string = '';
   showGifSearch: boolean = false;
   isMediaSelected: boolean = false;
   selectedMedia: { file: File, preview: string, type: string }[] = [];
   maxFileSizeMB: number = 20; // Maximum file size limit in MB
   errorMessage: string | null = null;
+  recipientProfilePicture: string = this.defaultAvatar;
   loading: boolean = false;
+  setRecipientSubscription: Subscription;
 
   constructor(
     private authService: AuthService,
@@ -44,8 +47,16 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
   }
 
   ngOnInit(): void {
-    this.setRecipient();
     this.generateTestData();
+
+    this.setRecipient();
+    this.setRecipientSubscription = interval(60000).subscribe(x => {
+      this.setRecipient(false);
+    });
+  }
+
+  ngOnDestroy() {
+    this.setRecipientSubscription.unsubscribe();
   }
 
   ngAfterViewInit(): void {
@@ -136,7 +147,7 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
 
   handleGifSelected(gifUrl: string): void {
     console.log('Selected GIF:', gifUrl);
-  
+
     const gifMessage: MessageViewModel = {
       messageId: this.messages.length + 1,
       senderId: this.currentUserId,
@@ -148,15 +159,15 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
       createdAt: new Date().toISOString(),
       modifiedAt: new Date().toISOString(),
     };
-  
+
     this.messages.push(gifMessage);
     this.scrollToBottom();
-  
+
     this.showGifSearch = false; // Close the GIF search overlay
   }
 
   containsGiphy(content): any {
-    if(content){
+    if (content) {
       return content.toLowerCase().includes('giphy');
     }
     return false;
@@ -215,20 +226,27 @@ export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterVie
     }, 100);
   }
 
-  setRecipient() {
-    this.loading = true;
+  setRecipient(withLoading: boolean = true): void {
+    if (withLoading) {
+      this.loading = true;
+    }
     this.userService.getUserDetails(this.recipientId).subscribe({
-          next: (model: UserViewModel) => {
-            this.recipient = model
-          },
-          error: (err: HttpErrorResponse) => {
-            console.log(err);
-            this.loading = false;
-          },
-          complete: () => {
-            this.loading = false;
-          },
-        })
+      next: (model: UserViewModel) => {
+        this.recipient = model
+        if (model.profilePicture) {
+          this.recipientProfilePicture = model.profilePicture;
+        } else {
+          this.recipientProfilePicture = this.defaultAvatar;
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        console.log(err);
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
+      },
+    })
   }
 
   scrollToBottom() {
