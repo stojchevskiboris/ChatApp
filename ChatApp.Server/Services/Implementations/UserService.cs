@@ -308,7 +308,7 @@ namespace ChatApp.Server.Services.Implementations
             var currentUserId = Context.GetCurrentUserId();
             var user = GetUserDomainById(currentUserId);
 
-            List<LastActiveModel> contactsLastActiveList = new List<LastActiveModel>();
+            var contactsLastActiveList = new List<LastActiveModel>();
 
             if (user.Contacts.Any())
             {

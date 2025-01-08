@@ -34,7 +34,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // test data
     this.testData();
     this.getContacts();
-    this.updateLastActiveSubscription = interval(5000).subscribe(x => {
+    this.updateLastActiveSubscription = interval(60000).subscribe(x => {
       this.updateContactsLastActive();
     });
   }
@@ -46,13 +46,14 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   updateContactsLastActive(): void {
     this.userService.updateContactsLastActive().subscribe({
       next: (response: LastActiveModel[]) => {
-        response.forEach((updatedContact: LastActiveModel) => {
-          const contact = this.contactsList.find(c => c.id === updatedContact.id);
-          if (contact) {
-            // TODO: check if this is set in the html
-            contact.lastActive = updatedContact.lastActive;
+        const updatedList = this.contactsList.map(contact => {
+          const updatedContact = response.find(c => c.id === contact.id);
+          if (updatedContact) {
+            return { ...contact, lastActive: updatedContact.lastActive };
           }
+          return contact;
         });
+        this.contactsList = [...updatedList];
       },
       error: (err: any) => {
         console.error('Error updating last active', err);

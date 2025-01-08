@@ -14,6 +14,7 @@ export class AuthService {
   private loginEndpoint = '/Users/Login';
   private sessionLoginEndpoint = '/Users/SessionLogin';
   private registerEndpoint = '/Users/Register';
+  private getCurrentUserDetailsEndpoint = '/Users/GetCurrentUserDetails';
   currentUser: string = '';
   token: string = '';
 
@@ -43,6 +44,7 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('userId', response.id);
           localStorage.setItem('currentUser', this.currentUser);
+          this.setDetailedUser().subscribe();
         })
       );
   }
@@ -62,6 +64,20 @@ export class AuthService {
           localStorage.setItem('token', response.token);
           localStorage.setItem('userId', response.id);
           localStorage.setItem('currentUser', this.currentUser);
+          this.setDetailedUser().subscribe();
+        })
+      );
+  }
+
+  setDetailedUser(){
+    return this.dataService
+      .get<any>(this.getCurrentUserDetailsEndpoint)
+      .pipe(
+        tap((response: UserViewModel) => {
+          if(response){
+            this.currentUser = JSON.stringify(response);
+            localStorage.setItem('currentUser', this.currentUser);
+          }
         })
       );
   }
@@ -79,6 +95,7 @@ export class AuthService {
   }
 
   getUserId(): string {
+    this.setDetailedUser().subscribe();
     return localStorage.getItem('userId');
   }
 

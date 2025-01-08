@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { AuthService } from '../../services/auth.service';
@@ -41,7 +41,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   constructor(
     private authService: AuthService,
-    private userService: UserService
+    private userService: UserService,
+    private cdr: ChangeDetectorRef
   ) {
     this.currentUserId = +this.authService.getUserId();
   }
@@ -232,6 +233,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     }
     this.userService.getUserDetails(this.recipientId).subscribe({
       next: (model: UserViewModel) => {
+        this.recipient = new UserViewModel();
+        this.cdr.detectChanges();
         this.recipient = model
         if (model.profilePicture) {
           this.recipientProfilePicture = model.profilePicture;
