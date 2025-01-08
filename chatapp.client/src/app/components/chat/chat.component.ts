@@ -1,4 +1,4 @@
-import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { AfterViewChecked, AfterViewInit, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { AuthService } from '../../services/auth.service';
@@ -13,7 +13,7 @@ import { interval, Subscription } from 'rxjs';
   templateUrl: './chat.component.html',
   styleUrl: './chat.component.css'
 })
-export class ChatComponent implements OnInit, OnChanges, AfterViewInit, AfterViewChecked {
+export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @Input() recipientId: number | null = null;
   @Output() toggleChatSettings = new EventEmitter();

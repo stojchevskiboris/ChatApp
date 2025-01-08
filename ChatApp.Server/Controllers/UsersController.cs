@@ -136,8 +136,16 @@ namespace ChatApp.Server.Controllers
         [Authorize]
         public void UpdateLastActive()
         {
-            this._userService.UpdateLastActive();
+            _userService.UpdateLastActive();
             return;
+        }
+
+        [HttpPost("UpdateContactsLastActive")]
+        [Authorize]
+        public List<LastActiveModel> UpdateContactsLastActive()
+        {
+            var result = _userService.UpdateContactsLastActive();
+            return result;
         }
 
         #region Authorization

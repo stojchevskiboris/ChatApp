@@ -303,6 +303,30 @@ namespace ChatApp.Server.Services.Implementations
             return;
         }
 
+        public List<LastActiveModel> UpdateContactsLastActive()
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var user = GetUserDomainById(currentUserId);
+
+            List<LastActiveModel> contactsLastActiveList = new List<LastActiveModel>();
+
+            if (user.Contacts.Any())
+            {
+                foreach (var c in user.Contacts)
+                {
+                    var contact = GetUserDomainById(c.ContactId);
+                    var model = new LastActiveModel()
+                    {
+                        Id = contact.Id,
+                        LastActive = contact.LastActive
+                    };
+                    contactsLastActiveList.Add(model);
+                };
+            }
+
+            return contactsLastActiveList;
+        }
+
         public AuthenticateResponse Authenticate(AuthenticateRequest model)
         {
             var user = _userRepository.GetByEmail(model.Username);

@@ -16,9 +16,10 @@ namespace ChatApp.Server.Services.Interfaces
         bool RemoveCurrentProfilePicture();
         UserViewModel CreateUser(UserRegisterModel model);
         UserViewModel UpdateUser(UpdateUserViewModel user);
-        void UpdateLastActive();
         bool DeleteUser(int id);
         bool ChangePassword(PasswordViewModel user);
+        void UpdateLastActive();
+        List<LastActiveModel> UpdateContactsLastActive();
         #endregion
 
         #region AuthenticationServices

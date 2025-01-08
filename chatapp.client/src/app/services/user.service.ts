@@ -4,6 +4,7 @@ import { tap } from 'rxjs/operators';
 import { DataService } from './data.service';
 import { UserViewModel } from '../models/user-view-model';
 import { ChangePasswordModel } from '../models/change-password-model';
+import { LastActiveModel } from '../models/last-active-model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,7 @@ export class UserService {
   private uploadProfilePictureEndpoint = '/Users/UploadProfilePicture';
   private removeProfilePictureEndpoint = '/Users/RemoveProfilePicture';
   private updateLastActiveEndpoint = '/Users/UpdateLastActive';
+  private updateContactsLastActiveEndpoint = '/Users/UpdateContactsLastActive';
 
   constructor(private dataService: DataService) {}
 
@@ -105,6 +107,16 @@ export class UserService {
   updateLastActive(): Observable<any> {
     return this.dataService
       .post<any>(this.updateLastActiveEndpoint, {})
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  updateContactsLastActive(): Observable<LastActiveModel[]> {
+    return this.dataService
+      .post<LastActiveModel[]>(this.updateContactsLastActiveEndpoint, {})
       .pipe(
         tap((response) => {
           return response;

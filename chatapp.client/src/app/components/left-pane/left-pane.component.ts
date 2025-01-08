@@ -1,15 +1,17 @@
-import { Component, ElementRef, EventEmitter, inject, Input, Output, SimpleChange, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
+import { interval, Subscription } from 'rxjs';
+import { LastActiveModel } from '../../models/last-active-model';
 
 @Component({
   selector: 'app-left-pane',
   templateUrl: './left-pane.component.html',
   styleUrl: './left-pane.component.css'
 })
-export class LeftPaneComponent {
+export class LeftPaneComponent implements OnInit, OnDestroy {
 
   constructor(
     private userService: UserService,
@@ -26,13 +28,36 @@ export class LeftPaneComponent {
   selectedTabIndex: number = 0;
 
   hasContactsLoaded: boolean = false;
-
+  updateLastActiveSubscription: Subscription;
 
   ngOnInit(): void {
     // test data
     this.testData();
     this.getContacts();
+    this.updateLastActiveSubscription = interval(5000).subscribe(x => {
+      this.updateContactsLastActive();
+    });
+  }
 
+  ngOnDestroy() {
+    this.updateLastActiveSubscription.unsubscribe();
+  }
+
+  updateContactsLastActive(): void {
+    this.userService.updateContactsLastActive().subscribe({
+      next: (response: LastActiveModel[]) => {
+        response.forEach((updatedContact: LastActiveModel) => {
+          const contact = this.contactsList.find(c => c.id === updatedContact.id);
+          if (contact) {
+            // TODO: check if this is set in the html
+            contact.lastActive = updatedContact.lastActive;
+          }
+        });
+      },
+      error: (err: any) => {
+        console.error('Error updating last active', err);
+      }
+    });
   }
 
   // ngAfterViewInit(): void {

@@ -20,10 +20,12 @@ export class GifSearchComponent {
   constructor(private giphyService: GiphyService) { }
 
   ngAfterViewInit(): void {
-    this.gifSearchDiv.nativeElement.addEventListener('focusout', () => {
-      // error: clicks on the input in the div triggers focusout
-      console.log("item-clicked");
-    });
+    if(this.gifSearchDiv != null){
+      this.gifSearchDiv.nativeElement.addEventListener('focusout', () => {
+        // error: clicks on the input in the div triggers focusout
+        console.log("item-clicked");
+      });
+    }
   }
 
   onSearch(): void {
