@@ -5,6 +5,7 @@ import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
+import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
 
 @Component({
   selector: 'app-left-pane',
@@ -13,15 +14,16 @@ import { LastActiveModel } from '../../models/last-active-model';
 })
 export class LeftPaneComponent implements OnInit, OnDestroy {
 
-  constructor(
-    private userService: UserService,
-  ) { }
-
   dialog = inject(MatDialog);
   @ViewChild('searchInput') searchInput: ElementRef;
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
   selectedChatId: number = null;
+
+  prevScrollPosMessages = 0;
+  prevScrollPosContacts = 0;
+  canLoadMessagesSemaphore = true;
+  canLoadContactsSemaphore = true;
 
   messagesList: any[] = [];
   contactsList: UserViewModel[] = [];
@@ -30,8 +32,11 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   hasContactsLoaded: boolean = false;
   updateLastActiveSubscription: Subscription;
 
+  constructor(
+    private userService: UserService,
+  ) { }
+
   ngOnInit(): void {
-    // test data
     this.testData();
     this.getContacts();
     this.updateLastActiveSubscription = interval(60000).subscribe(x => {
@@ -43,24 +48,85 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.updateLastActiveSubscription.unsubscribe();
   }
 
-  updateContactsLastActive(): void {
-    this.userService.updateContactsLastActive().subscribe({
-      next: (response: LastActiveModel[]) => {
-        const updatedList = this.contactsList.map(contact => {
-          const updatedContact = response.find(c => c.id === contact.id);
-          if (updatedContact) {
-            return { ...contact, lastActive: updatedContact.lastActive };
-          }
-          return contact;
-        });
-        this.contactsList = [...updatedList];
-      },
-      error: (err: any) => {
-        console.error('Error updating last active', err);
-      }
-    });
+  ngOnChanges(changes: { [property: string]: SimpleChange }) {
+    let change: SimpleChange = changes['startChat'];
+    if (!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
+      this.selectedTabIndex = 0;
+      this.searchInput.nativeElement.focus();
+    }
   }
 
+  // #region ScrollBar Events
+  onScrollMessages(event: any): void {
+    const scrollPosition = event.target.scrollTop;
+    const scrollHeight = event.target.scrollHeight;
+    const clientHeight = event.target.clientHeight;
+
+    const scrollDirection = scrollPosition > this.prevScrollPosMessages ? ScrollDirection.Down : ScrollDirection.Up;
+    this.prevScrollPosMessages = scrollPosition;
+
+    const threshold = 10; // Threshold for bottom and top detection
+
+    if (scrollDirection === ScrollDirection.Down && scrollHeight - scrollPosition <= clientHeight + threshold) {
+      this.onBottomReached(1);
+    }
+
+    if (scrollDirection === ScrollDirection.Up && scrollPosition <= threshold) {
+      this.onTopReached(1);
+    }
+  }
+
+  onScrollContacts(event: any): void {
+    const scrollPosition = event.target.scrollTop;
+    const scrollHeight = event.target.scrollHeight;
+    const clientHeight = event.target.clientHeight;
+
+    const scrollDirection = scrollPosition > this.prevScrollPosContacts ? ScrollDirection.Down : ScrollDirection.Up;
+    this.prevScrollPosContacts = scrollPosition;
+
+    console.log('Contacts Scroll Direction:', scrollDirection);
+
+    const threshold = 10; // Threshold for bottom and top detection
+
+    if (scrollDirection === ScrollDirection.Down && scrollHeight - scrollPosition <= clientHeight + threshold) {
+      console.log('Bottom reached in contacts!');
+      this.onBottomReached(2);
+    }
+
+    if (scrollDirection === ScrollDirection.Up && scrollPosition <= threshold) {
+      console.log('Top reached in contacts!');
+      this.onTopReached(2);
+    }
+  }
+
+  onBottomReached(tab: number): void {
+    if (tab === 1 && this.canLoadMessagesSemaphore) {
+      this.canLoadMessagesSemaphore = false;
+      setTimeout(() => {
+        this.canLoadMessagesSemaphore = true;
+      }, 500)
+      // TODO: this should fetch messages
+      console.log('Reached the bottom of the message list');
+    } else if (tab === 2 && this.canLoadContactsSemaphore) {
+      this.canLoadContactsSemaphore = false;
+      setTimeout(() => {
+        this.canLoadContactsSemaphore = true;
+      }, 500)
+      // TODO: this should fetch contacts
+      console.log('Reached the bottom of the contact list');
+    }
+  }
+
+  onTopReached(tab: number): void {
+    if (tab === 1) {
+      console.log('Reached the top of the message list');
+    } else if (tab === 2) {
+      console.log('Reached the top of the contact list');
+    }
+  }
+  // #endregion
+
+  // #region MatTab Selected
   // ngAfterViewInit(): void {
   //   this.changeBackgroundColor();
 
@@ -80,19 +146,8 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   //   const activeTab = document.getElementsByClassName('mdc-tab--active')[0];    
   //   (activeTab as HTMLElement).classList.add('active-tab');
   // }
-
-  isLessThan5min(date: any): boolean {
-    if (!date || isNaN(new Date(date).getTime())) {
-      return false;
-    }
-
-    const now = new Date();
-    const lastActiveDate = new Date(date);
-    const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
-
-    return diffInMinutes < 5;
-  }
-
+  // #endregion
+  
   openChat(recipientId: number) {
     this.selectedChat.emit(recipientId);
     this.selectedChatId = recipientId;
@@ -103,14 +158,6 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       this.selectedChatId = null;
     }
     this.selectedChat.emit(event);
-  }
-
-  ngOnChanges(changes: { [property: string]: SimpleChange }) {
-    let change: SimpleChange = changes['startChat'];
-    if (!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
-      this.selectedTabIndex = 0;
-      this.searchInput.nativeElement.focus();
-    }
   }
 
   goToContactsTab() {
@@ -153,6 +200,36 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     })
   }
 
+  updateContactsLastActive(): void {
+    this.userService.updateContactsLastActive().subscribe({
+      next: (response: LastActiveModel[]) => {
+        const updatedList = this.contactsList.map(contact => {
+          const updatedContact = response.find(c => c.id === contact.id);
+          if (updatedContact) {
+            return { ...contact, lastActive: updatedContact.lastActive };
+          }
+          return contact;
+        });
+        this.contactsList = [...updatedList];
+      },
+      error: (err: any) => {
+        console.error('Error updating last active', err);
+      }
+    });
+  }
+  
+  isContactActive(date: any): boolean {
+    if (!date || isNaN(new Date(date).getTime())) {
+      return false;
+    }
+
+    const now = new Date();
+    const lastActiveDate = new Date(date);
+    const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
+
+    return diffInMinutes < 5;
+  } 
+
   testData() {
     const firstNames = [
       'Alice',
@@ -194,7 +271,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 1: Within the last 5 minutes
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 3 * 60 * 1000), // 3 minutes ago
       isSeen: false,
@@ -204,7 +281,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 2: 5 to 30 minutes ago
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
       isSeen: false,
@@ -214,7 +291,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 3: Same day, more than 30 minutes ago
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
       isSeen: true,
@@ -224,7 +301,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 4: Within the last 7 days
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
       isSeen: true,
@@ -234,7 +311,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 5: More than 7 days ago, within the same year
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
       isSeen: true,
@@ -244,7 +321,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     // Case 6: Previous years
     this.messagesList.push({
       firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random()* lastNames.length)],
+      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
       recentMessage: messages[Math.floor(Math.random() * messages.length)],
       lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
       isSeen: false,

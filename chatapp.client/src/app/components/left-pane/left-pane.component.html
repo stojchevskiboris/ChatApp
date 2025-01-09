@@ -15,7 +15,8 @@
     <div class="tab-group-container flex-grow-1 overflow-hidden">
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
-                <ng-scrollbar *ngIf="messagesList.length > 0; else noMessagesPage">
+                <ng-scrollbar 
+                    *ngIf="messagesList.length > 0; else noMessagesPage" (scroll)="onScrollMessages($event)">
                     <mat-selection-list>
                         <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
                             [ngClass]="{'selected': message.recipientId==selectedChatId}"
@@ -57,7 +58,7 @@
                         </div>
                     </div>
                 </div>
-                <ng-scrollbar *ngIf="contactsList.length > 0; else noContactsPage">
+                <ng-scrollbar *ngIf="contactsList.length > 0; else noContactsPage" (scroll)="onScrollContacts($event)">
                     <mat-selection-list>
                         <mat-list-item *ngFor="let contact of contactsList; index as i" class="contacts-list"
                             [ngClass]="{'selected': contact.id==selectedChatId}"
@@ -71,7 +72,7 @@
                                     <mat-card-title>{{contact.firstName}} {{contact.lastName}}</mat-card-title>
                                     <mat-card-subtitle class="d-flex align-items-center mt-1">
                                         <ng-container
-                                            *ngIf="isLessThan5min(contact.lastActive); else lastActiveTemplate">
+                                            *ngIf="isContactActive(contact.lastActive); else lastActiveTemplate">
                                             <mat-icon class="active-icon">circle</mat-icon>
                                             Active now
                                         </ng-container>

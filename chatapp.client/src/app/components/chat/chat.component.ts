@@ -61,10 +61,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    this.inputFocus();
-  }
-
-  private inputFocus() {
     this.messageInput.nativeElement.focus();
   }
 
@@ -133,14 +129,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     }, 100);
   }
 
-  toggleGifSearch(): void {
-    this.showGifSearch = !this.showGifSearch;
-  }
-
-  hideGifSearch() {
-    this.showGifSearch = false;
-  }
-
   onImageUploadClick() {
     this.fileInput.nativeElement.click()
     this.showGifSearch = false;
@@ -167,11 +155,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.showGifSearch = false; // Close the GIF search overlay
   }
 
-  containsGiphy(content): any {
-    if (content) {
-      return content.toLowerCase().includes('giphy');
-    }
-    return false;
+  toggleGifSearch(): void {
+    this.showGifSearch = !this.showGifSearch;
+  }
+
+  hideGifSearch() {
+    this.showGifSearch = false;
   }
 
   sendMessage(): void {
@@ -260,14 +249,21 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.showGifSearch = false;
     this.toggleChatSettings.emit()
   }
+  
+  containsGiphy(content): any {
+    if (content) {
+      return content.toLowerCase().includes('giphy');
+    }
+    return false;
+  }
 
-  isLessThan5min(date: any): boolean {
-    if (!date || isNaN(new Date(date).getTime())) {
+  isContactActive(lastActive: any): boolean {
+    if (!lastActive || isNaN(new Date(lastActive).getTime())) {
       return false;
     }
 
     const now = new Date();
-    const lastActiveDate = new Date(date);
+    const lastActiveDate = new Date(lastActive);
     const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
 
     return diffInMinutes < 5;

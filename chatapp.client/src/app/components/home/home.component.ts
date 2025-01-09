@@ -54,10 +54,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     })
   }
 
-  logout() {
-    this.authService.logout();
-    this.router.navigate(['/']);
-    this.currentUser = new UserViewModel();
+  startChat() {
+    this.startChatEvent = !this.startChatEvent;
   }
 
   handleSelectedChat(recipientId: number) {
@@ -73,15 +71,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
   }
 
-  startChat() {
-    this.startChatEvent = !this.startChatEvent;
-  }
-
   updateLastActive() {
     this.userService.updateLastActive()
       .subscribe({
         next: () => console.log('Last active updated'),
         error: (err: HttpErrorResponse) => console.log('Error updating last active', err),
       });
+  }
+  
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/']);
+    this.currentUser = new UserViewModel();
   }
 }
