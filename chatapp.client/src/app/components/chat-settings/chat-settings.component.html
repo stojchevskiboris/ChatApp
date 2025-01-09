@@ -1,11 +1,13 @@
 <div class="d-flex flex-column h-100">
-  <!-- Header Section (15% height) -->
-  <header class="bg-primary text-white d-flex align-items-center justify-content-center" style="height: 15%;">
+  <!-- <header class="bg-primary text-white d-flex align-items-center justify-content-center" style="height: 15%;">
     <h1>Header</h1>
-  </header>
+  </header> -->
 
-  <!-- Main Section (85% height) -->
-  <main class="flex-grow-1 bg-light d-flex align-items-center justify-content-center">
-    <p>Main Content Area</p>
+  <main>
+    <div class="text-center">
+      <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
+      <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
+      <h5>({{ recipient?.username }})</h5>
+    </div>
   </main>
 </div>
