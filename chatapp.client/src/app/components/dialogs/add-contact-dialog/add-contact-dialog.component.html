@@ -33,7 +33,9 @@
               <img matListAvatar class="w-40px h-40px user-profile-picture"
                 [src]="user.profilePicture || 'img/default-avatar.png'" />
               <div class="ms-2 d-flex flex-column">
-                <span>{{ user.firstName }} {{ user.lastName }}</span>
+                <div>
+                  <span>{{ user.firstName }} {{ user.lastName }}</span> <span class="text-secondary"> ({{ user.username }})</span>
+                </div>
                 <span *ngIf="user.hasRequestedBack" class="has-requested-back-text">Has requested to connect with you</span>
               </div>
             </div>
