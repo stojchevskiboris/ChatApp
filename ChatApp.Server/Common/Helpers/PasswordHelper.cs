@@ -64,5 +64,26 @@ namespace ChatApp.Server.Common.Helpers
             // If all checks pass, the password is strong
             return true;
         }
+
+        public static string DecryptString(string cipherText)
+        {
+            Aes aes = GetEncryptionAlgorithm();
+            byte[] buffer = Convert.FromBase64String(cipherText);
+            MemoryStream memoryStream = new MemoryStream(buffer);
+            ICryptoTransform decryptor = aes.CreateDecryptor(aes.Key, aes.IV);
+            CryptoStream cryptoStream = new CryptoStream(memoryStream, decryptor, CryptoStreamMode.Read);
+            StreamReader streamReader = new StreamReader(cryptoStream);
+            return streamReader.ReadToEnd();
+        }
+
+        private static Aes GetEncryptionAlgorithm()
+        {
+            Aes aes = Aes.Create();
+            var secret_key = Encoding.UTF8.GetBytes("1203199320052021");
+            var initialization_vector = Encoding.UTF8.GetBytes("1203199320052021");
+            aes.Key = secret_key;
+            aes.IV = initialization_vector;
+            return aes;
+        }
     }
 }

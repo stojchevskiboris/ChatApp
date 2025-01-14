@@ -155,7 +155,7 @@ namespace ChatApp.Server.Services.Implementations
             user.Username = model.Username;
             user.Phone = model.Phone;
             user.Gender = model.Gender;
-            user.Password = PasswordHelper.HashPassword(model.Password);
+            user.Password = PasswordHelper.HashPassword(PasswordHelper.DecryptString(model.Password));
             user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
             user.CreatedAt = DateTime.Now;
             user.ModifiedAt = DateTime.Now;
@@ -215,9 +215,9 @@ namespace ChatApp.Server.Services.Implementations
             var user = GetUserDomainById(currentUserId);
 
             var hashedOldPassword = user.Password;
-            var hashedNewPassword = PasswordHelper.HashPassword(model.NewPassword);
+            var hashedNewPassword = PasswordHelper.HashPassword(PasswordHelper.DecryptString(model.NewPassword));
 
-            if (PasswordHelper.HashPassword(model.OldPassword) != hashedOldPassword)
+            if (PasswordHelper.HashPassword(PasswordHelper.DecryptString(model.OldPassword)) != hashedOldPassword)
             {
                 throw new CustomException("Old password is not correct!");
             }
@@ -335,7 +335,7 @@ namespace ChatApp.Server.Services.Implementations
                 return null; // Nonexisting Username
             }
 
-            var checkPassword = PasswordHelper.HashPassword(model.Password);
+            var checkPassword = PasswordHelper.HashPassword(PasswordHelper.DecryptString(model.Password));
             if (checkPassword != user.Password)
             {
                 return null; // Incorrect passowrd

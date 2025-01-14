@@ -5,6 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { UserRegisterModel } from '../../models/user-register-model';
 import { UserLoginModel } from '../../models/user-login-model';
 import { ToastrService } from 'ngx-toastr';
+import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 
 @Component({
   selector: 'app-login',
@@ -16,6 +17,7 @@ export class LoginComponent implements OnInit {
   constructor(
     private el: ElementRef,
     private authService: AuthService,
+    private encryptDecryptService: EncryptDecryptService,
     private router: Router,
     private toastr: ToastrService
   ) { }
@@ -65,10 +67,16 @@ export class LoginComponent implements OnInit {
 
 
     this.loading = true;
+    const rawPassword = this.registerModel.password;
+    const encryptedPassword = this.encryptDecryptService.encryptUsingAES256(this.registerModel.password);
+    const rawConfirmPassword = this.registerModel.confirmPassword;
+    const encryptedConfirmPassword = this.encryptDecryptService.encryptUsingAES256(this.registerModel.confirmPassword);
+    this.registerModel.password = encryptedPassword;
+    this.registerModel.confirmPassword = encryptedConfirmPassword;
     this.authService.register(this.registerModel).subscribe({
       next: (r) => {
         this.loginModel.username = this.registerModel.username;
-        this.loginModel.password = this.registerModel.password;
+        this.loginModel.password = rawPassword;
         this.login();
       },
       error: (err: HttpErrorResponse) => {
@@ -80,10 +88,15 @@ export class LoginComponent implements OnInit {
         this.loading = false;
       }
     });
+    this.registerModel.password = rawPassword;
+    this.registerModel.confirmPassword = rawConfirmPassword;
   }
 
   login() {
     this.loading = true;
+    const rawPassword = this.loginModel.password;
+    const encryptedPassword = this.encryptDecryptService.encryptUsingAES256(this.loginModel.password);
+    this.loginModel.password = encryptedPassword
     this.authService.login(this.loginModel).subscribe({
       next: (r) => {
         this.router.navigate(['/home']);
@@ -101,6 +114,7 @@ export class LoginComponent implements OnInit {
         this.loading = false;
       }
     });
+    this.loginModel.password = rawPassword;
   }
 
 

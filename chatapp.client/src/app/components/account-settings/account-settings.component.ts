@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { MatDialog } from '@angular/material/dialog';
 import { RemoveMediaDialogComponent } from '../dialogs/remove-media-dialog/remove-media-dialog.component';
+import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 
 @Component({
   selector: 'app-account-settings',
@@ -27,6 +28,7 @@ export class AccountSettingsComponent {
 
   constructor(
     private userService: UserService,
+    private encryptDecryptService: EncryptDecryptService,
     private fb: FormBuilder,
     private toastr: ToastrService,
     private datePipe: DatePipe
@@ -170,6 +172,15 @@ export class AccountSettingsComponent {
 
   changePassword(): void {
     if (this.passwordFormHasData) {
+      const rawOldPassword = this.passwordForm.controls['oldPassword'].value;
+      const encryptedOldPassword = this.encryptDecryptService.encryptUsingAES256(this.passwordForm.controls['oldPassword'].value);
+      const rawNewPassword = this.passwordForm.controls['newPassword'].value;
+      const encryptedNewPassword = this.encryptDecryptService.encryptUsingAES256(this.passwordForm.controls['newPassword'].value);
+      const rawConfirmPassword = this.passwordForm.controls['confirmPassword'].value;
+      const encryptedConfirmPassword = this.encryptDecryptService.encryptUsingAES256(this.passwordForm.controls['confirmPassword'].value);
+      this.passwordForm.controls['oldPassword'].setValue(encryptedOldPassword);
+      this.passwordForm.controls['newPassword'].setValue(encryptedNewPassword);
+      this.passwordForm.controls['confirmPassword'].setValue(encryptedConfirmPassword);
       this.userService.changePassword(this.passwordForm.value)
         .subscribe({
           next: (response: any) => {
@@ -190,6 +201,10 @@ export class AccountSettingsComponent {
             this.loading = false;
           }
         });
+      this.passwordForm.controls['oldPassword'].setValue(rawOldPassword);
+      this.passwordForm.controls['newPassword'].setValue(rawNewPassword);
+      this.passwordForm.controls['confirmPassword'].setValue(rawConfirmPassword);
+
     }
   }
 
