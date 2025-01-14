@@ -7,7 +7,9 @@
     <div class="d-flex justify-content-between">
       <div>
         <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
-        <div class="d-inline-block"><h3>({{recipientId}}){{ recipient?.firstName }} {{ recipient?.lastName }}</h3></div>
+        <div class="d-inline-block">
+          <h3>({{recipientId}}){{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+        </div>
         <div class="d-flex align-items-center mt-1" *ngIf="recipient">
           <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
             <mat-icon class="active-icon">circle</mat-icon>
@@ -19,6 +21,9 @@
         </div>
       </div>
       <div>
+        <button mat-icon-button (click)="searchMessage()">
+            <mat-icon>search</mat-icon>
+        </button>
         <button mat-icon-button (click)="toggleSettings()">
           <mat-icon>view_week</mat-icon>
         </button>
@@ -48,6 +53,7 @@
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
         <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span>
       </div>
+      <div id="searchTag" *ngIf="searchedMessageId == message.messageId"></div>
     </div>
   </ng-scrollbar>
 

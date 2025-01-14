@@ -26,6 +26,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   currentUserId: number = 0;
   recipient: UserViewModel = null;
   messages: MessageViewModel[] = [];
+  searchedMessageId: number = 9;
 
   hasScrolledToBottom: boolean = false;
   defaultAvatar = 'img/default-avatar.png';
@@ -243,6 +244,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   scrollToBottom() {
     this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+  }
+
+  searchMessage(){
+    this.scrollable.scrollToElement('#searchTag', {duration: 300 });
   }
 
   toggleSettings() {

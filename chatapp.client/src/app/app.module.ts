@@ -32,6 +32,7 @@ import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { RemoveContactDialogComponent } from './components/dialogs/remove-contact-dialog/remove-contact-dialog.component';
 import { DatePipe } from '@angular/common';
 import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-dialog/remove-media-dialog.component';
+import { ToDoComponent } from './components/to-do/to-do.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -50,7 +51,8 @@ import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-di
     SignOutDialogComponent,
     ContactsComponent,
     RemoveContactDialogComponent,
-    RemoveMediaDialogComponent
+    RemoveMediaDialogComponent,
+    ToDoComponent
   ],
   imports: [
     BrowserModule,
