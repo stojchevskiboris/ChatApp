@@ -1,13 +1,22 @@
-<div class="d-flex flex-column h-100">
-  <!-- <header class="bg-primary text-white d-flex align-items-center justify-content-center" style="height: 15%;">
-    <h1>Header</h1>
-  </header> -->
+<ng-scrollbar>
+<main>
+  <!-- Profile Section -->
+  <div class="text-center">
+    <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
+    <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
+    <h5 class="text-secondary">({{ recipient?.username }})</h5>
+  </div>
 
-  <main>
-    <div class="text-center">
-      <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
-      <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
-      <h5 class="text-secondary">({{ recipient?.username }})</h5>
+  <!-- Shared Media Section -->
+  <section class="media-section mt-4 px-3">
+    <h5 class="section-header">Shared Media</h5>
+    <div class="sharedMedia">
+      <ng-scrollbar class="media-list scrollable-container">
+        <div *ngFor="let media of sharedMedia" class="media-item" (click)="openMediaPreview(media)">
+          <img [src]="media.url" alt="{{ media.fileType }}" class="media-thumbnail" />
+        </div>
+      </ng-scrollbar>
     </div>
-  </main>
-</div>
+  </section>
+</main>
+</ng-scrollbar>

@@ -1,0 +1,49 @@
+.scrollable-container {
+    max-height: 300px;
+  }
+  
+  .media-thumbnail {
+    width: 100%;
+    max-width: 250px;
+    height: auto;
+    margin: 5px;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  .media-item{
+    display: inline-block;
+    width: auto;
+  }
+  
+  .media-preview-container {
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+  }
+  
+  .media-preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .preview-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .media-preview-footer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+  }
+
+  .sharedMedia{
+    border: 1px solid #dee2e6;
+    border-radius: 15px;
+    padding: 10px;
+    background: white;
+  }

@@ -33,6 +33,7 @@ import { RemoveContactDialogComponent } from './components/dialogs/remove-contac
 import { DatePipe } from '@angular/common';
 import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-dialog/remove-media-dialog.component';
 import { ToDoComponent } from './components/to-do/to-do.component';
+import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-dialog/media-preview-dialog.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -52,7 +53,9 @@ import { ToDoComponent } from './components/to-do/to-do.component';
     ContactsComponent,
     RemoveContactDialogComponent,
     RemoveMediaDialogComponent,
-    ToDoComponent
+    ToDoComponent,
+    RemoveMediaDialogComponent,
+    MediaPreviewDialogComponent
   ],
   imports: [
     BrowserModule,

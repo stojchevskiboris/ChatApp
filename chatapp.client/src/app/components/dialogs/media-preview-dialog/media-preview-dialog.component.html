@@ -1,0 +1,33 @@
+<div class="media-preview-container">
+    <div class="media-preview-header">
+        <h4>Media Preview</h4>
+        <button mat-icon-button aria-label="Close" (click)="closeDialog()">
+            <mat-icon>close</mat-icon>
+        </button>
+    </div>
+    <div class="media-preview-content">
+        <img *ngIf="data.media.fileType.startsWith('image/')" [src]="data.media.url" alt="{{ data.media.fileType }}"
+            class="preview-image" />
+        <video *ngIf="data.media.fileType.startsWith('video/')" controls class="preview-video">
+            <source [src]="data.media.url" [type]="data.media.fileType" />
+        </video>
+        <p><strong>File Type:</strong> {{ data.media.fileType }}</p>
+        <p><strong>File Size:</strong> {{ data.media.fileSize }} KB</p>
+        <p>
+            <strong>Created At:</strong>
+            {{ data.media.createdAt | date:'short' }}
+        </p>
+        <p>
+            <strong>Modified At:</strong>
+            {{ data.media.modifiedAt | date:'short' }}
+        </p>
+    </div>
+    <div class="media-preview-footer">
+        <button mat-raised-button color="primary" (click)="navigateMedia(-1)" [disabled]="!hasOlderMedia()">
+            Previous
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateMedia(1)" [disabled]="!hasNewerMedia()">
+            Next
+        </button>
+    </div>
+</div>
