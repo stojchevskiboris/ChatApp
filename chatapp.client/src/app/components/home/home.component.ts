@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   isChatSelected: boolean = false;
   selectedChatRecipientId: number = 0;
+  searchedMessageIdFromSettings: number = 0;
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
   isChatSettingsEnabled: boolean = true;
@@ -65,6 +66,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     } else {
       this.isChatSelected = true;
     }
+  }
+
+  handleSearchedMessageId(messageId: number) {
+    this.searchedMessageIdFromSettings = messageId;
   }
 
   toggleSettings(): void {

@@ -10,6 +10,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Services\SearchModels\**" />
+	  <Content Remove="Services\SearchModels\**" />
+	  <EmbeddedResource Remove="Services\SearchModels\**" />
+	  <None Remove="Services\SearchModels\**" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <Content Remove="Configs\Firebase\chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json" />
 	</ItemGroup>
 
@@ -58,7 +65,6 @@
 	<ItemGroup>
 		<Folder Include="Data\Mappings\" />
 		<Folder Include="Migrations\" />
-		<Folder Include="Services\SearchModels\" />
 	</ItemGroup>
 
 </Project>

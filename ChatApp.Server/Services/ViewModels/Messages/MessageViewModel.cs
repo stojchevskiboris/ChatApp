@@ -6,9 +6,9 @@ namespace ChatApp.Server.Services.ViewModels.Messages
     {
         public int Id { get; set; }
 
-        public User Sender { get; set; }
+        public int SenderId { get; set; }
 
-        public Recipient Recipient { get; set; }
+        public int RecipientId { get; set; }
 
         public string Content { get; set; }
 
@@ -16,7 +16,7 @@ namespace ChatApp.Server.Services.ViewModels.Messages
 
         public bool IsSeen { get; set; }
 
-        public Message ParentMessage { get; set; }
+        public int? ParentMessage { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

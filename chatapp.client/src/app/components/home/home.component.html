@@ -13,12 +13,12 @@
 
         <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border"
           *ngIf="isChatSelected && selectedChatRecipientId">
-          <app-chat (toggleChatSettings)="toggleSettings()" [recipientId]="selectedChatRecipientId"></app-chat>
+          <app-chat (toggleChatSettings)="toggleSettings()" [recipientId]="selectedChatRecipientId" [searchedMessageId]="searchedMessageIdFromSettings"></app-chat>
         </div>
 
         <div class="col-lg-4 chat fadeInAnimation border"
           *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
-          <app-chat-settings [recipientId]="selectedChatRecipientId"></app-chat-settings>
+          <app-chat-settings [recipientId]="selectedChatRecipientId" (searchMessageId)="handleSearchedMessageId($event)"></app-chat-settings>
         </div>
 
         <div class="col-sm-12 start-chat fadeInAnimation border" *ngIf="!isChatSelected">

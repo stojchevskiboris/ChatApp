@@ -8,15 +8,36 @@
   </div>
 
   <!-- Shared Media Section -->
-  <section class="media-section mt-4 px-3">
+  <section class="section mt-4 px-3">
     <h5 class="section-header">Shared Media</h5>
     <div class="sharedMedia">
-      <ng-scrollbar class="media-list scrollable-container">
+      <ng-scrollbar class="scrollable-container">
         <div *ngFor="let media of sharedMedia" class="media-item" (click)="openMediaPreview(media)">
           <img [src]="media.url" alt="{{ media.fileType }}" class="media-thumbnail" />
         </div>
       </ng-scrollbar>
     </div>
+  </section>
+
+  <!-- Search Chat Section -->
+  <section class="section mt-4 px-3">
+    <h5 class="section-header">Search Chat</h5>
+    <div class="search-container d-flex align-items-center mb-3">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search messages..."
+        [(ngModel)]="searchQuery"
+      />
+      
+      <button class="btn btn-primary" (click)="searchMessages()">Search</button>
+    </div>
+    <ng-scrollbar class="scrollable-container">
+      <div *ngFor="let message of searchResults" class="search-result-item" (click)="onSelectSearchResult(message.id)">
+        <div class="message-content">{{ message.content }}</div>
+        <div class="message-timestamp text-secondary">{{ message.createdAt | date: 'short' }}</div>
+      </div>
+    </ng-scrollbar>
   </section>
 </main>
 </ng-scrollbar>

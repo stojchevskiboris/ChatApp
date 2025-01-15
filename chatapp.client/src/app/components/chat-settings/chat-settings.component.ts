@@ -1,9 +1,11 @@
-import { Component, Input, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { MessageViewModel } from '../../models/message-view-model';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-chat-settings',
@@ -13,11 +15,15 @@ import { MatDialog } from '@angular/material/dialog';
 export class ChatSettingsComponent {
 
   @Input() recipientId: number | null = null;
+  @Output() searchMessageId = new EventEmitter<number>();
   recipient: UserViewModel = null;
   defaultAvatar = 'img/default-avatar.png';
   recipientProfilePicture: string = this.defaultAvatar;
   loading: boolean = false;
-  searchQuery: string = '';  
+  searchQuery: string = '';
+  searchResults: MessageViewModel[] = [];
+  selectedMessageId: number;
+  selectedMedia: Media | null = null;
   sharedMedia: Media[] = [
     {
       id: 1,
@@ -117,10 +123,9 @@ export class ChatSettingsComponent {
     },
   ];
   
-
-  selectedMedia: Media | null = null;
   constructor(
     private userService: UserService,
+    private messageService: MessageService,
     private dialog: MatDialog
   ) {}
 
@@ -158,9 +163,28 @@ export class ChatSettingsComponent {
     })
   }
 
-  searchMessages() {
-    console.log('Searching for:', this.searchQuery);
-    // Implement your search logic here
+  searchMessages(): void {
+    if (!this.searchQuery.trim()) {
+      return; // Ignore empty searches
+    }
+
+    this.messageService.searchMessages(this.recipientId, this.searchQuery).subscribe(
+      (results: MessageViewModel[]) => {
+        this.searchResults = results;
+      },
+      (error) => {
+        console.error('Error searching messages:', error);
+      }, 
+      () => {
+
+      }
+    );
+  }
+
+  onSelectSearchResult(messageId: number): void {
+    console.log('Selected message ID:', messageId);
+    this.searchMessageId.emit(messageId);
+    this.selectedMessageId = messageId;
   }
 
   openMediaPreview(media: Media) {

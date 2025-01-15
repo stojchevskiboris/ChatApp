@@ -32,6 +32,7 @@
   </div>
   <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar">
     <div *ngFor="let message of messages" class="message"
+      [class.highlight] = "searchedMessageId == message.id"
       [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
       <div class="message-content">
 
@@ -53,7 +54,7 @@
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
         <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span>
       </div>
-      <div id="searchTag" *ngIf="searchedMessageId == message.messageId"></div>
+      <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
     </div>
   </ng-scrollbar>
 

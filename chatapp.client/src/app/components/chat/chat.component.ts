@@ -16,6 +16,7 @@ import { interval, Subscription } from 'rxjs';
 export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @Input() recipientId: number | null = null;
+  @Input() searchedMessageId: number = -1;
   @Output() toggleChatSettings = new EventEmitter();
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
@@ -26,7 +27,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   currentUserId: number = 0;
   recipient: UserViewModel = null;
   messages: MessageViewModel[] = [];
-  searchedMessageId: number = 9;
 
   hasScrolledToBottom: boolean = false;
   defaultAvatar = 'img/default-avatar.png';
@@ -83,6 +83,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.scrollToBottom();
       this.newMessage = '';
       this.messageInput.nativeElement.focus();
+      this.searchedMessageId = -1;
+    }
+
+    this.cdr.detectChanges();
+
+    if (changes['searchedMessageId'] && !changes['searchedMessageId'].firstChange) {
+      this.searchMessage();
     }
   }
 
@@ -139,7 +146,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     console.log('Selected GIF:', gifUrl);
 
     const gifMessage: MessageViewModel = {
-      messageId: this.messages.length + 1,
+      id: this.messages.length + 1,
       senderId: this.currentUserId,
       recipientId: this.recipient?.id || 0,
       content: gifUrl,
@@ -169,7 +176,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     // Text Message
     if (this.newMessage.trim()) {
       const textMessage: MessageViewModel = {
-        messageId: this.messages.length + 1,
+        id: this.messages.length + 1,
         senderId: this.currentUserId,
         recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
@@ -188,7 +195,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (this.selectedMedia.length > 0) {
       this.selectedMedia.forEach((media, index) => {
         const mediaMessage: MessageViewModel = {
-          messageId: this.messages.length + 1 + index,
+          id: this.messages.length + 1 + index,
           senderId: this.currentUserId,
           recipientId: this.recipient?.id || 0,
           content: media.preview,
@@ -246,8 +253,16 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.scrollable.scrollTo({ bottom: -500, duration: 300 })
   }
 
-  searchMessage(){
-    this.scrollable.scrollToElement('#searchTag', {duration: 300 });
+  searchMessage() {
+    if (this.searchedMessageId) {
+      const messageExists = this.messages.some(msg => msg.id === this.searchedMessageId);
+      if (messageExists) {
+        this.scrollable.scrollToElement('#searchTag', {top: -10, duration: 300 });
+      } else {
+        console.log('Message not found locally. Fetching from server...');
+        // this.fetchMessages(this.searchedMessageId);
+      }
+    }
   }
 
   toggleSettings() {
@@ -277,7 +292,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   generateTestData() {
     this.messages = [
       {
-        messageId: 1,
+        id: 1,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Hey! How are you?',
@@ -288,7 +303,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 2,
+        id: 2,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'I am good, thanks! And you?',
@@ -299,7 +314,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 3,
+        id: 3,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'I’m doing well! Just working on a project.',
@@ -310,7 +325,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 4,
+        id: 4,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'That sounds interesting! What project?',
@@ -321,7 +336,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 5,
+        id: 5,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'It’s a chat application.',
@@ -332,7 +347,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 6,
+        id: 6,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -343,7 +358,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 7,
+        id: 7,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -354,7 +369,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 8,
+        id: 8,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -365,7 +380,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 9,
+        id: 9,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -376,7 +391,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 10,
+        id: 10,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -387,7 +402,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 11,
+        id: 11,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -398,7 +413,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 12,
+        id: 12,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -409,7 +424,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 13,
+        id: 13,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -420,7 +435,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 14,
+        id: 14,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -431,7 +446,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 15,
+        id: 15,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -442,7 +457,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 16,
+        id: 16,
         senderId: this.recipientId,
         recipientId: this.currentUserId,
         content: 'Nice! I’d love to see it when it’s done.',
@@ -453,7 +468,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         modifiedAt: new Date().toISOString(),
       },
       {
-        messageId: 17,
+        id: 17,
         senderId: this.currentUserId,
         recipientId: this.recipientId,
         content: 'Nice! I’d love to see it when it’s done.',
