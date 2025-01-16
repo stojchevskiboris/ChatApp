@@ -192,7 +192,7 @@ export class ChatSettingsComponent {
   onSelectSearchResult(messageId: number): void {
     console.log('Selected message ID:', messageId);
     this.searchMessageId.emit(-1);
-    this.cdr.detectChanges();
+    // this.cdr.detectChanges();
     setTimeout(() => {
       this.searchMessageId.emit(messageId);
       this.selectedMessageId = messageId;

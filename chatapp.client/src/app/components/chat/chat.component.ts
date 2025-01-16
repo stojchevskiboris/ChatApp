@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   messages: MessageViewModel[] = [];
 
   hasScrolledToBottom: boolean = false;
+  canBlurSearchMessage: number = 0;
   defaultAvatar = 'img/default-avatar.png';
   newMessage: string = '';
   showGifSearch: boolean = false;
@@ -257,7 +258,15 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (this.searchedMessageId) {
       const messageExists = this.messages.some(msg => msg.id === this.searchedMessageId);
       if (messageExists) {
-        this.scrollable.scrollToElement('#searchTag', {top: -10, duration: 300 });
+        this.scrollable.scrollToElement('#searchTag', { top: -10, duration: 300 });
+        this.canBlurSearchMessage++;
+        setTimeout(() => {
+          this.canBlurSearchMessage--;
+          if (this.canBlurSearchMessage == 0){
+            this.searchedMessageId = -1;
+          }
+          this.cdr.detectChanges();
+        }, 5000);
       } else {
         console.log('Message not found locally. Fetching from server...');
         // this.fetchMessages(this.searchedMessageId);
@@ -269,7 +278,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.showGifSearch = false;
     this.toggleChatSettings.emit()
   }
-  
+
   containsGiphy(content): any {
     if (content) {
       return content.toLowerCase().includes('giphy');
