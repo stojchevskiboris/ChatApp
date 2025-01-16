@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, SimpleChanges } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -6,6 +6,7 @@ import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/med
 import { MatDialog } from '@angular/material/dialog';
 import { MessageViewModel } from '../../models/message-view-model';
 import { MessageService } from '../../services/message.service';
+import { NgScrollbar } from 'ngx-scrollbar';
 
 @Component({
   selector: 'app-chat-settings',
@@ -14,6 +15,7 @@ import { MessageService } from '../../services/message.service';
 })
 export class ChatSettingsComponent {
 
+  @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @Input() recipientId: number | null = null;
   @Output() searchMessageId = new EventEmitter<number>();
   recipient: UserViewModel = null;
@@ -126,7 +128,8 @@ export class ChatSettingsComponent {
   constructor(
     private userService: UserService,
     private messageService: MessageService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -137,6 +140,10 @@ export class ChatSettingsComponent {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
     }
+  }
+  
+  scrollToBottom() {
+    this.scrollable.scrollTo({ bottom: -500, duration: 300 })
   }
 
   setRecipient(withLoading: boolean = true): void {
@@ -171,6 +178,7 @@ export class ChatSettingsComponent {
     this.messageService.searchMessages(this.recipientId, this.searchQuery).subscribe(
       (results: MessageViewModel[]) => {
         this.searchResults = results;
+        this.scrollToBottom();
       },
       (error) => {
         console.error('Error searching messages:', error);
@@ -183,8 +191,12 @@ export class ChatSettingsComponent {
 
   onSelectSearchResult(messageId: number): void {
     console.log('Selected message ID:', messageId);
-    this.searchMessageId.emit(messageId);
-    this.selectedMessageId = messageId;
+    this.searchMessageId.emit(-1);
+    this.cdr.detectChanges();
+    setTimeout(() => {
+      this.searchMessageId.emit(messageId);
+      this.selectedMessageId = messageId;
+    },50);
   }
 
   openMediaPreview(media: Media) {

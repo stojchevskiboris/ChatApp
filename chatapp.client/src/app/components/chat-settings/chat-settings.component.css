@@ -1,4 +1,11 @@
 .scrollable-container {
+  border: 1px solid #dee2e6;
+  border-radius: 15px;
+  padding: 10px;
+  background: white;
+}
+
+.scrollable{
   max-height: 300px;
 }
 
@@ -40,14 +47,6 @@
   justify-content: space-between;
   margin-top: 10px;
 }
-
-.sharedMedia {
-  border: 1px solid #dee2e6;
-  border-radius: 15px;
-  padding: 10px;
-  background: white;
-}
-
 
 .search-container {
   display: flex;
