@@ -22,6 +22,7 @@ export class ChatSettingsComponent {
   defaultAvatar = 'img/default-avatar.png';
   recipientProfilePicture: string = this.defaultAvatar;
   loading: boolean = false;
+  showSearchResults: boolean = false;
   searchQuery: string = '';
   searchResults: MessageViewModel[] = [];
   selectedMessageId: number;
@@ -139,6 +140,10 @@ export class ChatSettingsComponent {
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
+      this.searchResults = [];
+      this.showSearchResults = false;
+      this.searchQuery = '';
+      this.selectedMessageId = -1;
     }
   }
   
@@ -174,17 +179,16 @@ export class ChatSettingsComponent {
     if (!this.searchQuery.trim()) {
       return; // Ignore empty searches
     }
-
     this.messageService.searchMessages(this.recipientId, this.searchQuery).subscribe(
       (results: MessageViewModel[]) => {
         this.searchResults = results;
+        this.showSearchResults = true;
         this.scrollToBottom();
       },
       (error) => {
         console.error('Error searching messages:', error);
       }, 
       () => {
-
       }
     );
   }

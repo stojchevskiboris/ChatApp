@@ -40,6 +40,9 @@
         </div>
       </ng-scrollbar>
     </div>
+    <div *ngIf="showSearchResults && searchResults.length == 0" class="scrollable scrollable-container text-center text-gray">
+      No results
+    </div>
   </section>
 </main>
 </ng-scrollbar>
