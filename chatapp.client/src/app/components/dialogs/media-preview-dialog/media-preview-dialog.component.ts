@@ -1,5 +1,6 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MediaViewModel } from '../../../models/media-view-model';
 
 @Component({
   selector: 'app-media-preview-dialog',
@@ -8,7 +9,7 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 })
 export class MediaPreviewDialogComponent {
   constructor(
-    @Inject(MAT_DIALOG_DATA) public data: { media: Media; sharedMedia: Media[] },
+    @Inject(MAT_DIALOG_DATA) public data: { media: MediaViewModel; sharedMedia: MediaViewModel[] },
     private dialogRef: MatDialogRef<MediaPreviewDialogComponent>
   ) {}
 
@@ -42,11 +43,3 @@ export class MediaPreviewDialogComponent {
   }
 }
 
-interface Media {
-  id: number;
-  url: string;
-  fileType: string;
-  fileSize: number;
-  createdAt: Date;
-  modifiedAt: Date;
-}
