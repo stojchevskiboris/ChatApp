@@ -1,6 +1,5 @@
 <div class="media-preview-container">
     <ng-scrollbar>
-
         <div class="media-preview-header">
             <h4>Media Preview</h4>
             <button mat-icon-button aria-label="Close" (click)="closeDialog()">
@@ -16,21 +15,20 @@
             <!-- add shared by and shared on -->
             <p>
                 <strong>Shared by:</strong>
-                {{ data.media.sentByFirstName }} {{ data.media.sentByLastName }} <span class="text-secondary"> ({{
-                    data.media.sentByUsername }}) </span>
+                {{ data.media.sentByFirstName }} {{ data.media.sentByLastName }} 
+                <span class="text-secondary"> ({{ data.media.sentByUsername }}) </span>
             </p>
             <p>
                 {{ data.media.modifiedAt | date:'dd.MM.yyyy, HH:mm' }}
             </p>
         </div>
-        <div class="media-preview-footer m-2">
-            <button mat-raised-button color="primary" (click)="navigateMedia(-1)" [disabled]="!hasOlderMedia()">
-                Previous
-            </button>
-            <button mat-raised-button color="primary" (click)="navigateMedia(1)" [disabled]="!hasNewerMedia()">
-                Next
-            </button>
-        </div>
     </ng-scrollbar>
-
+    <div class="media-preview-footer m-2">
+        <button mat-raised-button color="primary" (click)="navigateMedia(-1)" [disabled]="!hasOlderMedia()">
+            Previous
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateMedia(1)" [disabled]="!hasNewerMedia()">
+            Next
+        </button>
+    </div>
 </div>

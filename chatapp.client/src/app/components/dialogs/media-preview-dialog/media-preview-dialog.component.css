@@ -1,6 +1,7 @@
 .media-preview-container {
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 20px;
   max-width: 600px;
   height: 90vh;
