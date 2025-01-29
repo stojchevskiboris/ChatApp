@@ -24,12 +24,12 @@
                             <div class="message-card d-flex align-items-center">
                                 <div mat-card-avatar class="me-2 example-header-image w-50px h-50px rounded-circle"></div>
                                 <div>
-                                    <span matListItemTitle>{{ message.firstName }} {{ message.lastName }}</span>
+                                    <span matListItemTitle>{{ message.recipientFirstName }} {{ message.recipientLastName }}</span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                        {{ message.recentMessage }}
+                                        {{ message.content }}
                                     </span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                        {{ message.lastMessageSentAt | chatDate }}
+                                        {{ message.modifiedAt | chatDate }}
                                     </span>
                                 </div>
                             </div>

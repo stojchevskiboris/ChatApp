@@ -20,6 +20,8 @@ namespace ChatApp.Server.Configs
             services.AddScoped<IGroupUserRepository, GroupUserRepository>();
             services.AddScoped<IRequestRepository, RequestRepository>();
             services.AddScoped<IMediaRepository, MediaRepository>();
+            services.AddScoped<IMessageRepository, MessageRepository>();
+            services.AddScoped<IRecipientRepository, RecipientRepository>();
         }
 
         public static void ConfigureServices(this IServiceCollection services)
@@ -30,6 +32,7 @@ namespace ChatApp.Server.Configs
             services.AddScoped<IGiphyService, GiphyService>();
             services.AddScoped<IGroupUserService, GroupUserService>();
             services.AddScoped<IRequestService, RequestService>();
+            services.AddScoped<IMessageService, MessageService>();
 
             services.AddHttpClient<IGiphyService, GiphyService>();
             services.AddHttpContextAccessor();

@@ -101,6 +101,7 @@ namespace ChatApp.Server.Data
             modelBuilder.Entity<Request>()
                 .Navigation(r => r.UserTo)
                 .AutoInclude();
+
         }
     }
 }

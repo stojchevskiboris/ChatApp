@@ -1,6 +1,4 @@
-﻿using ChatApp.Server.Domain.Models;
-
-namespace ChatApp.Server.Services.ViewModels.Messages
+﻿namespace ChatApp.Server.Services.ViewModels.Messages
 {
     public class MessageViewModel
     {
@@ -10,7 +8,7 @@ namespace ChatApp.Server.Services.ViewModels.Messages
 
         public int RecipientId { get; set; }
 
-        public string Content { get; set; }
+        public string Content { get; set; } = "";
 
         public bool HasMedia { get; set; }
 

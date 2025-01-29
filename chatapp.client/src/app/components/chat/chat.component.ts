@@ -7,6 +7,8 @@ import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
+import { MessageService } from '../../services/message.service';
+import { MediaMessageModel } from '../../models/media-message-model';
 
 @Component({
   selector: 'app-chat',
@@ -34,7 +36,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   newMessage: string = '';
   showGifSearch: boolean = false;
   isMediaSelected: boolean = false;
-  selectedMedia: { file: File, preview: string, type: string }[] = [];
+  selectedMedia: MediaMessageModel[] = [];
   maxFileSizeMB: number = 20; // Maximum file size limit in MB
   errorMessage: string | null = null;
   recipientProfilePicture: string = this.defaultAvatar;
@@ -44,6 +46,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   constructor(
     private authService: AuthService,
     private userService: UserService,
+    private messageService: MessageService,
     private cdr: ChangeDetectorRef
   ) {
     this.currentUserId = +this.authService.getUserId();
@@ -177,7 +180,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     // Text Message
     if (this.newMessage.trim()) {
       const textMessage: MessageViewModel = {
-        id: this.messages.length + 1,
+        id: 0,
         senderId: this.currentUserId,
         recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
@@ -190,13 +193,21 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
       this.messages.push(textMessage);
       this.newMessage = '';
+      this.messageService.sendMessage(textMessage).subscribe({
+        next: (response: boolean) => {
+        },
+        error: (err: HttpErrorResponse) => {
+        },
+        complete: () => {
+        },
+      })
     }
 
     // Media Message
     if (this.selectedMedia.length > 0) {
       this.selectedMedia.forEach((media, index) => {
         const mediaMessage: MessageViewModel = {
-          id: this.messages.length + 1 + index,
+          id: 0,
           senderId: this.currentUserId,
           recipientId: this.recipient?.id || 0,
           content: media.preview,
@@ -208,8 +219,15 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         };
 
         console.log('Sending media:', media);
-        // Replace with actual upload logic
         this.messages.push(mediaMessage);
+        this.messageService.sendMessage(mediaMessage).subscribe({
+          next: (response: boolean) => {
+          },
+          error: (err: HttpErrorResponse) => {
+          },
+          complete: () => {
+          },
+        })
       });
 
       this.selectedMedia = [];

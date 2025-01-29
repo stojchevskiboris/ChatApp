@@ -6,6 +6,7 @@ import { UserService } from '../../services/user.service';
 import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
+import { RecentMessageViewModel } from '../../models/recent-message-view-model';
 
 @Component({
   selector: 'app-left-pane',
@@ -25,7 +26,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   canLoadMessagesSemaphore = true;
   canLoadContactsSemaphore = true;
 
-  messagesList: any[] = [];
+  messagesList: RecentMessageViewModel[] = [];
   contactsList: UserViewModel[] = [];
   selectedTabIndex: number = 0;
 
@@ -232,116 +233,96 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   testData() {
     const firstNames = [
-      'Alice',
-      'Bob',
-      'Charlie',
-      'Diana',
-      'Edward',
-      'Fiona',
-      'Grace',
-      'Chris',
-      'Bryan',
-      'George',
+      'Alice', 'Bob', 'Charlie', 'Diana', 'Edward', 
+      'Fiona', 'Grace', 'Chris', 'Bryan', 'George'
     ];
-
+  
     const lastNames = [
-      'Foden',
-      'Maguire',
-      'Scott',
-      'Frank',
-      'Snowden',
-      'Isaac',
-      'Foden',
-      'Allen',
-      'Green',
-      'Allen'
-    ]
-
+      'Foden', 'Maguire', 'Scott', 'Frank', 'Snowden', 
+      'Isaac', 'Foden', 'Allen', 'Green', 'Allen'
+    ];
+  
     const messages = [
-      'Just checking in!', 'Can we reschedule our meeting?',
-      'Don’t forget to send the report.', 'Looking forward to our next chat.',
-      'Do you have time to talk?', 'I found that article you might like.',
-      'Let’s catch up soon!', 'How was your weekend?',
+      'Just checking in!', 'Can we reschedule our meeting?', 
+      'Don’t forget to send the report.', 'Looking forward to our next chat.', 
+      'Do you have time to talk?', 'I found that article you might like.', 
+      'Let’s catch up soon!', 'How was your weekend?', 
       'Happy to help with your project.', 'Are you free for lunch tomorrow?'
     ];
-    var j: number = 1;
-
+  
+    let j: number = 1;
     const now = new Date();
-
+  
     // Case 1: Within the last 5 minutes
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getTime() - 3 * 60 * 1000), // 3 minutes ago
-      isSeen: false,
-      recipientId: j++
-    });
-
+    let message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getTime() - 3 * 60 * 1000); // 3 minutes ago
+    message.isSeen = false;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Case 2: 5 to 30 minutes ago
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getTime() - 15 * 60 * 1000), // 15 minutes ago
-      isSeen: false,
-      recipientId: j++
-    });
-
+    message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getTime() - 15 * 60 * 1000); // 15 minutes ago
+    message.isSeen = false;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Case 3: Same day, more than 30 minutes ago
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getTime() - 4 * 60 * 60 * 1000), // 4 hours ago
-      isSeen: true,
-      recipientId: j++
-    });
-
+    message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getTime() - 4 * 60 * 60 * 1000); // 4 hours ago
+    message.isSeen = true;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Case 4: Within the last 7 days
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-      isSeen: true,
-      recipientId: j++
-    });
-
+    message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getTime() - 2 * 24 * 60 * 60 * 1000); // 2 days ago
+    message.isSeen = true;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Case 5: More than 7 days ago, within the same year
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000), // 10 days ago
-      isSeen: true,
-      recipientId: j++
-    });
-
+    message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getTime() - 10 * 24 * 60 * 60 * 1000); // 10 days ago
+    message.isSeen = true;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Case 6: Previous years
-    this.messagesList.push({
-      firstName: firstNames[Math.floor(Math.random() * firstNames.length)],
-      lastName: lastNames[Math.floor(Math.random() * lastNames.length)],
-      recentMessage: messages[Math.floor(Math.random() * messages.length)],
-      lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()), // 1 year ago
-      isSeen: false,
-      recipientId: j++
-    });
-
+    message = new RecentMessageViewModel();
+    message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+    message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+    message.content = messages[Math.floor(Math.random() * messages.length)];
+    message.modifiedAt = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()); // 1 year ago
+    message.isSeen = false;
+    message.recipientId = j++;
+    this.messagesList.push(message);
+  
     // Adding some extra random data
     for (let i = 6; i < 20; i++) {
-      const randomFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-      const randomLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-      const randomMessage = messages[Math.floor(Math.random() * messages.length)];
-
-      this.messagesList.push({
-        firstName: randomFirstName,
-        lastName: randomLastName,
-        recentMessage: randomMessage,
-        lastMessageSentAt: new Date(now.getFullYear() - 1, now.getMonth(), now.getDate()),
-        isSeen: true,
-        recipientId: j++
-      });
+      message = new RecentMessageViewModel();
+      message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
+      message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
+      message.content = messages[Math.floor(Math.random() * messages.length)];
+      message.modifiedAt = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
+      message.isSeen = true;
+      message.recipientId = j++;
+      this.messagesList.push(message);
     }
 
     j = 1;
