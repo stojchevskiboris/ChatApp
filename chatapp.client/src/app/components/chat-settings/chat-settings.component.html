@@ -17,6 +17,9 @@
         </div>
       </ng-scrollbar>
     </div>
+    <div class="noMedia" *ngIf="sharedMedia.length == 0">
+      <p>No media found</p>
+    </div>
   </section>
 
   <!-- Search Chat Section -->

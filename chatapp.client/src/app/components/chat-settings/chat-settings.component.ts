@@ -271,7 +271,10 @@ export class ChatSettingsComponent {
   openMediaPreview(media: MediaViewModel) {
     this.dialog.open(MediaPreviewDialogComponent, {
       data: { media, sharedMedia: this.sharedMedia },
-      width: '700px',
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      height: '90%',
+      width: '90%',
       autoFocus: false,
     });
   }
