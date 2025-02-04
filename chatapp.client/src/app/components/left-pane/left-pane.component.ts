@@ -7,6 +7,8 @@ import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
 import { RecentMessageViewModel } from '../../models/recent-message-view-model';
+import { MessageViewModel } from '../../models/message-view-model';
+import { MessageService } from '../../services/message.service';
 
 @Component({
   selector: 'app-left-pane',
@@ -17,6 +19,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   dialog = inject(MatDialog);
   @ViewChild('searchInput') searchInput: ElementRef;
+  searchQuery: string = '';
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
   selectedChatId: number = null;
@@ -31,15 +34,18 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   selectedTabIndex: number = 0;
 
   hasContactsLoaded: boolean = false;
+  hasMessagesLoaded: boolean = false;
   updateLastActiveSubscription: Subscription;
 
   constructor(
     private userService: UserService,
+    private messageService: MessageService,
   ) { }
 
   ngOnInit(): void {
-    this.testData();
+    // this.testData();
     this.getContacts();
+    this.getMessages();
     this.updateLastActiveSubscription = interval(60000).subscribe(x => {
       this.updateContactsLastActive();
     });
@@ -149,6 +155,12 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   // }
   // #endregion
   
+  openChatFromMessages(message: RecentMessageViewModel) {
+    message.isSeen = true;
+    this.messageService.setMessageSeen(message.id).subscribe(data => {});
+    this.openChat(message.recipientId);
+  }
+
   openChat(recipientId: number) {
     this.selectedChat.emit(recipientId);
     this.selectedChatId = recipientId;
@@ -175,6 +187,30 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       console.log(`Dialog result: ${result}`);
     });
 
+  }
+
+  getMessages() {
+    var setFlag: boolean = true;
+    setTimeout(() => {
+      if (setFlag) {
+        this.hasMessagesLoaded = false;
+      }
+    }, 200);
+    this.messageService.getRecentMessages(this.searchQuery).subscribe({
+      next: (model: RecentMessageViewModel[]) => {
+        setFlag = false;
+        this.messagesList = model;
+        this.hasMessagesLoaded = true;
+      },
+      error: (err: any) => {
+        setFlag = false;
+        this.hasMessagesLoaded = true;
+      },
+      complete: () => {
+        setFlag = false;
+        this.hasMessagesLoaded = true;
+      }
+    })
   }
 
   getContacts() {

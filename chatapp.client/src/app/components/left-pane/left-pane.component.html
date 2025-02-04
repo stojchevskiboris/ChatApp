@@ -6,8 +6,8 @@
     <div class="search-bar mb-2">
         <mat-form-field class="w-100 search-bar-field">
             <mat-label>Search</mat-label>
-            <input matInput type="text" #searchInput>
-            <button matSuffix mat-icon-button aria-label="Search" class="me-2">
+            <input matInput type="text" #searchInput [(ngModel)]="searchQuery" (keyup)="getMessages()">
+            <button matSuffix mat-icon-button aria-label="Search" class="me-2" (click)="getMessages()">
                 <mat-icon>search</mat-icon>
             </button>
         </mat-form-field>
@@ -20,13 +20,19 @@
                     <mat-selection-list>
                         <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
                             [ngClass]="{'selected': message.recipientId==selectedChatId}"
-                            (click)="openChat(message.recipientId)">
+                            (click)="openChatFromMessages(message)">
                             <div class="message-card d-flex align-items-center">
-                                <div mat-card-avatar class="me-2 example-header-image w-50px h-50px rounded-circle"></div>
+                                <div mat-card-avatar class="me-4">
+                                    <img matListAvatar class="w-50px h-50px user-profile-picture"
+                                        [src]="message.recipientProfilePicture || 'img/default-avatar.png'" />
+                                </div>                                
                                 <div>
-                                    <span matListItemTitle>{{ message.recipientFirstName }} {{ message.recipientLastName }}</span>
+                                    <span matListItemTitle [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.recipientFirstName }} {{ message.recipientLastName }}</span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                        {{ message.content }}
+                                        <span *ngIf="message.isSentMessage" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">You: </span>
+                                        <span *ngIf="message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">(Media message)</span>
+                                        <span *ngIf="!message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.content }}</span>
+                                        
                                     </span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
                                         {{ message.modifiedAt | chatDate }}
@@ -37,8 +43,8 @@
                     </mat-selection-list>
                 </ng-scrollbar>
 
-                <ng-template #noMessagesPage>
-                    <div class="text-center mt-3 mb-3">
+                <ng-template #noMessagesPage >
+                    <div class="text-center mt-3 mb-3" *ngIf="hasMessagesLoaded">
                         <span>No messages found</span>
                         <br>
                         <button mat-stroked-button class="mt-3 mb-3" (click)="goToContactsTab()">
@@ -46,6 +52,15 @@
                         </button>
                     </div>
                 </ng-template>
+                <div class="flex-content-center mt-1 h-50px" *ngIf="!hasMessagesLoaded">
+                    <div class="load-wrapp">
+                        <div class="load-3">
+                            <div class="line"></div>
+                            <div class="line"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                </div>
             </mat-tab>
 
             <mat-tab label="Contacts">

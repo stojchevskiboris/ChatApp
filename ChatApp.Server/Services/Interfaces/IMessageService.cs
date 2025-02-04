@@ -6,5 +6,7 @@ namespace ChatApp.Server.Services.Interfaces
     {
         List<MessageViewModel> SearchMessages(MessageSearchModel model);
         bool SendMessage(MessageViewModel model);
+        List<RecentMessageViewModel> GetRecentMessages(string searchQuery);
+        bool SetMessageSeen(int messageId);
     }
 }

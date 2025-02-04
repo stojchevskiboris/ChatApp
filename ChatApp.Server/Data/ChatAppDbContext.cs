@@ -102,6 +102,21 @@ namespace ChatApp.Server.Data
                 .Navigation(r => r.UserTo)
                 .AutoInclude();
 
+            modelBuilder.Entity<Recipient>()
+                .Navigation(r => r.RecipientUser)
+                .AutoInclude();
+
+            modelBuilder.Entity<Recipient>()
+                .Navigation(r => r.RecipientGroup)
+                .AutoInclude();
+
+            modelBuilder.Entity<Message>()
+                .Navigation(m => m.Recipient)
+                .AutoInclude();
+
+            modelBuilder.Entity<Message>()
+                .Navigation(m => m.Sender)
+                .AutoInclude();
         }
     }
 }

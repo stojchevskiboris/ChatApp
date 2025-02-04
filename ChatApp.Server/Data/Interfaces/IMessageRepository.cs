@@ -5,5 +5,7 @@ namespace ChatApp.Server.Data.Interfaces
 {
     public interface IMessageRepository : IRepository<Message>
     {
+        public List<Message> GetMessagesSentOrRecievedByUser(int userId);
+
     }
 }

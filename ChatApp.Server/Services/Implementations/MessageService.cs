@@ -1,7 +1,9 @@
 ﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
+using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels.Messages;
 
 namespace ChatApp.Server.Services.Implementations
@@ -62,7 +64,7 @@ namespace ChatApp.Server.Services.Implementations
                 ModifiedAt = DateTime.UtcNow.AddMinutes(-20)
             }
         };
-        
+
         public MessageService(
             IMessageRepository messageRepository,
             IUserRepository userRepository,
@@ -132,6 +134,84 @@ namespace ChatApp.Server.Services.Implementations
             }
 
             return recipient;
+        }
+
+        public List<RecentMessageViewModel> GetRecentMessages(string searchQuery)
+        {
+            // prvo pristap do kontakti
+            // ako ima poraki od kontaktite, 
+            var currentUserId = Context.GetCurrentUserId();
+            var user = _userRepository.Get(currentUserId);
+            if (user == null)
+            {
+                throw new CustomException("User not existing");
+            }
+
+            var result = new List<RecentMessageViewModel>();
+
+            var contactIds = _userRepository.GetContactsByUserId(currentUserId);
+            if (contactIds.Count == 0)
+            {
+                return new List<RecentMessageViewModel>();
+            }
+
+            var query = _messageRepository.GetMessagesSentOrRecievedByUser(currentUserId);
+
+            if (!query.Any())
+            {
+                return new List<RecentMessageViewModel>();
+            }
+
+            foreach (var c in contactIds)
+            {
+                if (query.Any(x => x.Recipient.RecipientUser.Id == c || x.Sender.Id == c))
+                {
+                    var mostRecentMessage = query.Where(x => x.Recipient.RecipientUser.Id == c || x.Sender.Id == c).FirstOrDefault();
+                    if (mostRecentMessage == null)
+                    {
+                        continue;
+                    }
+                    var isSentMessage = mostRecentMessage.Sender.Id == currentUserId;
+                    result.Add(new RecentMessageViewModel()
+                    {
+                        Id = mostRecentMessage.Id,
+                        SenderId = isSentMessage ?
+                            currentUserId : mostRecentMessage.Recipient.RecipientUser.Id,
+                        RecipientId = isSentMessage ?
+                            mostRecentMessage.Recipient.RecipientUser.Id : mostRecentMessage.Sender.Id,
+                        RecipientFirstName = isSentMessage ?
+                            mostRecentMessage.Recipient.RecipientUser.FirstName : mostRecentMessage.Sender.FirstName,
+                        RecipientLastName = isSentMessage ?
+                            mostRecentMessage.Recipient.RecipientUser.LastName : mostRecentMessage.Sender.LastName,
+                        RecipientProfilePicture = isSentMessage ?
+                            mostRecentMessage.Recipient.RecipientUser.ProfilePicture?.Url : mostRecentMessage.Sender.ProfilePicture?.Url,
+                        Content = mostRecentMessage.Content,
+                        HasMedia = mostRecentMessage.HasMedia,
+                        IsSeen = isSentMessage ? true : mostRecentMessage.IsSeen,
+                        IsSentMessage = isSentMessage,
+                        ParentMessageId = mostRecentMessage.ParentMessage?.Id,
+                        CreatedAt = mostRecentMessage.CreatedAt,
+                        ModifiedAt = mostRecentMessage.ModifiedAt,
+                    });
+                }
+            }
+
+            return result.OrderByDescending(x => x.CreatedAt).ToList();
+        }
+
+        public bool SetMessageSeen(int messageId)
+        {
+            var currentUserId = Context.GetCurrentUserId();
+
+            var message = _messageRepository.Get(messageId);
+            if (message != null)
+            {
+                message.IsSeen = true;
+                _messageRepository.Update(message);
+                return true;
+            }
+
+            return false;
         }
     }
 }

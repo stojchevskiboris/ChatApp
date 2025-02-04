@@ -4,10 +4,12 @@ export class RecentMessageViewModel {
     recipientId: number = 0;
     recipientFirstName: string = '';
     recipientLastName: string = '';
+    recipientProfilePicture: string = '';
     content: string = '';
     hasMedia: boolean = false;
     isSeen: boolean = false;
-    parentMessageId: boolean = false;
+    isSentMessage: boolean = false;
+    parentMessageId: number = 0;
     createdAt: Date = null;
     modifiedAt: Date = null;
 }

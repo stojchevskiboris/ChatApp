@@ -1,5 +1,6 @@
 ﻿using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
+using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -33,6 +34,24 @@ namespace ChatApp.Server.Controllers
         public bool SendMessage(MessageViewModel model)
         {
             var result = _messageService.SendMessage(model);
+
+            return result;
+        }
+
+        [HttpPost("GetRecentMessages")]
+        [Authorize]
+        public List<RecentMessageViewModel> GetRecentMessages(HttpRequestQueryModel model)
+        {
+            var result = _messageService.GetRecentMessages(model.Query);
+
+            return result;
+        }
+
+        [HttpPost("SetMessageSeen")]
+        [Authorize]
+        public bool SetMessageSeen(HttpRequestIdModel model)
+        {
+            var result = _messageService.SetMessageSeen(model.Id);
 
             return result;
         }
