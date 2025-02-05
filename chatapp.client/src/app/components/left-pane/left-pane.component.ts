@@ -6,7 +6,7 @@ import { UserService } from '../../services/user.service';
 import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
-import { RecentMessageViewModel } from '../../models/recent-message-view-model';
+import { RecentChatViewModel } from '../../models/recent-message-view-model';
 import { MessageViewModel } from '../../models/message-view-model';
 import { MessageService } from '../../services/message.service';
 
@@ -29,7 +29,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   canLoadMessagesSemaphore = true;
   canLoadContactsSemaphore = true;
 
-  messagesList: RecentMessageViewModel[] = [];
+  messagesList: RecentChatViewModel[] = [];
   contactsList: UserViewModel[] = [];
   selectedTabIndex: number = 0;
 
@@ -45,7 +45,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // this.testData();
     this.getContacts();
-    this.getMessages();
+    this.getRecentChats();
     this.updateLastActiveSubscription = interval(60000).subscribe(x => {
       this.updateContactsLastActive();
     });
@@ -155,7 +155,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   // }
   // #endregion
   
-  openChatFromMessages(message: RecentMessageViewModel) {
+  openChatFromMessages(message: RecentChatViewModel) {
     message.isSeen = true;
     this.messageService.setMessageSeen(message.id).subscribe(data => {});
     this.openChat(message.recipientId);
@@ -189,15 +189,15 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   }
 
-  getMessages() {
+  getRecentChats() {
     var setFlag: boolean = true;
     setTimeout(() => {
       if (setFlag) {
         this.hasMessagesLoaded = false;
       }
     }, 200);
-    this.messageService.getRecentMessages(this.searchQuery).subscribe({
-      next: (model: RecentMessageViewModel[]) => {
+    this.messageService.getRecentChats(this.searchQuery).subscribe({
+      next: (model: RecentChatViewModel[]) => {
         setFlag = false;
         this.messagesList = model;
         this.hasMessagesLoaded = true;
@@ -290,7 +290,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     const now = new Date();
   
     // Case 1: Within the last 5 minutes
-    let message = new RecentMessageViewModel();
+    let message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -300,7 +300,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messagesList.push(message);
   
     // Case 2: 5 to 30 minutes ago
-    message = new RecentMessageViewModel();
+    message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -310,7 +310,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messagesList.push(message);
   
     // Case 3: Same day, more than 30 minutes ago
-    message = new RecentMessageViewModel();
+    message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -320,7 +320,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messagesList.push(message);
   
     // Case 4: Within the last 7 days
-    message = new RecentMessageViewModel();
+    message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -330,7 +330,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messagesList.push(message);
   
     // Case 5: More than 7 days ago, within the same year
-    message = new RecentMessageViewModel();
+    message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -340,7 +340,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messagesList.push(message);
   
     // Case 6: Previous years
-    message = new RecentMessageViewModel();
+    message = new RecentChatViewModel();
     message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     message.content = messages[Math.floor(Math.random() * messages.length)];
@@ -351,7 +351,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   
     // Adding some extra random data
     for (let i = 6; i < 20; i++) {
-      message = new RecentMessageViewModel();
+      message = new RecentChatViewModel();
       message.recipientFirstName = firstNames[Math.floor(Math.random() * firstNames.length)];
       message.recipientLastName = lastNames[Math.floor(Math.random() * lastNames.length)];
       message.content = messages[Math.floor(Math.random() * messages.length)];

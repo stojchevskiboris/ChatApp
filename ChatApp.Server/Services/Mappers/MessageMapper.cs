@@ -6,15 +6,14 @@ namespace ChatApp.Server.Services.Mappers
 {
     public static class MessageMapper
     {
-        public static RecentMessageViewModel MapToRecentMessageModel(this Message message)
+        public static RecentChatViewModel MapToRecentMessageModel(this Message message)
         {
             if (message == null)
                 return null;
 
-            var model = new RecentMessageViewModel
+            var model = new RecentChatViewModel
             {
                 Id = message.Id,
-                SenderId = message.Sender?.Id ?? 0,
                 RecipientId = message.Recipient?.RecipientUser?.Id ?? 0,
                 RecipientFirstName = message.Recipient?.RecipientUser?.FirstName ?? "",
                 RecipientLastName = message.Recipient?.RecipientUser?.LastName ?? "",
@@ -29,7 +28,7 @@ namespace ChatApp.Server.Services.Mappers
             return model;
         }
 
-        public static List<RecentMessageViewModel> MapToRecentMessagesModelList(this List<Message> messages)
+        public static List<RecentChatViewModel> MapToRecentMessagesModelList(this List<Message> messages)
         {
             return messages.Select(x => x.MapToRecentMessageModel()).ToList();
         }

@@ -1,6 +1,5 @@
-export class RecentMessageViewModel {
+export class RecentChatViewModel {
     id: number = 0;
-    senderId: number = 0;
     recipientId: number = 0;
     recipientFirstName: string = '';
     recipientLastName: string = '';

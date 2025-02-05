@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { MessageViewModel } from '../models/message-view-model';
 import { Observable, tap } from 'rxjs';
-import { RecentMessageViewModel } from '../models/recent-message-view-model';
+import { RecentChatViewModel } from '../models/recent-message-view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +13,7 @@ export class MessageService {
 
   private searchMessagesEndpoint = '/Messages/SearchMessages';
   private sendMessageEndpoint = '/Messages/SendMessage';
-  private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
+  private getRecentChatsEndpoint = '/Messages/GetRecentChats';
   private SetMessageSeenEndpoint = '/Messages/SetMessageSeen';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
@@ -36,9 +36,9 @@ export class MessageService {
       );
   }
 
-  getRecentMessages(searchInput: string): Observable<RecentMessageViewModel[]> {
+  getRecentChats(searchInput: string): Observable<RecentChatViewModel[]> {
     return this.dataService
-      .post<RecentMessageViewModel[]>(this.getRecentMessagesEndpoint, {Query: searchInput})
+      .post<RecentChatViewModel[]>(this.getRecentChatsEndpoint, {Query: searchInput})
       .pipe(
         tap((response) => {
           return response;

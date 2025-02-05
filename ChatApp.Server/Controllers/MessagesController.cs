@@ -38,11 +38,11 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
-        [HttpPost("GetRecentMessages")]
+        [HttpPost("GetRecentChats")]
         [Authorize]
-        public List<RecentMessageViewModel> GetRecentMessages(HttpRequestQueryModel model)
+        public List<RecentChatViewModel> GetRecentChats(HttpRequestQueryModel model)
         {
-            var result = _messageService.GetRecentMessages(model.Query);
+            var result = _messageService.GetRecentChats(model.Query);
 
             return result;
         }

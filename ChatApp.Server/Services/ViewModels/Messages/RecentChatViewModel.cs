@@ -1,9 +1,8 @@
 ﻿namespace ChatApp.Server.Services.ViewModels.Messages
 {
-    public class RecentMessageViewModel
+    public class RecentChatViewModel
     {
         public int Id { get; set; }
-        public int SenderId { get; set; }
         public int RecipientId { get; set; }
         public string RecipientFirstName { get; set; }
         public string RecipientLastName { get; set; }

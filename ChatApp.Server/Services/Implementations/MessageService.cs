@@ -136,7 +136,7 @@ namespace ChatApp.Server.Services.Implementations
             return recipient;
         }
 
-        public List<RecentMessageViewModel> GetRecentMessages(string searchQuery)
+        public List<RecentChatViewModel> GetRecentChats(string searchQuery)
         {
             // prvo pristap do kontakti
             // ako ima poraki od kontaktite, 
@@ -147,19 +147,19 @@ namespace ChatApp.Server.Services.Implementations
                 throw new CustomException("User not existing");
             }
 
-            var result = new List<RecentMessageViewModel>();
+            var result = new List<RecentChatViewModel>();
 
             var contactIds = _userRepository.GetContactsByUserId(currentUserId);
             if (contactIds.Count == 0)
             {
-                return new List<RecentMessageViewModel>();
+                return new List<RecentChatViewModel>();
             }
 
             var query = _messageRepository.GetMessagesSentOrRecievedByUser(currentUserId);
 
             if (!query.Any())
             {
-                return new List<RecentMessageViewModel>();
+                return new List<RecentChatViewModel>();
             }
 
             foreach (var c in contactIds)
@@ -172,19 +172,17 @@ namespace ChatApp.Server.Services.Implementations
                         continue;
                     }
                     var isSentMessage = mostRecentMessage.Sender.Id == currentUserId;
-                    result.Add(new RecentMessageViewModel()
+
+                    var recipient = isSentMessage ?
+                        mostRecentMessage.Recipient.RecipientUser : mostRecentMessage.Sender;
+
+                    result.Add(new RecentChatViewModel()
                     {
                         Id = mostRecentMessage.Id,
-                        SenderId = isSentMessage ?
-                            currentUserId : mostRecentMessage.Recipient.RecipientUser.Id,
-                        RecipientId = isSentMessage ?
-                            mostRecentMessage.Recipient.RecipientUser.Id : mostRecentMessage.Sender.Id,
-                        RecipientFirstName = isSentMessage ?
-                            mostRecentMessage.Recipient.RecipientUser.FirstName : mostRecentMessage.Sender.FirstName,
-                        RecipientLastName = isSentMessage ?
-                            mostRecentMessage.Recipient.RecipientUser.LastName : mostRecentMessage.Sender.LastName,
-                        RecipientProfilePicture = isSentMessage ?
-                            mostRecentMessage.Recipient.RecipientUser.ProfilePicture?.Url : mostRecentMessage.Sender.ProfilePicture?.Url,
+                        RecipientId = recipient.Id,
+                        RecipientFirstName = recipient.FirstName,
+                        RecipientLastName = recipient.LastName,
+                        RecipientProfilePicture = recipient.ProfilePicture?.Url,
                         Content = mostRecentMessage.Content,
                         HasMedia = mostRecentMessage.HasMedia,
                         IsSeen = isSentMessage ? true : mostRecentMessage.IsSeen,
