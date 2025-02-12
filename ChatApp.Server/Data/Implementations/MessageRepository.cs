@@ -16,7 +16,7 @@ namespace ChatApp.Server.Data.Implementations
 
         public List<Message> GetMessagesSentOrRecievedByUser(int userId)
         {
-            var pendingRequests = _context.Messages
+            var messages = _context.Messages
                 .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&
                             x.Sender != null &&
                             (x.Recipient.RecipientUser.Id == userId) ||
@@ -24,7 +24,20 @@ namespace ChatApp.Server.Data.Implementations
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 
-            return pendingRequests;
+            return messages;
+        }
+
+        public List<Message> GetMessagesBySenderAndRecipient(int user1Id, int user2Id)
+        {
+            var messages = _context.Messages
+                .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&
+                            x.Sender != null &&
+                            (x.Recipient.RecipientUser.Id == user1Id && x.Sender.Id == user2Id) ||
+                            (x.Recipient.RecipientUser.Id == user2Id && x.Sender.Id == user1Id))
+                .OrderBy(x => x.CreatedAt)
+                .ToList();
+
+            return messages;
         }
     }
 }

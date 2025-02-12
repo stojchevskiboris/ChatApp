@@ -14,7 +14,8 @@ export class MessageService {
   private searchMessagesEndpoint = '/Messages/SearchMessages';
   private sendMessageEndpoint = '/Messages/SendMessage';
   private getRecentChatsEndpoint = '/Messages/GetRecentChats';
-  private SetMessageSeenEndpoint = '/Messages/SetMessageSeen';
+  private setMessageSeenEndpoint = '/Messages/SetMessageSeen';
+  private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
     return this.dataService
@@ -48,7 +49,17 @@ export class MessageService {
 
   setMessageSeen(messageId: number): Observable<boolean>{
     return this.dataService
-      .post<boolean>(this.SetMessageSeenEndpoint, {Id: messageId})
+      .post<boolean>(this.setMessageSeenEndpoint, {Id: messageId})
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getRecentMessages(recipientId: number): Observable<MessageViewModel[]> {
+    return this.dataService
+      .post<MessageViewModel[]>(this.getRecentMessagesEndpoint, {Id: recipientId})
       .pipe(
         tap((response) => {
           return response;

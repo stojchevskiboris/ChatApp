@@ -53,12 +53,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
-    this.generateTestData();
+    // this.generateTestData();
 
+    
     this.setRecipient();
     this.setRecipientSubscription = interval(60000).subscribe(x => {
       this.setRecipient(false);
     });
+    this.getRecentMessages();
   }
 
   ngOnDestroy() {
@@ -83,7 +85,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
-      this.generateTestData();
+      // this.generateTestData();
+      this.getRecentMessages();
       this.scrollToBottom();
       this.newMessage = '';
       this.messageInput.nativeElement.focus();
@@ -95,6 +98,23 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (changes['searchedMessageId'] && !changes['searchedMessageId'].firstChange) {
       this.searchMessage();
     }
+  }
+
+  getRecentMessages(){
+    this.loading = true;
+    this.messageService.getRecentMessages(this.recipientId).subscribe(
+      (messages: MessageViewModel[]) => {
+        this.messages = messages;
+        this.loading = false;
+      },
+      (error: HttpErrorResponse) => {
+        this.loading = false;
+        console.error(error);
+      },
+      () => {
+        this.loading = false;
+      }
+    );
   }
 
   handleMediaUpload(event: Event): void {

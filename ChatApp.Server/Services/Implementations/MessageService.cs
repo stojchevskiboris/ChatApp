@@ -211,5 +211,21 @@ namespace ChatApp.Server.Services.Implementations
 
             return false;
         }
+
+        public List<MessageViewModel> GetRecentMessages(int recipientUserId)
+        {
+            var recipientUser = _userRepository.Get(recipientUserId);
+            var currentUserId = Context.GetCurrentUserId();
+
+
+            if (recipientUser == null)
+            {
+                return new List<MessageViewModel>();
+            }
+
+            var result = _messageRepository.GetMessagesBySenderAndRecipient(currentUserId, recipientUserId);
+
+            return result.MapToViewModelList();
+        }
     }
 }

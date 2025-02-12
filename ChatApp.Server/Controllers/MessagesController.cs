@@ -11,7 +11,7 @@ namespace ChatApp.Server.Controllers
     public class MessagesController : ControllerBase
     {
         private readonly IMessageService _messageService;
-        
+
 
         public MessagesController(IMessageService messageService)
         {
@@ -54,6 +54,17 @@ namespace ChatApp.Server.Controllers
             var result = _messageService.SetMessageSeen(model.Id);
 
             return result;
+        }
+
+        [HttpPost("GetRecentMessages")]
+        [Authorize]
+        public List<MessageViewModel> GetRecentMessages(HttpRequestIdModel model)
+        {
+            if (model.Id == 0)
+            {
+                return new List<MessageViewModel>();
+            }
+            return _messageService.GetRecentMessages(model.Id);
         }
     }
 }
