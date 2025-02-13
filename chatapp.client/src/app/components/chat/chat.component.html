@@ -10,7 +10,7 @@
       <div>
         <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
         <div class="d-inline-block">
-          <h3>({{recipientId}}){{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+          <h3>{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
         </div>
         <div class="d-flex align-items-center mt-1" *ngIf="recipient">
           <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
@@ -36,7 +36,12 @@
     <div *ngFor="let message of messages" class="message"
       [class.highlight] = "searchedMessageId == message.id"
       [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
-      <div class="message-content">
+      <div class="message-content" 
+        #tooltip="matTooltip"
+        matTooltipPosition="above"
+        [matTooltipPositionAtOrigin]="true"
+        (click)="tooltip.toggle()"
+        matTooltip="{{message.createdAt | messageDate}}">
 
         <!-- Text message -->
         <span *ngIf="!message.hasMedia" class="wrap-anywhere">{{ message.content }}</span>
@@ -53,7 +58,7 @@
         </div>
 
         <br>
-        <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
+        <span class="timestamp" [ngClass]="{'float-right': message.senderId == currentUserId}">{{ message.createdAt | date:'shortTime' }}</span>
         <!-- <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span> -->
       </div>
       <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>

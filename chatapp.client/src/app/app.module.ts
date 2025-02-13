@@ -34,6 +34,7 @@ import { DatePipe } from '@angular/common';
 import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-dialog/remove-media-dialog.component';
 import { ToDoComponent } from './components/to-do/to-do.component';
 import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-dialog/media-preview-dialog.component';
+import { MessageDatePipe } from './shared/pipes/message-date.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -47,6 +48,7 @@ import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-
     HeaderComponent,
     ChatDatePipe,
     LastActivePipe,
+    MessageDatePipe,
     GifSearchComponent,
     AddContactDialogComponent,
     SignOutDialogComponent,

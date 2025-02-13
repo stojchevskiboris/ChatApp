@@ -34,7 +34,7 @@
 
 .message-content {
   max-width: 80%;
-  padding: 8px;
+  padding: 8px 8px 0px 8px;
   border-radius: 5px;
 }
 
