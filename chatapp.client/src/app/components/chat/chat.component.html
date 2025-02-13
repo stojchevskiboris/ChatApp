@@ -1,8 +1,10 @@
-<div *ngIf="loading" class="loading-container flex-content-center">
+<div *ngIf="loading && hasFetchedMessages" class="loading-container flex-content-center">
   <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>
 
 <div class="chat-window">
+
+  <!-- Chat Header -->
   <div class="h-100px card p-3 mb-3">
     <div class="d-flex justify-content-between">
       <div>
@@ -27,6 +29,9 @@
       </div>
     </div>
   </div>
+  <!-- Chat Header -->
+
+  <!-- Messages Window -->
   <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar">
     <div *ngFor="let message of messages" class="message"
       [class.highlight] = "searchedMessageId == message.id"
@@ -49,12 +54,14 @@
 
         <br>
         <span class="timestamp">{{ message.createdAt | date:'shortTime' }}</span>
-        <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span>
+        <!-- <span style="float: right;">s:{{message.senderId}}, r:{{message.recipientId}}</span> -->
       </div>
       <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
     </div>
   </ng-scrollbar>
+  <!-- Messages Window -->
 
+  <!-- Input container -->
   <div class="input-container d-flex align-items-end p-2">
     <div class="w-100 d-flex align-items-end">
       <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" placeholder="Message..." matInput #messageInput
@@ -99,4 +106,6 @@
       </div>
     </button>
   </div>
+  <!-- Input container -->
+
 </div>

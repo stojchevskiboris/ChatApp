@@ -157,7 +157,9 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   
   openChatFromMessages(message: RecentChatViewModel) {
     message.isSeen = true;
-    this.messageService.setMessageSeen(message.id).subscribe(data => {});
+    if(!message.isSentMessage){
+      this.messageService.setMessageSeen(message.id).subscribe(data => {});
+    }
     this.openChat(message.recipientId);
   }
 

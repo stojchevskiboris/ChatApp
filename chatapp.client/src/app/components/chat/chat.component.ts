@@ -41,6 +41,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   errorMessage: string | null = null;
   recipientProfilePicture: string = this.defaultAvatar;
   loading: boolean = false;
+  hasFetchedMessages: boolean = false;
   setRecipientSubscription: Subscription;
 
   constructor(
@@ -54,13 +55,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnInit(): void {
     // this.generateTestData();
-
-    
+    this.getRecentMessages();
     this.setRecipient();
     this.setRecipientSubscription = interval(60000).subscribe(x => {
       this.setRecipient(false);
     });
-    this.getRecentMessages();
   }
 
   ngOnDestroy() {
@@ -84,13 +83,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
+      this.emptyMessages();
       this.setRecipient();
       // this.generateTestData();
       this.getRecentMessages();
-      this.scrollToBottom();
       this.newMessage = '';
       this.messageInput.nativeElement.focus();
       this.searchedMessageId = -1;
+      this.hasScrolledToBottom = false;
     }
 
     this.cdr.detectChanges();
@@ -99,20 +99,26 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.searchMessage();
     }
   }
+  emptyMessages() {
+    this.messages = [];
+  }
 
   getRecentMessages(){
-    this.loading = true;
     this.messageService.getRecentMessages(this.recipientId).subscribe(
       (messages: MessageViewModel[]) => {
         this.messages = messages;
-        this.loading = false;
+        this.hasFetchedMessages = true;
+        this.cdr.detectChanges();
+        this.scrollToBottom();
       },
       (error: HttpErrorResponse) => {
-        this.loading = false;
+        this.hasFetchedMessages = true;
         console.error(error);
+        this.scrollToBottom();
       },
       () => {
-        this.loading = false;
+        this.hasFetchedMessages = true;
+        this.scrollToBottom();
       }
     );
   }
@@ -200,7 +206,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     // Text Message
     if (this.newMessage.trim()) {
       const textMessage: MessageViewModel = {
-        id: 0,
+        id: -5,
         senderId: this.currentUserId,
         recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
@@ -227,7 +233,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (this.selectedMedia.length > 0) {
       this.selectedMedia.forEach((media, index) => {
         const mediaMessage: MessageViewModel = {
-          id: 0,
+          id: -5,
           senderId: this.currentUserId,
           recipientId: this.recipient?.id || 0,
           content: media.preview,
