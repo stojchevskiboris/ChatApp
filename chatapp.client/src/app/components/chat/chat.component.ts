@@ -9,6 +9,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { MediaMessageModel } from '../../models/media-message-model';
+import { MessageMediaViewModel } from '../../models/message-media-view-model';
 
 @Component({
   selector: 'app-chat',
@@ -103,7 +104,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.messages = [];
   }
 
-  getRecentMessages(){
+  getRecentMessages() {
     this.messageService.getRecentMessages(this.recipientId).subscribe(
       (messages: MessageViewModel[]) => {
         this.messages = messages;
@@ -175,11 +176,23 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   handleGifSelected(gifUrl: string): void {
     console.log('Selected GIF:', gifUrl);
 
+    const media: MessageMediaViewModel = {
+      id: -5,
+      messageId: this.messages.length + 1,
+      url: gifUrl,
+      fileType: 'image/gif',
+      fileSize: 0,
+      createdAt: new Date().toISOString(),
+      modifiedAt: new Date().toISOString()
+    }
+
     const gifMessage: MessageViewModel = {
       id: this.messages.length + 1,
       senderId: this.currentUserId,
       recipientId: this.recipient?.id || 0,
       content: gifUrl,
+      type: 'image/gif',
+      media: media,
       hasMedia: true,
       isSeen: false,
       parentMessageId: false,
@@ -211,6 +224,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         recipientId: this.recipient?.id || 0,
         content: this.newMessage.trim(),
         hasMedia: false,
+        type: 'text',
+        media: null,
         isSeen: false,
         parentMessageId: false,
         createdAt: new Date().toISOString(),
@@ -232,28 +247,62 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     // Media Message
     if (this.selectedMedia.length > 0) {
       this.selectedMedia.forEach((media, index) => {
-        const mediaMessage: MessageViewModel = {
-          id: -5,
-          senderId: this.currentUserId,
-          recipientId: this.recipient?.id || 0,
-          content: media.preview,
-          hasMedia: true,
-          isSeen: false,
-          parentMessageId: false,
-          createdAt: new Date().toISOString(),
-          modifiedAt: new Date().toISOString(),
-        };
+        const formData = new FormData();
+        formData.append('file', media.file);
 
-        console.log('Sending media:', media);
-        this.messages.push(mediaMessage);
-        this.messageService.sendMessage(mediaMessage).subscribe({
-          next: (response: boolean) => {
+        this.messageService.uploadMedia(formData).subscribe({
+          next: (uploadResponse) => {
+            if (uploadResponse.url) {
+              const media: MessageMediaViewModel = {
+                id: -5,
+                messageId: -5,
+                url: uploadResponse.url,
+                fileType: uploadResponse.contentType,
+                fileSize: uploadResponse.fileLength,
+                createdAt: new Date().toISOString(),
+                modifiedAt: new Date().toISOString()
+              }
+              const mediaMessage: MessageViewModel = {
+                id: -5,
+                senderId: this.currentUserId,
+                recipientId: this.recipient?.id || 0,
+                content: uploadResponse.url,  // Use uploaded media URL
+                type: media.fileType,  // Use uploaded media type
+                media: media,
+                hasMedia: true,
+                isSeen: false,
+                parentMessageId: false,
+                createdAt: new Date().toISOString(),
+                modifiedAt: new Date().toISOString(),
+              };
+
+              console.log('Sending media message:', mediaMessage);
+
+              this.messages.push(mediaMessage);
+              this.messageService.sendMessage(mediaMessage).subscribe({
+                next: (response: boolean) => {
+                  // this.toastr.success('Media message sent successfully');
+                },
+                error: (err: HttpErrorResponse) => {
+                  console.log(err);
+                  // this.toastr.error('Failed to send media message');
+                },
+                complete: () => {
+                  if (index === this.selectedMedia.length - 1) {
+                    this.loading = false;
+                  }
+                },
+              });
+            }
           },
-          error: (err: HttpErrorResponse) => {
+          error: (err) => {
+            console.log(err);
+            // this.toastr.error('Failed to upload media');
+            if (index === this.selectedMedia.length - 1) {
+              this.loading = false;
+            }
           },
-          complete: () => {
-          },
-        })
+        });
       });
 
       this.selectedMedia = [];
@@ -306,7 +355,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.canBlurSearchMessage++;
         setTimeout(() => {
           this.canBlurSearchMessage--;
-          if (this.canBlurSearchMessage == 0){
+          if (this.canBlurSearchMessage == 0) {
             this.searchedMessageId = -1;
           }
           this.cdr.detectChanges();
@@ -342,195 +391,236 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     return diffInMinutes < 5;
   }
 
-  generateTestData() {
-    this.messages = [
-      {
-        id: 1,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Hey! How are you?',
-        hasMedia: false,
-        isSeen: false,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 2,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'I am good, thanks! And you?',
-        hasMedia: false,
-        isSeen: false,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 3,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'I’m doing well! Just working on a project.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 4,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'That sounds interesting! What project?',
-        hasMedia: false,
-        isSeen: false,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 5,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'It’s a chat application.',
-        hasMedia: false,
-        isSeen: false,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 6,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 7,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 8,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 9,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 10,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 11,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 12,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 13,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 14,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 15,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 16,
-        senderId: this.recipientId,
-        recipientId: this.currentUserId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      },
-      {
-        id: 17,
-        senderId: this.currentUserId,
-        recipientId: this.recipientId,
-        content: 'Nice! I’d love to see it when it’s done.',
-        hasMedia: false,
-        isSeen: true,
-        parentMessageId: false,
-        createdAt: new Date().toISOString(),
-        modifiedAt: new Date().toISOString(),
-      }
-    ];
+  isImage(fileType: string | undefined): boolean {
+    return fileType?.startsWith('image') ?? false;
   }
+  
+  isGif(fileType: string | undefined): boolean {
+    return fileType === 'image/gif';
+  }
+  
+  isVideo(fileType: string | undefined): boolean {
+    return fileType?.startsWith('video') ?? false;
+  }
+  
+  isAudio(fileType: string | undefined): boolean {
+    return fileType?.startsWith('audio') ?? false;
+  }
+  
+  isFile(fileType: string | undefined): boolean {
+    return fileType?.startsWith('application') ?? false;
+  }
+  
+  getFileName(url: string): string {
+    return url.split('/').pop()?.split('?')[0] || 'Unknown File';
+  }
+
+  // generateTestData() {
+  //   this.messages = [
+  //     {
+  //       id: 1,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Hey! How are you?',
+  //       hasMedia: false,
+  //       isSeen: false,        
+  //       type: 'text',
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 2,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'I am good, thanks! And you?',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: false,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 3,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'I’m doing well! Just working on a project.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 4,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'That sounds interesting! What project?',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: false,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 5,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'It’s a chat application.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: false,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 6,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 7,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 8,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 9,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 10,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 11,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 12,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 13,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 14,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 15,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 16,
+  //       senderId: this.recipientId,
+  //       recipientId: this.currentUserId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     },
+  //     {
+  //       id: 17,
+  //       senderId: this.currentUserId,
+  //       recipientId: this.recipientId,
+  //       content: 'Nice! I’d love to see it when it’s done.',
+  //       type: 'text',
+  //       hasMedia: false,
+  //       isSeen: true,
+  //       parentMessageId: false,
+  //       createdAt: new Date().toISOString(),
+  //       modifiedAt: new Date().toISOString(),
+  //     }
+  //   ];
+  // }
 }

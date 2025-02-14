@@ -42,10 +42,28 @@ namespace ChatApp.Server.Services.Implementations
             return fileUris;
         }
 
-        public async Task<string> UploadFileAsync(IFormFile file)
+        public async Task<string> UploadAvatarFileAsync(IFormFile file)
         {
             var userId = Context.GetCurrentUserId();
             var fileName = $"avatars/{userId}/{Guid.NewGuid()}_{file.FileName}";
+
+            using var stream = new MemoryStream();
+            await file.CopyToAsync(stream);
+
+            var storageObject = await _storageClient.UploadObjectAsync(
+                BucketName,
+                fileName,
+                file.ContentType,
+                stream);
+
+            return $"https://firebasestorage.googleapis.com/v0/b/{BucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
+
+        }
+
+        public async Task<string> UploadMediaFileAsync(IFormFile file)
+        {
+            var userId = Context.GetCurrentUserId();
+            var fileName = $"messages/{userId}/{Guid.NewGuid()}_{file.FileName}";
 
             using var stream = new MemoryStream();
             await file.CopyToAsync(stream);

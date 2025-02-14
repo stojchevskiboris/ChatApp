@@ -16,6 +16,7 @@ export class MessageService {
   private getRecentChatsEndpoint = '/Messages/GetRecentChats';
   private setMessageSeenEndpoint = '/Messages/SetMessageSeen';
   private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
+  private uploadMediaEndpoint = '/Messages/UploadMedia';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
     return this.dataService
@@ -35,6 +36,16 @@ export class MessageService {
           return response;
         })
       );
+  }
+
+  uploadMedia(data: FormData): Observable<any> {
+    return this.dataService
+    .post<any>(this.uploadMediaEndpoint, data)
+    .pipe(
+      tap((response) => {
+        return response;
+      })
+    );
   }
 
   getRecentChats(searchInput: string): Observable<RecentChatViewModel[]> {

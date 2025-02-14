@@ -138,7 +138,6 @@ export class AccountSettingsComponent {
         });
       }
     });
-
   }
 
   updateUserDetails(): void {

@@ -109,6 +109,28 @@ namespace ChatApp.Server.Services.Implementations
 
                 _messageRepository.Create(message);
 
+                if (model.HasMedia)
+                {
+                    if (model.Media == null)
+                    {
+                        throw new Exception("media is null");
+                    }
+
+                    Media mediaContent = new Media()
+                    {
+                        MessageId = message.Id,
+                        Url = model.Media.Url,
+                        FileType = model.Media.FileType,
+                        FileSize = model.Media.FileSize,
+                        CreatedAt = DateTime.Now,
+                        ModifiedAt = DateTime.Now
+                    };
+
+                    message.MediaContent = mediaContent;
+
+                    _messageRepository.Update(message);
+                }
+
                 return true;
             }
             catch

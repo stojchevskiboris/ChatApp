@@ -29,6 +29,8 @@ namespace ChatApp.Server.Domain.Models
         //[ForeignKey("ParentMessageId")]
         public Message? ParentMessage { get; set; }
 
+        public Media? MediaContent { get; set; } // new added prop
+
         //public int? ParentMessageId { get; set; }
 
         [Required]

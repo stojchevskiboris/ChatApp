@@ -7,7 +7,7 @@ namespace ChatApp.Server.Domain.Models
         public int Id { get; set; }
 
         // todo add messageId
-        public Message? Message { get; set; }
+        public int? MessageId { get; set; }
 
         [Required]
         [MaxLength(2048)]

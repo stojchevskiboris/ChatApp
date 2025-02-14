@@ -1,4 +1,6 @@
-﻿namespace ChatApp.Server.Services.ViewModels.Messages
+﻿using ChatApp.Server.Services.ViewModels.Media;
+
+namespace ChatApp.Server.Services.ViewModels.Messages
 {
     public class MessageViewModel
     {
@@ -11,6 +13,8 @@
         public string Content { get; set; } = "";
 
         public bool HasMedia { get; set; }
+
+        public MediaViewModel? Media { get; set; }
 
         public bool IsSeen { get; set; }
 

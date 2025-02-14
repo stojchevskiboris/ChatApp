@@ -100,9 +100,11 @@ namespace ChatApp.Server.Controllers
         public async Task<IActionResult> UploadProfilePicture([FromForm] IFormFile file)
         {
             if (file == null || file.Length == 0)
+            {
                 return BadRequest("No file uploaded");
+            }
 
-            var imageUrl = await _firebaseStorageService.UploadFileAsync(file);
+            var imageUrl = await _firebaseStorageService.UploadAvatarFileAsync(file);
             if (string.IsNullOrEmpty(imageUrl))
             {
                 return StatusCode(500, "Failed to upload profile picture");

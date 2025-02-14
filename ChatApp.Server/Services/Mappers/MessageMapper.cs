@@ -44,6 +44,7 @@ namespace ChatApp.Server.Services.Mappers
                 SenderId = message.Sender?.Id ?? 0,
                 Content = message.Content ?? "",
                 HasMedia = message.HasMedia,
+                Media = message.MediaContent?.MapToViewModel(),
                 IsSeen = message.IsSeen,
                 ParentMessage = message.ParentMessage?.Id,
                 CreatedAt = message.CreatedAt,

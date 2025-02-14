@@ -7,7 +7,6 @@ using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels.Users;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
@@ -79,7 +78,7 @@ namespace ChatApp.Server.Services.Implementations
                 }
             }
 
-            return contacts;
+            return contacts.OrderByDescending(x => x.LastActive).ToList();
         }
 
         public UserViewModel GetUserByUsername(string username)

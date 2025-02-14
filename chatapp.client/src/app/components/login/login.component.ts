@@ -38,6 +38,12 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/home']);
           this.loading = false;
         }
+      },
+      error: (err: any) => {        
+        this.loading = false;
+      },
+      complete: () => {
+        this.loading = false;
       }
     });
   }

@@ -117,6 +117,10 @@ namespace ChatApp.Server.Data
             modelBuilder.Entity<Message>()
                 .Navigation(m => m.Sender)
                 .AutoInclude();
+
+            modelBuilder.Entity<Message>()
+                .Navigation(m => m.MediaContent)
+                .AutoInclude();
         }
     }
 }
