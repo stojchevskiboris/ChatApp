@@ -7,28 +7,38 @@
             </button>
         </div>
         <div class="media-preview-content">
-            <img *ngIf="data.media.fileType.startsWith('image/')" [src]="data.media.url" alt="{{ data.media.fileType }}"
-                class="preview-image" />
-            <video *ngIf="data.media.fileType.startsWith('video/')" controls class="preview-video">
-                <source [src]="data.media.url" [type]="data.media.fileType" />
-            </video>
-            <!-- add shared by and shared on -->
-            <p>
-                <strong>Shared by:</strong>
-                {{ data.media.sentByFirstName }} {{ data.media.sentByLastName }} 
-                <span class="text-secondary"> ({{ data.media.sentByUsername }}) </span>
-            </p>
-            <p>
-                {{ data.media.modifiedAt | date:'dd.MM.yyyy, HH:mm' }}
-            </p>
+            <div *ngIf="data.media; else noMedia">
+
+                <img *ngIf="data.media.fileType.startsWith('image/')" [src]="data.media.url"
+                    alt="{{ data.media.fileType }}" class="preview-image" />
+                <video *ngIf="data.media.fileType.startsWith('video/')" controls class="preview-video">
+                    <source [src]="data.media.url" [type]="data.media.fileType" />
+                </video>
+                <!-- add shared by and shared on -->
+                <p>
+                    <strong>Shared by:</strong>
+                    {{ data.media.sentByFirstName }} {{ data.media.sentByLastName }}
+                    <span class="text-secondary"> ({{ data.media.sentByUsername }}) </span>
+                </p>
+                <p>
+                    {{ data.media.modifiedAt | date:'dd.MM.yyyy, HH:mm' }}
+                </p>
+            </div>
+            <ng-template #noMedia>
+                <div class="load-3">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                </div>
+            </ng-template>
         </div>
     </ng-scrollbar>
     <div class="media-preview-footer m-2">
-        <button mat-raised-button color="primary" (click)="navigateMedia(-1)" [disabled]="!hasOlderMedia()">
-            Previous
-        </button>
         <button mat-raised-button color="primary" (click)="navigateMedia(1)" [disabled]="!hasNewerMedia()">
-            Next
+            <mat-icon class="m-0">arrow_back_ios</mat-icon>
+        </button>
+        <button mat-raised-button color="primary" (click)="navigateMedia(-1)" [disabled]="!hasOlderMedia()">
+            <mat-icon class="m-0">arrow_forward_ios</mat-icon>
         </button>
     </div>
 </div>

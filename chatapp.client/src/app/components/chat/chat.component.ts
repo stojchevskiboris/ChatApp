@@ -10,6 +10,9 @@ import { interval, Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { MediaMessageModel } from '../../models/media-message-model';
 import { MessageMediaViewModel } from '../../models/message-media-view-model';
+import { MediaViewModel } from '../../models/media-view-model';
+import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-chat',
@@ -28,6 +31,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   @ViewChild('autosize') autosize: CdkTextareaAutosize;
 
   currentUserId: number = 0;
+  currentUser: UserViewModel;
   recipient: UserViewModel = null;
   messages: MessageViewModel[] = [];
 
@@ -44,23 +48,41 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   loading: boolean = false;
   hasFetchedMessages: boolean = false;
   setRecipientSubscription: Subscription;
+  selectedMediaFromChat: MediaViewModel | null = null;
+  sharedMedia: MediaViewModel[] = [];
+  noMessages: boolean = false;
 
   constructor(
     private authService: AuthService,
     private userService: UserService,
     private messageService: MessageService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private dialog: MatDialog
   ) {
     this.currentUserId = +this.authService.getUserId();
   }
 
   ngOnInit(): void {
-    // this.generateTestData();
+    this.getCurrentUserDetails();
+
     this.getRecentMessages();
     this.setRecipient();
     this.setRecipientSubscription = interval(60000).subscribe(x => {
       this.setRecipient(false);
     });
+  }
+  getCurrentUserDetails() {
+    this.userService.getCurrentUserDetails()
+      .subscribe(
+        (response: UserViewModel) => {
+          if (response) {
+            this.currentUser = response;
+          }
+        },
+        (error) => {
+          console.error('Error loading user data:', error);
+        }
+      );
   }
 
   ngOnDestroy() {
@@ -84,9 +106,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
+      this.noMessages = false;
       this.emptyMessages();
       this.setRecipient();
-      // this.generateTestData();
       this.getRecentMessages();
       this.newMessage = '';
       this.messageInput.nativeElement.focus();
@@ -107,7 +129,32 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   getRecentMessages() {
     this.messageService.getRecentMessages(this.recipientId).subscribe(
       (messages: MessageViewModel[]) => {
+        if(!messages || messages.length == 0){
+          this.noMessages = true;
+        }
         this.messages = messages;
+        this.sharedMedia = messages
+          .filter(x => x.hasMedia)
+          .map(msg => {
+            var isSent = msg.senderId == this.currentUserId;
+            var media = new MediaViewModel;
+            media.id = msg.id;
+            media.url = msg.media!.url;
+            media.fileType = msg.media!.fileType;
+            media.fileSize = msg.media!.fileSize;
+            media.sentById = isSent ? this.recipient.id : this.currentUser.id;
+            media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
+            media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
+            media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
+            media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
+            media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
+            media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;
+            media.sentToUsername = isSent ? this.recipient.username : this.currentUser.username;
+            media.createdAt = new Date(msg.createdAt);
+            media.modifiedAt = new Date(msg.modifiedAt);
+
+            return media;
+          })
         this.hasFetchedMessages = true;
         this.cdr.detectChanges();
         this.scrollToBottom();
@@ -176,34 +223,61 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   handleGifSelected(gifUrl: string): void {
     console.log('Selected GIF:', gifUrl);
 
-    const media: MessageMediaViewModel = {
-      id: -5,
-      messageId: this.messages.length + 1,
-      url: gifUrl,
-      fileType: 'image/gif',
-      fileSize: 0,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString()
-    }
+    this.messageService.uploadGif(gifUrl).subscribe({
+      next: (uploadResponse) => {
+        if (uploadResponse.url) {
+          const media: MessageMediaViewModel = {
+            id: -5,
+            messageId: -5,
+            url: uploadResponse.url,
+            fileType: uploadResponse.contentType,
+            fileSize: uploadResponse.fileLength,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString()
+          }
+          const mediaMessage: MessageViewModel = {
+            id: -5,
+            senderId: this.currentUserId,
+            recipientId: this.recipient?.id || 0,
+            content: uploadResponse.url,  // Use uploaded media URL
+            type: 'image/gif',  // Use uploaded media type
+            media: media,
+            hasMedia: true,
+            isSeen: false,
+            parentMessageId: false,
+            createdAt: new Date().toISOString(),
+            modifiedAt: new Date().toISOString(),
+          };
 
-    const gifMessage: MessageViewModel = {
-      id: this.messages.length + 1,
-      senderId: this.currentUserId,
-      recipientId: this.recipient?.id || 0,
-      content: gifUrl,
-      type: 'image/gif',
-      media: media,
-      hasMedia: true,
-      isSeen: false,
-      parentMessageId: false,
-      createdAt: new Date().toISOString(),
-      modifiedAt: new Date().toISOString(),
-    };
+          console.log('Sending media message:', mediaMessage);
 
-    this.messages.push(gifMessage);
+          this.messages.push(mediaMessage);
+          this.scrollToBottom();
+          this.messageService.sendMessage(mediaMessage).subscribe({
+            next: (response: boolean) => {
+              // this.toastr.success('Media message sent successfully');
+            },
+            error: (err: HttpErrorResponse) => {
+              console.log(err);
+              // this.toastr.error('Failed to send media message');
+            },
+            complete: () => {
+              this.loading = false;
+            },
+          });
+        }
+      },
+      error: (err) => {
+        console.log(err);
+        // this.toastr.error('Failed to upload media');
+        this.loading = false;
+      },
+    });
+
+    // this.messages.push(gifMessage);
     this.scrollToBottom();
 
-    this.showGifSearch = false; // Close the GIF search overlay
+    this.showGifSearch = false;
   }
 
   toggleGifSearch(): void {
@@ -233,6 +307,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       };
 
       this.messages.push(textMessage);
+      this.scrollToBottom();
       this.newMessage = '';
       this.messageService.sendMessage(textMessage).subscribe({
         next: (response: boolean) => {
@@ -279,6 +354,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               console.log('Sending media message:', mediaMessage);
 
               this.messages.push(mediaMessage);
+              this.scrollToBottom();
               this.messageService.sendMessage(mediaMessage).subscribe({
                 next: (response: boolean) => {
                   // this.toastr.success('Media message sent successfully');
@@ -391,236 +467,87 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     return diffInMinutes < 5;
   }
 
-  isImage(fileType: string | undefined): boolean {
-    return fileType?.startsWith('image') ?? false;
-  }
-  
+
   isGif(fileType: string | undefined): boolean {
     return fileType === 'image/gif';
   }
-  
+
+  isImage(fileType: string | undefined): boolean {
+    return fileType?.startsWith('image') && !this.isGif(fileType) ? true : false;
+  }
+
   isVideo(fileType: string | undefined): boolean {
     return fileType?.startsWith('video') ?? false;
   }
-  
+
   isAudio(fileType: string | undefined): boolean {
     return fileType?.startsWith('audio') ?? false;
   }
-  
+
   isFile(fileType: string | undefined): boolean {
     return fileType?.startsWith('application') ?? false;
   }
-  
+
   getFileName(url: string): string {
     return url.split('/').pop()?.split('?')[0] || 'Unknown File';
   }
 
-  // generateTestData() {
-  //   this.messages = [
-  //     {
-  //       id: 1,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Hey! How are you?',
-  //       hasMedia: false,
-  //       isSeen: false,        
-  //       type: 'text',
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 2,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'I am good, thanks! And you?',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: false,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 3,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'I’m doing well! Just working on a project.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 4,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'That sounds interesting! What project?',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: false,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 5,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'It’s a chat application.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: false,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 6,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 7,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 8,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 9,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 10,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 11,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 12,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 13,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 14,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 15,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 16,
-  //       senderId: this.recipientId,
-  //       recipientId: this.currentUserId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     },
-  //     {
-  //       id: 17,
-  //       senderId: this.currentUserId,
-  //       recipientId: this.recipientId,
-  //       content: 'Nice! I’d love to see it when it’s done.',
-  //       type: 'text',
-  //       hasMedia: false,
-  //       isSeen: true,
-  //       parentMessageId: false,
-  //       createdAt: new Date().toISOString(),
-  //       modifiedAt: new Date().toISOString(),
-  //     }
-  //   ];
-  // }
+  openMediaPreview(msg: MessageViewModel) {
+    var isSent = msg.senderId == this.currentUserId;
+    var media = new MediaViewModel;
+    media.id = msg.id;
+    media.url = msg.media!.url;
+    media.fileType = msg.media!.fileType;
+    media.fileSize = msg.media!.fileSize;
+    media.sentById = isSent ? this.recipient.id : this.currentUser.id;
+    media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
+    media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
+    media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
+    media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
+    media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
+    media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;
+    media.sentToUsername = isSent ? this.recipient.username : this.currentUser.username;
+    media.createdAt = new Date(msg.createdAt);
+    media.modifiedAt = new Date(msg.modifiedAt);
+    this.dialog.open(MediaPreviewDialogComponent, {
+      data: { media, sharedMedia: this.sharedMedia },
+      maxWidth: '90vw',
+      maxHeight: '90vh',
+      height: '90%',
+      width: '90%',
+      autoFocus: false,
+    });
+  }
+
+  closeMediaPreview() {
+    this.dialog.closeAll();
+  }
+
+  navigateMedia(direction: number) {
+    if (!this.selectedMediaFromChat) return;
+    const currentIndex = this.sharedMedia.findIndex(
+      (m) => m.id === this.selectedMediaFromChat!.id
+    );
+    const newIndex = currentIndex + direction;
+
+    if (newIndex >= 0 && newIndex < this.sharedMedia.length) {
+      this.selectedMediaFromChat = this.sharedMedia[newIndex];
+    }
+  }
+
+  hasOlderMedia(): boolean {
+    if (!this.selectedMediaFromChat) return false;
+    const currentIndex = this.sharedMedia.findIndex(
+      (m) => m.id === this.selectedMediaFromChat!.id
+    );
+    return currentIndex > 0;
+  }
+
+  hasNewerMedia(): boolean {
+    if (!this.selectedMediaFromChat) return false;
+    const currentIndex = this.sharedMedia.findIndex(
+      (m) => m.id === this.selectedMediaFromChat!.id
+    );
+    return currentIndex < this.sharedMedia.length - 1;
+  }
 }

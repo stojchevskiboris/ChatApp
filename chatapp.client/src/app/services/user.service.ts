@@ -123,4 +123,8 @@ export class UserService {
         })
       );
   }
+
+  getCurrentUser(): string {
+    return localStorage.getItem('currentUser');
+  }
 }

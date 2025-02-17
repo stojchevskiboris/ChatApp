@@ -98,8 +98,4 @@ export class AuthService {
     this.setDetailedUser().subscribe();
     return localStorage.getItem('userId');
   }
-
-  getCurrentUser(): string {
-    return localStorage.getItem('currentUser');
-  }
 }

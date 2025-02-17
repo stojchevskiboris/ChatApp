@@ -35,7 +35,7 @@ export class AccountOverviewComponent {
   requestsCount: number = 0;
 
   ngOnInit(): void {
-    var currentUserStr = this.authService.getCurrentUser();
+    var currentUserStr = this.userService.getCurrentUser();
     if (currentUserStr == null || currentUserStr == undefined || currentUserStr == '') {
       this.authService.logout(false);
       this.router.navigate(['/']);

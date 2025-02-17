@@ -17,6 +17,7 @@ export class MessageService {
   private setMessageSeenEndpoint = '/Messages/SetMessageSeen';
   private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
   private uploadMediaEndpoint = '/Messages/UploadMedia';
+  private uploadGifEndpoint = '/Messages/UploadGif';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
     return this.dataService
@@ -41,6 +42,16 @@ export class MessageService {
   uploadMedia(data: FormData): Observable<any> {
     return this.dataService
     .post<any>(this.uploadMediaEndpoint, data)
+    .pipe(
+      tap((response) => {
+        return response;
+      })
+    );
+  }
+
+  uploadGif(gifUrl: string): Observable<any> {
+    return this.dataService
+    .post<any>(this.uploadGifEndpoint, {Query: gifUrl})
     .pipe(
       tap((response) => {
         return response;
