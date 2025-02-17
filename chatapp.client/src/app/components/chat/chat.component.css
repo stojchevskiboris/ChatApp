@@ -98,3 +98,27 @@ button.close {
 button.close:hover {
   background: rgba(255, 255, 255, 1); /* Change background on hover */
 }
+
+.startChat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: #666;
+  font-size: 16px;
+  font-weight: 500;
+  padding: 20px;
+  opacity: 0.8;
+}
+
+.startChat mat-icon {
+  font-size: 48px;
+  color: #888;
+  margin-bottom: 10px;
+}
+
+.startChat span {
+  max-width: 80%;
+}

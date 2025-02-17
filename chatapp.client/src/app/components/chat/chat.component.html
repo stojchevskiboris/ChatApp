@@ -73,6 +73,10 @@
       </div>
       <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
     </div>
+    <div class="startChat" *ngIf="noMessages">
+      <mat-icon class="h-50px w-50px">chat_bubble_outline</mat-icon>
+      <span>No messages yet. Start chatting by sending a message.</span>
+    </div>
   </ng-scrollbar>
   <!-- Messages Window -->
 
