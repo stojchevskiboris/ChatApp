@@ -2,25 +2,19 @@
 
   <mat-form-field appearance="outline" class="search-input">
     <mat-label>Search GIFs</mat-label>
-    <input
-      matInput
-      type="text"
-      [(ngModel)]="searchQuery"
-      (input)="onSearch()"/>
-    <button  *ngIf="searchQuery" mat-icon-button matSuffix (click)="clearSearch()">
+    <input matInput type="text" [(ngModel)]="searchQuery" (input)="onSearch()" />
+    <button *ngIf="searchQuery" mat-icon-button matSuffix (click)="clearSearch()">
       <mat-icon>close</mat-icon>
     </button>
   </mat-form-field>
-
-    <div class="gif-results">
-      <div class="gif-item" *ngFor="let gif of gifs" (click)="selectGif(gif)">
-        <mat-card>
-          <img [src]="gif.previewUrl" alt="GIF" />
-        </mat-card>
-      </div>
-      <div>
-        <img src="powered_by_giphy/Poweredby_100px_Badge.gif" />
-      </div>
+  <div>
+    <img src="img/3.gif" class="w-100 mb-1 rounded-3"  />
+  </div>
+  <div class="gif-results">
+    <div class="gif-item" *ngFor="let gif of gifs" (click)="selectGif(gif)">
+      <mat-card>
+        <img [src]="gif.previewUrl" alt="GIF" />
+      </mat-card>
     </div>
-  
+  </div>
 </div>

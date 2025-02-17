@@ -4,6 +4,7 @@ using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
 
 namespace ChatApp.Server.Controllers
 {
@@ -55,10 +56,11 @@ namespace ChatApp.Server.Controllers
                 var imageUrl = await _firebaseStorageService.UploadMediaFileAsync(file);
                 if (string.IsNullOrEmpty(imageUrl))
                 {
-                    return StatusCode(500, "Failed to upload profile picture");
+                    return StatusCode(500, "Failed to upload media");
                 }
 
-                return Ok(new { 
+                return Ok(new
+                {
                     url = imageUrl,
                     contentType = file.ContentType,
                     fileLength = file.Length
@@ -68,7 +70,35 @@ namespace ChatApp.Server.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
 
+        [HttpPost("UploadGif")]
+        [Authorize]
+        public async Task<IActionResult> UploadGif(HttpRequestQueryModel model)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(model.Query))
+                {
+                    return BadRequest("No file uploaded");
+                }
+
+                var gif = await _firebaseStorageService.UploadGifFileAsync(model.Query);
+                if (string.IsNullOrEmpty(gif.Url))
+                {
+                    return StatusCode(500, "Failed to upload gif");
+                }
+
+                return Ok(new { 
+                    url = gif.Url,
+                    contentType = "image/gif",
+                    fileLength = gif.FileSize
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("GetRecentChats")]

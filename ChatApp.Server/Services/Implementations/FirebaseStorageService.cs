@@ -78,6 +78,37 @@ namespace ChatApp.Server.Services.Implementations
 
         }
 
+        public async Task<(string Url, int FileSize)> UploadGifFileAsync(string gifUrl)
+        {
+            using var httpClient = new HttpClient();
+            var response = await httpClient.GetAsync(gifUrl);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                throw new Exception("Failed to download GIF.");
+            }
+
+            await using var memoryStream = new MemoryStream();
+            await response.Content.CopyToAsync(memoryStream);
+
+            int fileSize = (int)memoryStream.Length; // File size in bytes
+            memoryStream.Position = 0; // Reset stream position before upload
+
+            var userId = Context.GetCurrentUserId();
+            var fileName = $"messages/{userId}/{Guid.NewGuid()}_GIF.gif";
+
+            await _storageClient.UploadObjectAsync(
+                BucketName,
+                fileName,
+                "image/gif",
+                memoryStream
+            );
+
+            var fileUrl = $"https://firebasestorage.googleapis.com/v0/b/{BucketName}/o/{Uri.EscapeDataString(fileName)}?alt=media";
+
+            return (fileUrl, fileSize);
+        }
+
         public void GetAllPhotoUris()
         {
             throw new NotImplementedException();
