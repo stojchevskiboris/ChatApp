@@ -56,11 +56,11 @@
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
 		<PackageReference Include="Serilog.Expressions" Version="4.0.0" />
 	</ItemGroup>
-	<ItemGroup>
+	<!--<ItemGroup>
 		<ProjectReference Include="..\chatapp.client\chatapp.client.esproj">
 			<ReferenceOutputAssembly>false</ReferenceOutputAssembly>
 		</ProjectReference>
-	</ItemGroup>
+	</ItemGroup>-->
 
 	<ItemGroup>
 		<Folder Include="Data\Mappings\" />

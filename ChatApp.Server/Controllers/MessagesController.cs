@@ -1,10 +1,8 @@
 ﻿using ChatApp.Server.Configs.Authentication;
-using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
 
 namespace ChatApp.Server.Controllers
 {
