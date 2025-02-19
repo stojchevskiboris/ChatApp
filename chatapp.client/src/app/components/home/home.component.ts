@@ -31,6 +31,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   isChatSettingsEnabled: boolean = true;
   startChatEvent: boolean = false;
   lastActiveSubscription: Subscription;
+  activeUserId: number = 0;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -61,6 +62,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         .on('Join', (userId: string, user:UserViewModel) => {
           if (user!){
             this.toastr.info(user.username + " is active");
+            this.activeUserId = user.id;
           }
         })
     })

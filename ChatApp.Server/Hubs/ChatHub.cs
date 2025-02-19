@@ -19,7 +19,7 @@ namespace ChatApp.Server.Hubs
             var httpContext = Context.GetHttpContext();
             var userId = httpContext?.Request.Query["userId"];
             var currentUser = _userService.GetCurrentUserDetailsOrDefault(userId);
-            await Clients.All.SendAsync("Join", Context.ConnectionId, currentUser);
+            await Clients.AllExcept(Context.ConnectionId).SendAsync("Join", Context.ConnectionId, currentUser);
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)

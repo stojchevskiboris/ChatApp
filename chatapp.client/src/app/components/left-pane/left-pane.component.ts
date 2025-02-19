@@ -22,6 +22,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   searchQuery: string = '';
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
+  @Input() updateActiveContact: number;
   selectedChatId: number = null;
 
   prevScrollPosMessages = 0;
@@ -59,6 +60,11 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     if (!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
       this.selectedTabIndex = 0;
       this.searchInput.nativeElement.focus();
+    }
+    let activeContact: SimpleChange = changes['updateActiveContact']
+    if (!activeContact.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
+      // todo Update contact last active set now
+      this.contactsList.find(c => c.id === activeContact.currentValue);
     }
   }
 
