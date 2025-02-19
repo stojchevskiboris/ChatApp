@@ -11,9 +11,9 @@ namespace ChatApp.Server.Domain.Enums
         Canceled = 2, // sender cancels the request
 
         [Description("Accepted")]
-        Accepted = 3, // reciever accepts the request
+        Accepted = 3, // receiver accepts the request
 
         [Description("Rejected")]
-        Rejected = 4 // reciever rejects the request
+        Rejected = 4 // receiver rejects the request
     }
 }

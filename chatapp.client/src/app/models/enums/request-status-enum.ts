@@ -3,7 +3,7 @@ export enum RequestStatusEnum {
 
     Canceled = 2, // sender cancels the request
 
-    Accepted = 3, // reciever accepts the request
+    Accepted = 3, // receiver accepts the request
 
-    Rejected = 4 // reciever rejects the request
+    Rejected = 4 // receiver rejects the request
 }

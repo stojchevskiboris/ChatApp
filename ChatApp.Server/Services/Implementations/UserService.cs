@@ -53,6 +53,20 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
+        public UserViewModel? GetCurrentUserDetailsOrDefault(string userId)
+        {
+            try
+            {
+                int id = int.Parse(userId.Trim());
+                var user = GetUserDomainById(id);
+                return user.MapToViewModel();
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
         public List<UserViewModel> GetContacts()
         {
             var contacts = new List<UserViewModel>();

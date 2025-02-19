@@ -1,11 +1,12 @@
+using Microsoft.AspNetCore.Diagnostics;
+using Microsoft.EntityFrameworkCore;
+using Serilog;
 using ChatApp.Server.Common.Constants;
 using ChatApp.Server.Configs;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Configs.Authentication.Models;
 using ChatApp.Server.Data;
-using Microsoft.AspNetCore.Diagnostics;
-using Microsoft.EntityFrameworkCore;
-using Serilog;
+using ChatApp.Server.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,9 @@ builder.Services.ConfigureRepositories();
 
 // --- Service Registration ---
 builder.Services.ConfigureServices();
+
+// --- SignalR Registration ---
+builder.Services.AddSignalR();
 
 // --- Validators Registration ---
 builder.Services.ConfigureValidators();
@@ -90,6 +94,8 @@ app.UseStaticFiles();
 app.UseDefaultFiles();
 app.UseSerilogRequestLogging();
 app.UseCors("AllowAngularApp");
+app.UseWebSockets();
+app.MapHub<ChatHub>("/chatHub");
 app.UseAuthorization();
 app.UseMiddleware<JwtMiddleware>();
 app.MapControllers();

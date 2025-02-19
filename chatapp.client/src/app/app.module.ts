@@ -35,6 +35,7 @@ import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-di
 import { ToDoComponent } from './components/to-do/to-do.component';
 import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-dialog/media-preview-dialog.component';
 import { MessageDatePipe } from './shared/pipes/message-date.pipe';
+import { SignalRService } from './services/signalr.service';
 @NgModule({
   declarations: [
     AppComponent,
@@ -76,6 +77,7 @@ import { MessageDatePipe } from './shared/pipes/message-date.pipe';
     DataService,
     AuthService,
     UserService,
+    SignalRService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: AuthInterceptor,

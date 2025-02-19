@@ -5,6 +5,8 @@ import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
 import { AuthService } from '../../services/auth.service';
 import { interval, Subscription } from 'rxjs';
+import { SignalRService } from '../../services/signalr.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-home',
@@ -16,6 +18,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private router: Router,
     private userService: UserService,
+    private signalrService: SignalRService,
+    private toastr: ToastrService,
     private authService: AuthService
   ) { }
 
@@ -33,6 +37,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.userId) {
       this.getUserDetails();
     }
+    this.connectSignalR();
 
     this.updateLastActive();
     this.lastActiveSubscription = interval(60000).subscribe(x => {
@@ -40,7 +45,29 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  disconnectSignalR() {
+    this.signalrService.disconnect();
+  }
+
+  connectSignalR() {
+    this.signalrService.connect().then(() => {
+      // this.signalrService.getHubConnection()
+      //   .on('ReceiveMessage', (user: string, message: MessageViewModel) => {
+      //     debugger;
+      //     this.messages.push(message);
+      //   })
+
+      this.signalrService.getHubConnection()
+        .on('Join', (userId: string, user:UserViewModel) => {
+          if (user!){
+            this.toastr.info(user.username + " is active");
+          }
+        })
+    })
+  }
+
   ngOnDestroy(){
+    this.disconnectSignalR();
     this.lastActiveSubscription.unsubscribe();
   }
 

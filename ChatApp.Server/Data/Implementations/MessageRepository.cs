@@ -14,7 +14,7 @@ namespace ChatApp.Server.Data.Implementations
             _context = context;
         }
 
-        public List<Message> GetMessagesSentOrRecievedByUser(int userId)
+        public List<Message> GetMessagesSentOrReceivedByUser(int userId)
         {
             var messages = _context.Messages
                 .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&

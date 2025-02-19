@@ -177,7 +177,7 @@ namespace ChatApp.Server.Services.Implementations
                 return new List<RecentChatViewModel>();
             }
 
-            var query = _messageRepository.GetMessagesSentOrRecievedByUser(currentUserId);
+            var query = _messageRepository.GetMessagesSentOrReceivedByUser(currentUserId);
 
             if (!query.Any())
             {

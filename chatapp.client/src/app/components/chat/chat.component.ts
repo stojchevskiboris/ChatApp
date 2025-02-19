@@ -13,6 +13,8 @@ import { MessageMediaViewModel } from '../../models/message-media-view-model';
 import { MediaViewModel } from '../../models/media-view-model';
 import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { SignalRService } from '../../services/signalr.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat',
@@ -64,13 +66,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnInit(): void {
     this.getCurrentUserDetails();
-
     this.getRecentMessages();
     this.setRecipient();
     this.setRecipientSubscription = interval(60000).subscribe(x => {
       this.setRecipient(false);
     });
   }
+
   getCurrentUserDetails() {
     this.userService.getCurrentUserDetails()
       .subscribe(
@@ -129,7 +131,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   getRecentMessages() {
     this.messageService.getRecentMessages(this.recipientId).subscribe(
       (messages: MessageViewModel[]) => {
-        if(!messages || messages.length == 0){
+        if (!messages || messages.length == 0) {
           this.noMessages = true;
         }
         this.messages = messages;
