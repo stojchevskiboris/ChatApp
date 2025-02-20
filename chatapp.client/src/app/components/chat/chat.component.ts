@@ -66,27 +66,36 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   ngOnInit(): void {
-    this.getCurrentUserDetails();
-    this.setRecipient();
-    this.getRecentMessages();
-    this.connectSignalR();
-    this.setRecipientSubscription = interval(60000).subscribe(x => {
+    this.getCurrentUserDetails()
+      .then(() => this.setRecipient())
+      .then(() => this.getRecentMessages())
+      .then(() => this.connectSignalR())
+      .catch((error) => {
+        console.error('Error in initialization sequence:', error);
+      });
+  
+    // Keep the subscription separate as it doesn't need to wait for the above sequence
+    this.setRecipientSubscription = interval(60000).subscribe(() => {
       this.setRecipient(false);
     });
   }
 
-  getCurrentUserDetails() {
-    this.userService.getCurrentUserDetails()
-      .subscribe(
-        (response: UserViewModel) => {
-          if (response) {
-            this.currentUser = response;
+  getCurrentUserDetails(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.userService.getCurrentUserDetails()
+        .subscribe({
+          next: (response: UserViewModel) => {
+            if (response) {
+              this.currentUser = response;
+              resolve();
+            }
+          },
+          error: (error) => {
+            console.error('Error loading user data:', error);
+            reject(error);
           }
-        },
-        (error) => {
-          console.error('Error loading user data:', error);
-        }
-      );
+        });
+    });
   }
 
   ngOnDestroy() {
@@ -130,48 +139,53 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.messages = [];
   }
 
-  getRecentMessages() {
-    this.messageService.getRecentMessages(this.recipientId).subscribe(
-      (messages: MessageViewModel[]) => {
-        if (!messages || messages.length == 0) {
-          this.noMessages = true;
+  getRecentMessages(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.messageService.getRecentMessages(this.recipientId).subscribe({
+        next: (messages: MessageViewModel[]) => {
+          if (!messages || messages.length === 0) {
+            this.noMessages = true;
+          }
+          this.messages = messages;
+          this.sharedMedia = messages
+            .filter(x => x.hasMedia)
+            .map(msg => this.mapToMediaViewModel(msg));
+          this.hasFetchedMessages = true;
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+          resolve();
+        },
+        error: (error: HttpErrorResponse) => {
+          this.hasFetchedMessages = true;
+          console.error('Error fetching messages:', error);
+          this.scrollToBottom();
+          reject(error);
+        },
+        complete: () => {
+          this.hasFetchedMessages = true;
+          this.scrollToBottom();
+          resolve();
         }
-        this.messages = messages;
-        this.sharedMedia = messages
-          .filter(x => x.hasMedia)
-          .map(msg => {            
-            var media = this.mapToMediaViewModel(msg);
-            return media;
-          })
-        this.hasFetchedMessages = true;
-        this.cdr.detectChanges();
-        this.scrollToBottom();
-      },
-      (error: HttpErrorResponse) => {
-        this.hasFetchedMessages = true;
-        console.error(error);
-        this.scrollToBottom();
-      },
-      () => {
-        this.hasFetchedMessages = true;
-        this.scrollToBottom();
-      }
-    );
+      });
+    });
   }
 
-  connectSignalR() {
+  connectSignalR(): Promise<void> {
+    return new Promise((resolve) => {
       this.signalrService.getHubConnection()
-        .on('ReceiveMessage', (userFromId: number, message:MessageViewModel) => {
-          if (userFromId == this.recipientId){
+        .on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {
+          if (userFromId === this.recipientId) {
             this.messages.push(message);
-            if (message.hasMedia){
-              var media = this.mapToMediaViewModel(message);
+            if (message.hasMedia) {
+              const media = this.mapToMediaViewModel(message);
               this.sharedMedia.push(media);
             }
             this.cdr.detectChanges();
             this.scrollToBottom();
           }
-        })
+        });
+      resolve();
+    });
   }
 
   handleMediaUpload(event: Event): void {
@@ -409,29 +423,30 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     }, 100);
   }
 
-  setRecipient(withLoading: boolean = true): void {
+  setRecipient(withLoading: boolean = true): Promise<void> {
     if (withLoading) {
       this.loading = true;
     }
-    this.userService.getUserDetails(this.recipientId).subscribe({
-      next: (model: UserViewModel) => {
-        this.recipient = new UserViewModel();
-        this.cdr.detectChanges();
-        this.recipient = model
-        if (model.profilePicture) {
-          this.recipientProfilePicture = model.profilePicture;
-        } else {
-          this.recipientProfilePicture = this.defaultAvatar;
+    return new Promise((resolve, reject) => {
+      this.userService.getUserDetails(this.recipientId).subscribe({
+        next: (model: UserViewModel) => {
+          this.recipient = new UserViewModel();
+          this.cdr.detectChanges();
+          this.recipient = model;
+          this.recipientProfilePicture = model.profilePicture || this.defaultAvatar;
+          resolve();
+        },
+        error: (err: HttpErrorResponse) => {
+          console.error('Error setting recipient:', err);
+          this.loading = false;
+          reject(err);
+        },
+        complete: () => {
+          this.loading = false;
+          resolve();
         }
-      },
-      error: (err: HttpErrorResponse) => {
-        console.log(err);
-        this.loading = false;
-      },
-      complete: () => {
-        this.loading = false;
-      },
-    })
+      });
+    });
   }
 
   scrollToBottom() {
@@ -585,4 +600,24 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     media.modifiedAt = new Date(msg.modifiedAt);
     return media;
   }
+
+  // private mapToMediaViewModel(msg: MessageViewModel): MediaViewModel {
+  //   const isSent = msg.senderId === this.currentUserId;
+  //   const media = new MediaViewModel();
+  //   media.id = msg.id;
+  //   media.url = msg.media!.url;
+  //   media.fileType = msg.media!.fileType;
+  //   media.fileSize = msg.media!.fileSize;
+  //   media.sentById = isSent ? this.recipient?.id ?? 0 : this.currentUser?.id ?? 0;
+  //   media.sentByFirstName = isSent ? this.currentUser?.firstName ?? '' : this.recipient?.firstName ?? '';
+  //   media.sentByLastName = isSent ? this.currentUser?.lastName ?? '' : this.recipient?.lastName ?? '';
+  //   media.sentByUsername = isSent ? this.currentUser?.username ?? '' : this.recipient?.username ?? '';
+  //   media.sentToId = isSent ? this.currentUser?.id ?? 0 : this.recipient?.id ?? 0;
+  //   media.sentToFirstName = isSent ? this.recipient?.firstName ?? '' : this.currentUser?.firstName ?? '';
+  //   media.sentToLastName = isSent ? this.recipient?.lastName ?? '' : this.currentUser?.lastName ?? '';
+  //   media.sentToUsername = isSent ? this.recipient?.username ?? '' : this.currentUser?.username ?? '';
+  //   media.createdAt = new Date(msg.createdAt);
+  //   media.modifiedAt = new Date(msg.modifiedAt);
+  //   return media;
+  // }
 }
