@@ -25,6 +25,7 @@ builder.Services.ConfigureServices();
 
 // --- SignalR Registration ---
 builder.Services.AddSignalR();
+builder.Services.AddSingleton<IDictionary<string, int>>(opt => new Dictionary<string, int>());
 
 // --- Validators Registration ---
 builder.Services.ConfigureValidators();

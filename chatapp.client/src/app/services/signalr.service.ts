@@ -12,18 +12,19 @@ export class SignalRService {
 
   private hubUrl = environment.signalRUrl;
   hubConnection: HubConnection;
+  currentUserId: string;
 
   constructor(
     private authService: AuthService,
     private router: Router
   ) {
-    var userId = this.authService.getUserId();
-    if (!userId) {
+    this.currentUserId = this.authService.getUserId();
+    if (!this.currentUserId) {
       this.authService.logout();
       this.router.navigate(['/login']);
     }
     this.hubConnection = new HubConnectionBuilder()
-      .withUrl(this.hubUrl+`?userId=${userId}`, {
+      .withUrl(this.hubUrl+`?userId=${this.currentUserId}`, {
         skipNegotiation: true,
         transport: HttpTransportType.WebSockets,
       })
@@ -52,14 +53,12 @@ export class SignalRService {
     }
   }
 
-  async sendMessage(userId: number, message: MessageViewModel): Promise<void>{
+  async sendMessage(toUserId: number, message: MessageViewModel): Promise<void>{
     try {
-      //.invoke('methodName', ...args)
-      await this.hubConnection.invoke('SendMessage', userId, message);
+      await this.hubConnection.invoke('SendMessage', +this.currentUserId, toUserId, message);
       console.log('SignalR message sent');
     } catch (err) {
       console.error('Error sending SignalR message', err);
     }
   }
-
 }

@@ -7,31 +7,44 @@ namespace ChatApp.Server.Hubs
 {
     public class ChatHub : Hub
     {
+        private readonly IDictionary<string, int> _connection;
         private readonly IUserService _userService;
+        private readonly ILogger<ChatHub> _logger;
 
-        public ChatHub(IUserService userService)
+        public ChatHub(IDictionary<string, int> connection, IUserService userService, ILogger<ChatHub> logger)
         {
+            _connection = connection;
             _userService = userService;
+            _logger = logger;
         }
 
         public override async Task OnConnectedAsync()
         {
             var httpContext = Context.GetHttpContext();
-            var userId = httpContext?.Request.Query["userId"];
-            var currentUser = _userService.GetCurrentUserDetailsOrDefault(userId);
+            var userIdString = httpContext?.Request.Query["userId"];
+
+            if (int.TryParse(userIdString, out int userId))
+            {
+                _connection[Context.ConnectionId] = userId;
+            }
+
+            var currentUser = _userService.GetCurrentUserDetailsOrDefault(userIdString);
             await Clients.AllExcept(Context.ConnectionId).SendAsync("Join", Context.ConnectionId, currentUser);
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)
         {
+            _connection.Remove(Context.ConnectionId);
             return base.OnDisconnectedAsync(exception);
         }
 
-        public async Task SendMessage(string user, MessageViewModel message)
+        public async Task SendMessage(int userFromId, int userToId, MessageViewModel message)
         {
-            Clients.All.SendAsync("ReceiveMessage", user, message);
-
-            Clients.User("1").SendAsync("ReceiveMessage", message);
+            var connectionIds = _connection.Where(x => x.Value == userToId).Select(x => x.Key).ToList();
+            if (connectionIds.Any())
+            {
+                await Clients.Clients(connectionIds).SendAsync("ReceiveMessage", userFromId, message);
+            }
         }
     }
 }

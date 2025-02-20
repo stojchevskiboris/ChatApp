@@ -58,6 +58,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     private authService: AuthService,
     private userService: UserService,
     private messageService: MessageService,
+    private signalrService: SignalRService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog
   ) {
@@ -66,8 +67,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnInit(): void {
     this.getCurrentUserDetails();
-    this.getRecentMessages();
     this.setRecipient();
+    this.getRecentMessages();
+    this.connectSignalR();
     this.setRecipientSubscription = interval(60000).subscribe(x => {
       this.setRecipient(false);
     });
@@ -137,24 +139,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.messages = messages;
         this.sharedMedia = messages
           .filter(x => x.hasMedia)
-          .map(msg => {
-            var isSent = msg.senderId == this.currentUserId;
-            var media = new MediaViewModel;
-            media.id = msg.id;
-            media.url = msg.media!.url;
-            media.fileType = msg.media!.fileType;
-            media.fileSize = msg.media!.fileSize;
-            media.sentById = isSent ? this.recipient.id : this.currentUser.id;
-            media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
-            media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
-            media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
-            media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
-            media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
-            media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;
-            media.sentToUsername = isSent ? this.recipient.username : this.currentUser.username;
-            media.createdAt = new Date(msg.createdAt);
-            media.modifiedAt = new Date(msg.modifiedAt);
-
+          .map(msg => {            
+            var media = this.mapToMediaViewModel(msg);
             return media;
           })
         this.hasFetchedMessages = true;
@@ -171,6 +157,21 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.scrollToBottom();
       }
     );
+  }
+
+  connectSignalR() {
+      this.signalrService.getHubConnection()
+        .on('ReceiveMessage', (userFromId: number, message:MessageViewModel) => {
+          if (userFromId == this.recipientId){
+            this.messages.push(message);
+            if (message.hasMedia){
+              var media = this.mapToMediaViewModel(message);
+              this.sharedMedia.push(media);
+            }
+            this.cdr.detectChanges();
+            this.scrollToBottom();
+          }
+        })
   }
 
   handleMediaUpload(event: Event): void {
@@ -254,10 +255,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           console.log('Sending media message:', mediaMessage);
 
           this.messages.push(mediaMessage);
+          var item = this.mapToMediaViewModel(mediaMessage);
+          this.sharedMedia.push(item);
           this.scrollToBottom();
           this.messageService.sendMessage(mediaMessage).subscribe({
             next: (response: boolean) => {
-              // this.toastr.success('Media message sent successfully');
+              this.signalrService.sendMessage(this.recipientId, mediaMessage).then(()=>{
+                console.log('Message sent successfully via SignalR');
+              })
             },
             error: (err: HttpErrorResponse) => {
               console.log(err);
@@ -313,6 +318,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.newMessage = '';
       this.messageService.sendMessage(textMessage).subscribe({
         next: (response: boolean) => {
+          this.signalrService.sendMessage(this.recipientId, textMessage).then(()=>{
+            console.log('Message sent successfully via SignalR');
+          })
         },
         error: (err: HttpErrorResponse) => {
         },
@@ -356,10 +364,15 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               console.log('Sending media message:', mediaMessage);
 
               this.messages.push(mediaMessage);
+              var item = this.mapToMediaViewModel(mediaMessage);
+              this.sharedMedia.push(item);
+
               this.scrollToBottom();
               this.messageService.sendMessage(mediaMessage).subscribe({
                 next: (response: boolean) => {
-                  // this.toastr.success('Media message sent successfully');
+                  this.signalrService.sendMessage(this.recipientId, mediaMessage).then(()=>{
+                    console.log('Message sent successfully via SignalR');
+                  })
                 },
                 error: (err: HttpErrorResponse) => {
                   console.log(err);
@@ -551,5 +564,25 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       (m) => m.id === this.selectedMediaFromChat!.id
     );
     return currentIndex < this.sharedMedia.length - 1;
+  }
+
+  private mapToMediaViewModel(msg: MessageViewModel) {
+    var isSent = msg.senderId == this.currentUserId;
+    var media = new MediaViewModel;
+    media.id = msg.id;
+    media.url = msg.media!.url;
+    media.fileType = msg.media!.fileType;
+    media.fileSize = msg.media!.fileSize;
+    media.sentById = isSent ? this.recipient.id : this.currentUser.id;
+    media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
+    media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
+    media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
+    media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
+    media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
+    media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;
+    media.sentToUsername = isSent ? this.recipient.username : this.currentUser.username;
+    media.createdAt = new Date(msg.createdAt);
+    media.modifiedAt = new Date(msg.modifiedAt);
+    return media;
   }
 }
