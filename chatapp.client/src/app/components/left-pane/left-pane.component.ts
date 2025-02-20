@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserViewModel } from '../../models/user-view-model';
@@ -7,7 +7,6 @@ import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
 import { RecentChatViewModel } from '../../models/recent-message-view-model';
-import { MessageViewModel } from '../../models/message-view-model';
 import { MessageService } from '../../services/message.service';
 
 @Component({
@@ -41,6 +40,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   constructor(
     private userService: UserService,
     private messageService: MessageService,
+    private cdr: ChangeDetectorRef
   ) { }
 
   ngOnInit(): void {
@@ -56,15 +56,19 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   }
 
   ngOnChanges(changes: { [property: string]: SimpleChange }) {
-    let change: SimpleChange = changes['startChat'];
-    if (!change.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
+    let chatChange: SimpleChange = changes['startChat'];
+    if (chatChange != undefined && !chatChange.firstChange) {
       this.selectedTabIndex = 0;
       this.searchInput.nativeElement.focus();
     }
-    let activeContact: SimpleChange = changes['updateActiveContact']
-    if (!activeContact.firstChange/* && change.previousValue != undefined && change.previousValue != change.currentValue*/) {
-      // todo Update contact last active set now
-      this.contactsList.find(c => c.id === activeContact.currentValue);
+  
+    let activeContactChange: SimpleChange = changes['updateActiveContact'];
+    if (activeContactChange != undefined && !activeContactChange.firstChange) {
+      let contact = this.contactsList.find(c => c.id === activeContactChange.currentValue);
+      if (contact) {
+        contact.lastActive = new Date().toISOString();
+        this.cdr.detectChanges();
+      }
     }
   }
 

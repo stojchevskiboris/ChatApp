@@ -46,31 +46,30 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  disconnectSignalR() {
-    this.signalrService.disconnect();
+  ngOnDestroy(){
+    this.disconnectSignalR();
+    this.lastActiveSubscription.unsubscribe();
   }
 
   connectSignalR() {
     this.signalrService.connect().then(() => {
-      // this.signalrService.getHubConnection()
-      //   .on('ReceiveMessage', (user: string, message: MessageViewModel) => {
-      //     debugger;
-      //     this.messages.push(message);
-      //   })
-
       this.signalrService.getHubConnection()
         .on('Join', (userId: string, user:UserViewModel) => {
-          if (user!){
-            this.toastr.info(user.username + " is active");
+          if (user! && user.id != this.activeUserId){
+            this.toastr.info(`${user.username} is active`, 'User Online', {
+              timeOut: 2000,
+              positionClass: 'toast-top-right',
+              progressBar: true, 
+              closeButton: false, 
+            });
             this.activeUserId = user.id;
           }
         })
     })
   }
 
-  ngOnDestroy(){
-    this.disconnectSignalR();
-    this.lastActiveSubscription.unsubscribe();
+  disconnectSignalR() {
+    this.signalrService.disconnect();
   }
 
   getUserDetails() {
