@@ -29,7 +29,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   canLoadMessagesSemaphore = true;
   canLoadContactsSemaphore = true;
 
-  messagesList: RecentChatViewModel[] = [];
+  chatList: RecentChatViewModel[] = [];
   contactsList: UserViewModel[] = [];
   selectedTabIndex: number = 0;
 
@@ -210,7 +210,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     this.messageService.getRecentChats(this.searchQuery).subscribe({
       next: (model: RecentChatViewModel[]) => {
         setFlag = false;
-        this.messagesList = model;
+        this.chatList = model;
         this.hasMessagesLoaded = true;
       },
       error: (err: any) => {
@@ -277,4 +277,13 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
     return diffInMinutes < 5;
   } 
+
+  getMediaType(fileType: string): string {
+    return  fileType?.startsWith('image/gif')? 'a GIF' : 
+            fileType?.startsWith('image')? 'an image' : 
+            fileType?.startsWith('video')? 'a video' : 
+            fileType?.startsWith('audio')? 'an audio' : 
+            fileType?.startsWith('application')? 'a file' : 
+            'a message';
+  }
 }

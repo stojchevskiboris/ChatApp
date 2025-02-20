@@ -6,6 +6,7 @@ export class RecentChatViewModel {
     recipientProfilePicture: string = '';
     content: string = '';
     hasMedia: boolean = false;
+    mediaType: string = '';
     isSeen: boolean = false;
     isSentMessage: boolean = false;
     parentMessageId: number = 0;

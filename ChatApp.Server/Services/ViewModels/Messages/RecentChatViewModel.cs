@@ -9,6 +9,7 @@
         public string RecipientProfilePicture {  get; set; }
         public string Content { get; set; }
         public bool HasMedia { get; set; }
+        public string MediaType { get; set; }
         public bool IsSeen { get; set; }
         public bool IsSentMessage { get; set; }
         public int? ParentMessageId { get; set; }

@@ -41,6 +41,7 @@
         <!-- Text message -->
         <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere">
           {{ message.content }}
+          <br>
         </span>
         <ng-template #mediaTemplate>
           <div (click)="openMediaPreview(message)" class="cursor-pointer">
@@ -66,8 +67,6 @@
           </div>
         </ng-template>
 
-
-        <br>
         <span class="timestamp" [ngClass]="{'float-right': message.senderId == currentUserId}">{{ message.createdAt |
           date:'shortTime' }}</span>
       </div>

@@ -160,8 +160,6 @@ namespace ChatApp.Server.Services.Implementations
 
         public List<RecentChatViewModel> GetRecentChats(string searchQuery)
         {
-            // prvo pristap do kontakti
-            // ako ima poraki od kontaktite, 
             var currentUserId = Context.GetCurrentUserId();
             var user = _userRepository.Get(currentUserId);
             if (user == null)
@@ -207,6 +205,7 @@ namespace ChatApp.Server.Services.Implementations
                         RecipientProfilePicture = recipient.ProfilePicture?.Url,
                         Content = mostRecentMessage.Content,
                         HasMedia = mostRecentMessage.HasMedia,
+                        MediaType = mostRecentMessage.MediaContent?.FileType ?? string.Empty,
                         IsSeen = isSentMessage ? true : mostRecentMessage.IsSeen,
                         IsSentMessage = isSentMessage,
                         ParentMessageId = mostRecentMessage.ParentMessage?.Id,

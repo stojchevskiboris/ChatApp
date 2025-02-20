@@ -16,9 +16,9 @@
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
                 <ng-scrollbar 
-                    *ngIf="messagesList.length > 0; else noMessagesPage" (scroll)="onScrollMessages($event)">
+                    *ngIf="chatList.length > 0; else noMessagesPage" (scroll)="onScrollMessages($event)">
                     <mat-selection-list>
-                        <mat-list-item *ngFor="let message of messagesList; index as i" class="message-list"
+                        <mat-list-item *ngFor="let message of chatList; index as i" class="message-list"
                             [ngClass]="{'selected': message.recipientId==selectedChatId}"
                             (click)="openChatFromMessages(message)">
                             <div class="message-card d-flex align-items-center">
@@ -30,7 +30,7 @@
                                     <span matListItemTitle [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.recipientFirstName }} {{ message.recipientLastName }}</span>
                                     <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
                                         <span *ngIf="message.isSentMessage" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">You: </span>
-                                        <span *ngIf="message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">(Media message)</span>
+                                        <span *ngIf="message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">Sent {{ getMediaType(message.mediaType) }}</span>
                                         <span *ngIf="!message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.content }}</span>
                                         
                                     </span>
