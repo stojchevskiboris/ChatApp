@@ -3,7 +3,6 @@
 </div>
 
 <div class="chat-window">
-
   <!-- Chat Header -->
   <div class="h-100px card p-3 mb-3">
     <div class="d-flex justify-content-between">
@@ -29,55 +28,57 @@
       </div>
     </div>
   </div>
-  <!-- Chat Header -->
 
   <!-- Messages Window -->
   <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar">
-    <div *ngFor="let message of messages" class="message" [class.highlight]="searchedMessageId == message.id"
-      [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
-      <div class="message-content" #tooltip="matTooltip" matTooltipPosition="above" [matTooltipPositionAtOrigin]="true"
-        (click)="tooltip.toggle()" matTooltip="{{message.createdAt | messageDate}}">
+    <ng-container *ngFor="let message of messages; let i = index">
 
-        <!-- Text message -->
-        <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere">
-          {{ message.content }}
-          <br>
-        </span>
-        <ng-template #mediaTemplate>
-          <div (click)="openMediaPreview(message)" class="cursor-pointer">
-
-            <!-- Image -->
-            <img *ngIf="isImage(message.media?.fileType)" [src]="message.content" alt="Image Preview"
-              class="media-chat">
-
-            <!-- GIF -->
-            <img *ngIf="isGif(message.media?.fileType)" [src]="message.content" alt="GIF" class="media-chat">
-
-            <!-- Video -->
-            <video *ngIf="isVideo(message.media?.fileType)" [src]="message.content" class="media-chat" controls
-              muted></video>
-
-            <!-- Audio -->
-            <audio *ngIf="isAudio(message.media?.fileType)" [src]="message.content" controls></audio>
-
-            <!-- File -->
-            <div *ngIf="isFile(message.media?.fileType)" class="file-message">
-              <a [href]="message.content" target="_blank" class="file-link">{{ getFileName(message.content) }}</a>
-            </div>
-          </div>
-        </ng-template>
-
-        <span class="timestamp" [ngClass]="{'float-right': message.senderId == currentUserId}">{{ message.createdAt |
-          date:'shortTime' }}</span>
+      <!-- Show date marker when the day changes -->
+      <div *ngIf="i === 0 || (messages[i - 1].createdAt | messageDate) !== (message.createdAt | messageDate)"
+        class="date-marker">
+        {{ message.createdAt | messageDate }}
       </div>
-      <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
-    </div>
-    <div class="startChat" *ngIf="noMessages && messages.length == 0">
-      <mat-icon class="h-50px w-50px">chat_bubble_outline</mat-icon>
-      <span>No messages yet. Start chatting by sending a message.</span>
-    </div>
+
+      <!-- Message Block -->
+      <div class="message" [class.highlight]="searchedMessageId == message.id"
+        [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
+        <div class="message-content" #tooltip="matTooltip" matTooltipPosition="above"
+          [matTooltipPositionAtOrigin]="true" (click)="tooltip.toggle()"
+          matTooltip="{{message.createdAt | messageDate}}">
+
+          <!-- Text message -->
+          <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere">
+            {{ message.content }}
+            <br>
+          </span>
+
+          <!-- Media message -->
+          <ng-template #mediaTemplate>
+            <div (click)="openMediaPreview(message)" class="cursor-pointer">
+              <!-- Image -->
+              <img *ngIf="isImage(message.media?.fileType)" [src]="message.content" alt="Image Preview" class="media-chat" (load)="scrollToBottom()">
+              <!-- GIF -->
+              <img *ngIf="isGif(message.media?.fileType)" [src]="message.content" alt="GIF" class="media-chat" (load)="scrollToBottom()">
+              <!-- Video -->
+              <video *ngIf="isVideo(message.media?.fileType)" [src]="message.content" class="media-chat" controls muted (load)="scrollToBottom()"></video>
+              <!-- Audio -->
+              <audio *ngIf="isAudio(message.media?.fileType)" [src]="message.content" controls (load)="scrollToBottom()"></audio>
+              <!-- File -->
+              <div *ngIf="isFile(message.media?.fileType)" class="file-message">
+                <a [href]="message.content" target="_blank" class="file-link">{{ getFileName(message.content) }}</a>
+              </div>
+            </div>
+          </ng-template>
+
+          <span class="timestamp" [ngClass]="{'float-right': message.senderId == currentUserId}">
+            {{ message.createdAt | date:'shortTime' }}
+          </span>
+        </div>
+        <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
+      </div>
+
+    </ng-container>
   </ng-scrollbar>
-  <!-- Messages Window -->
 
   <!-- Input container -->
   <div class="input-container d-flex align-items-end p-2">
@@ -117,13 +118,12 @@
       </div>
 
     </div>
-    <!-- <button mat-raised-button color="primary" (click)="sendMessage()">Send</button> -->
+
     <button mat-raised-button color="primary" (click)="sendMessage()">
       <div class="d-flex">
         <mat-icon>send</mat-icon>
       </div>
     </button>
   </div>
-  <!-- Input container -->
 
 </div>

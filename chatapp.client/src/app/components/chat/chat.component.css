@@ -122,3 +122,14 @@ button.close:hover {
 .startChat span {
   max-width: 80%;
 }
+
+.date-marker {
+  font-size: 1.2rem;
+  text-align: center;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #666;
+  background-color: #f0f0f078;
+  padding: 5px;
+  border-radius: 20px;
+}

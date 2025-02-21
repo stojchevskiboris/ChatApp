@@ -1,20 +1,19 @@
 import { AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { CdkTextareaAutosize } from '@angular/cdk/text-field';
+import { HttpErrorResponse } from '@angular/common/http';
+import { MatDialog } from '@angular/material/dialog';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { AuthService } from '../../services/auth.service';
 import { MessageViewModel } from '../../models/message-view-model';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
-import { HttpErrorResponse } from '@angular/common/http';
 import { interval, Subscription } from 'rxjs';
 import { MessageService } from '../../services/message.service';
 import { MediaMessageModel } from '../../models/media-message-model';
 import { MessageMediaViewModel } from '../../models/message-media-view-model';
 import { MediaViewModel } from '../../models/media-view-model';
 import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
-import { MatDialog } from '@angular/material/dialog';
 import { SignalRService } from '../../services/signalr.service';
-import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat',
@@ -74,7 +73,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         console.error('Error in initialization sequence:', error);
       });
   
-    // Keep the subscription separate as it doesn't need to wait for the above sequence
     this.setRecipientSubscription = interval(60000).subscribe(() => {
       this.setRecipient(false);
     });
@@ -103,7 +101,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   ngAfterViewInit(): void {
-    this.messageInput.nativeElement.focus();
+    this.focusToInput();
   }
 
   ngAfterViewChecked() {
@@ -124,7 +122,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.setRecipient();
       this.getRecentMessages();
       this.newMessage = '';
-      this.messageInput.nativeElement.focus();
+      this.focusToInput();
       this.searchedMessageId = -1;
       this.hasScrolledToBottom = false;
     }
@@ -226,9 +224,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.selectedMedia.splice(index, 1);
     this.isMediaSelected = this.selectedMedia.length > 0;
     setTimeout(() => {
-      if (this.messageInput) {
-        this.messageInput.nativeElement.focus();
-      }
+      this.focusToInput();
     }, 100);
   }
 
@@ -256,8 +252,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             id: -5,
             senderId: this.currentUserId,
             recipientId: this.recipient?.id || 0,
-            content: uploadResponse.url,  // Use uploaded media URL
-            type: 'image/gif',  // Use uploaded media type
+            content: uploadResponse.url, 
+            type: 'image/gif', 
             media: media,
             hasMedia: true,
             isSeen: false,
@@ -295,9 +291,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       },
     });
 
-    // this.messages.push(gifMessage);
     this.scrollToBottom();
-
     this.showGifSearch = false;
   }
 
@@ -365,8 +359,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
                 id: -5,
                 senderId: this.currentUserId,
                 recipientId: this.recipient?.id || 0,
-                content: uploadResponse.url,  // Use uploaded media URL
-                type: media.fileType,  // Use uploaded media type
+                content: uploadResponse.url,
+                type: media.fileType,
                 media: media,
                 hasMedia: true,
                 isSeen: false,
@@ -417,9 +411,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.scrollToBottom();
 
     setTimeout(() => {
-      if (this.messageInput) {
-        this.messageInput.nativeElement.focus();
-      }
+      this.focusToInput();
     }, 100);
   }
 
@@ -580,6 +572,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     );
     return currentIndex < this.sharedMedia.length - 1;
   }
+  
+  private focusToInput() {
+    if (this.messageInput?.nativeElement) {
+      this.messageInput.nativeElement.focus();
+    }
+  }
 
   private mapToMediaViewModel(msg: MessageViewModel) {
     var isSent = msg.senderId == this.currentUserId;
@@ -600,24 +598,4 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     media.modifiedAt = new Date(msg.modifiedAt);
     return media;
   }
-
-  // private mapToMediaViewModel(msg: MessageViewModel): MediaViewModel {
-  //   const isSent = msg.senderId === this.currentUserId;
-  //   const media = new MediaViewModel();
-  //   media.id = msg.id;
-  //   media.url = msg.media!.url;
-  //   media.fileType = msg.media!.fileType;
-  //   media.fileSize = msg.media!.fileSize;
-  //   media.sentById = isSent ? this.recipient?.id ?? 0 : this.currentUser?.id ?? 0;
-  //   media.sentByFirstName = isSent ? this.currentUser?.firstName ?? '' : this.recipient?.firstName ?? '';
-  //   media.sentByLastName = isSent ? this.currentUser?.lastName ?? '' : this.recipient?.lastName ?? '';
-  //   media.sentByUsername = isSent ? this.currentUser?.username ?? '' : this.recipient?.username ?? '';
-  //   media.sentToId = isSent ? this.currentUser?.id ?? 0 : this.recipient?.id ?? 0;
-  //   media.sentToFirstName = isSent ? this.recipient?.firstName ?? '' : this.currentUser?.firstName ?? '';
-  //   media.sentToLastName = isSent ? this.recipient?.lastName ?? '' : this.currentUser?.lastName ?? '';
-  //   media.sentToUsername = isSent ? this.recipient?.username ?? '' : this.currentUser?.username ?? '';
-  //   media.createdAt = new Date(msg.createdAt);
-  //   media.modifiedAt = new Date(msg.modifiedAt);
-  //   return media;
-  // }
 }
