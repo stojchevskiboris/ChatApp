@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { DataService } from './data.service';
 import { MessageViewModel } from '../models/message-view-model';
 import { Observable, tap } from 'rxjs';
-import { RecentChatViewModel } from '../models/recent-message-view-model';
+import { RecentChatViewModel } from '../models/recent-chat-view-model';
 
 @Injectable({
   providedIn: 'root'

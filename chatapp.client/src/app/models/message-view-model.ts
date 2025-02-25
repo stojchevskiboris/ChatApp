@@ -9,7 +9,7 @@ export class MessageViewModel {
     type: string = '';
     hasMedia: boolean = false;
     isSeen: boolean = false;
-    parentMessageId: boolean = false;
+    parentMessageId: number = 0;
     createdAt: string = '';
     modifiedAt: string = '';
 }

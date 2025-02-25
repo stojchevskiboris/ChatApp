@@ -13,10 +13,19 @@ export class ChatDatePipe implements PipeTransform {
     const now = new Date();
     const date = new Date(value);
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
+
     
+    if (diffInMinutes <= 1){
+      return 'just now';
+    }
+
+    if (diffInMinutes <= 2){
+      return 'a minute ago';
+    }
+
     // If within the last 5 minutes
     if (diffInMinutes < 5) {
-      return 'now';
+      return 'a few minutes ago';
     }
 
     // If within 5 to 30 minutes

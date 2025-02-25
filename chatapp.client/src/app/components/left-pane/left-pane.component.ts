@@ -6,7 +6,7 @@ import { UserService } from '../../services/user.service';
 import { interval, Subscription } from 'rxjs';
 import { LastActiveModel } from '../../models/last-active-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
-import { RecentChatViewModel } from '../../models/recent-message-view-model';
+import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 import { MessageService } from '../../services/message.service';
 
 @Component({
@@ -22,6 +22,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   @Output() selectedChat = new EventEmitter<number>();
   @Input() startChat: any;
   @Input() updateActiveContact: number;
+  @Input() newChatMessage: RecentChatViewModel;
   selectedChatId: number = null;
 
   prevScrollPosMessages = 0;
@@ -61,7 +62,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       this.selectedTabIndex = 0;
       this.searchInput.nativeElement.focus();
     }
-  
+
     let activeContactChange: SimpleChange = changes['updateActiveContact'];
     if (activeContactChange != undefined && !activeContactChange.firstChange) {
       let contact = this.contactsList.find(c => c.id === activeContactChange.currentValue);
@@ -69,6 +70,39 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
         contact.lastActive = new Date().toISOString();
         this.cdr.detectChanges();
       }
+    }
+
+    let recentMessageChange: SimpleChange = changes['newChatMessage'];
+    if (recentMessageChange != undefined && !recentMessageChange.firstChange) {
+      const existingChatIndex = this.chatList.findIndex(
+        chat => chat.recipientId === this.newChatMessage.recipientId // recentMessageChange.currentValue.recipientId
+      );
+
+      if (existingChatIndex !== -1) {
+        var chatToUpdate = this.chatList[existingChatIndex];
+        chatToUpdate.content = this.newChatMessage.content;
+        chatToUpdate.createdAt = this.newChatMessage.createdAt;
+        chatToUpdate.isSentMessage = this.newChatMessage.isSentMessage;
+        if (this.selectedChatId === this.newChatMessage.recipientId) {
+          chatToUpdate.isSeen = true;
+        } else {
+          chatToUpdate.isSeen = false;
+        }
+      } else {
+        // Fetch recipient info and add new chat
+        this.userService.getUserDetails(this.newChatMessage.recipientId)
+          .subscribe(user => {
+            const newChat = {
+              ...this.newChatMessage,
+              recipientFirstName: user.firstName,
+              recipientLastName: user.lastName,
+              recipientProfilePicture: user.profilePicture
+            };
+            this.chatList.unshift(newChat);
+          });
+      }
+      this.sortChats();
+      this.cdr.detectChanges();
     }
   }
 
@@ -163,11 +197,11 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   //   (activeTab as HTMLElement).classList.add('active-tab');
   // }
   // #endregion
-  
+
   openChatFromMessages(message: RecentChatViewModel) {
     message.isSeen = true;
-    if(!message.isSentMessage){
-      this.messageService.setMessageSeen(message.id).subscribe(data => {});
+    if (!message.isSentMessage) {
+      this.messageService.setMessageSeen(message.id).subscribe(data => { });
     }
     this.openChat(message.recipientId);
   }
@@ -265,7 +299,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       }
     });
   }
-  
+
   isContactActive(date: any): boolean {
     if (!date || isNaN(new Date(date).getTime())) {
       return false;
@@ -276,14 +310,18 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
 
     return diffInMinutes < 5;
-  } 
+  }
 
   getMediaType(fileType: string): string {
-    return  fileType?.startsWith('image/gif')? 'a GIF' : 
-            fileType?.startsWith('image')? 'an image' : 
-            fileType?.startsWith('video')? 'a video' : 
-            fileType?.startsWith('audio')? 'an audio' : 
-            fileType?.startsWith('application')? 'a file' : 
-            'a message';
+    return fileType?.startsWith('image/gif') ? 'a GIF' :
+      fileType?.startsWith('image') ? 'an image' :
+        fileType?.startsWith('video') ? 'a video' :
+          fileType?.startsWith('audio') ? 'an audio' :
+            fileType?.startsWith('application') ? 'a file' :
+              'a message';
+  }
+
+  private sortChats(){
+    this.chatList = this.chatList.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 }

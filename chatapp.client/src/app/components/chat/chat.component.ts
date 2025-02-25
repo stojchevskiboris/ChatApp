@@ -14,6 +14,7 @@ import { MessageMediaViewModel } from '../../models/message-media-view-model';
 import { MediaViewModel } from '../../models/media-view-model';
 import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
 import { SignalRService } from '../../services/signalr.service';
+import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 
 @Component({
   selector: 'app-chat',
@@ -25,6 +26,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   @Input() recipientId: number | null = null;
   @Input() searchedMessageId: number = -1;
   @Output() toggleChatSettings = new EventEmitter();
+  @Output() newSentChatMessage = new EventEmitter<RecentChatViewModel>();
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
@@ -257,13 +259,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             media: media,
             hasMedia: true,
             isSeen: false,
-            parentMessageId: false,
+            parentMessageId: 0,
             createdAt: new Date().toISOString(),
             modifiedAt: new Date().toISOString(),
           };
 
           console.log('Sending media message:', mediaMessage);
 
+          this.emitNewSentMessage(mediaMessage);
           this.messages.push(mediaMessage);
           var item = this.mapToMediaViewModel(mediaMessage);
           this.sharedMedia.push(item);
@@ -316,11 +319,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         type: 'text',
         media: null,
         isSeen: false,
-        parentMessageId: false,
+        parentMessageId: 0,
         createdAt: new Date().toISOString(),
         modifiedAt: new Date().toISOString(),
       };
 
+      this.emitNewSentMessage(textMessage);
       this.messages.push(textMessage);
       this.scrollToBottom();
       this.newMessage = '';
@@ -364,13 +368,14 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
                 media: media,
                 hasMedia: true,
                 isSeen: false,
-                parentMessageId: false,
+                parentMessageId: 0,
                 createdAt: new Date().toISOString(),
                 modifiedAt: new Date().toISOString(),
               };
 
               console.log('Sending media message:', mediaMessage);
 
+              this.emitNewSentMessage(mediaMessage);
               this.messages.push(mediaMessage);
               var item = this.mapToMediaViewModel(mediaMessage);
               this.sharedMedia.push(item);
@@ -468,6 +473,25 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   toggleSettings() {
     this.showGifSearch = false;
     this.toggleChatSettings.emit()
+  }
+
+  emitNewSentMessage(message: MessageViewModel): void {
+    const newRecentChat: RecentChatViewModel = {
+      id: message.id,
+      recipientId: this.recipientId,
+      recipientFirstName: this.recipient?.firstName ?? '',
+      recipientLastName: this.recipient?.lastName ?? '',
+      recipientProfilePicture: this.recipient?.profilePicture,
+      content: message.content,
+      hasMedia: message.hasMedia,
+      mediaType: message.media?.fileType || '',
+      isSeen: true,
+      isSentMessage: true, 
+      parentMessageId: message.parentMessageId,
+      createdAt: message.createdAt ? new Date(message.createdAt) : null,
+      modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
+    };
+    this.newSentChatMessage.emit(newRecentChat);
   }
 
   containsGiphy(content): any {

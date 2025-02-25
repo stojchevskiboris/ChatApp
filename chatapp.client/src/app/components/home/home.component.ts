@@ -7,6 +7,8 @@ import { AuthService } from '../../services/auth.service';
 import { interval, Subscription } from 'rxjs';
 import { SignalRService } from '../../services/signalr.service';
 import { ToastrService } from 'ngx-toastr';
+import { MessageViewModel } from '../../models/message-view-model';
+import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 
 @Component({
   selector: 'app-home',
@@ -32,6 +34,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   startChatEvent: boolean = false;
   lastActiveSubscription: Subscription;
   activeUserId: number = 0;
+  recievedChatMessage: RecentChatViewModel = null;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -46,25 +49,47 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnDestroy(){
+  ngOnDestroy() {
     this.disconnectSignalR();
     this.lastActiveSubscription.unsubscribe();
   }
 
   connectSignalR() {
     this.signalrService.connect().then(() => {
-      this.signalrService.getHubConnection()
-        .on('Join', (userId: string, user:UserViewModel) => {
-          if (user! && user.id != this.activeUserId){
-            this.toastr.info(`${user.username} is active`, 'User Online', {
-              timeOut: 2000,
-              positionClass: 'toast-top-right',
-              progressBar: true, 
-              closeButton: false, 
-            });
-            this.activeUserId = user.id;
-          }
-        })
+      var connection = this.signalrService.getHubConnection();
+      connection.on('Join', (userId: string, user: UserViewModel) => {
+        if (user! && user.id != this.activeUserId) {
+          this.toastr.info(`${user.username} is active`, 'User Online', {
+            timeOut: 2000,
+            positionClass: 'toast-top-right',
+            progressBar: true,
+            closeButton: false,
+          });
+          this.activeUserId = user.id;
+        }
+      })
+
+      connection.on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {
+        if (message != null) {
+          const newRecentChat: RecentChatViewModel = {
+            id: message.id,
+            recipientId: userFromId,
+            recipientFirstName: '',
+            recipientLastName: '',
+            recipientProfilePicture: '',
+            content: message.content,
+            hasMedia: message.hasMedia,
+            mediaType: message.media?.fileType || '',
+            isSeen: message.isSeen,
+            isSentMessage: false,
+            parentMessageId: message.parentMessageId,
+            createdAt: message.createdAt ? new Date(message.createdAt) : null,
+            modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
+          };
+          this.recievedChatMessage = newRecentChat;
+        }
+      });
+
     })
   }
 
@@ -104,6 +129,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
   }
 
+  updateLeftPaneChats(sentMessageToUpdate: RecentChatViewModel): void {
+    this.recievedChatMessage = sentMessageToUpdate;
+  }
+
   updateLastActive() {
     this.userService.updateLastActive()
       .subscribe({
@@ -111,7 +140,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         error: (err: HttpErrorResponse) => console.log('Error updating last active', err),
       });
   }
-  
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/']);

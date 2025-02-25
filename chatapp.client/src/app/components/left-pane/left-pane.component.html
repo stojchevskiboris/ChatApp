@@ -1,6 +1,7 @@
 <div class="left-pane d-flex flex-column h-100">
     <div class="acc-overview mb-2">
-        <app-account-overview (resetChat)="handleSelectedChat($event)" (contactsEmitter)="getContacts()"></app-account-overview>
+        <app-account-overview (resetChat)="handleSelectedChat($event)"
+            (contactsEmitter)="getContacts()"></app-account-overview>
     </div>
 
     <div class="search-bar mb-2">
@@ -15,27 +16,32 @@
     <div class="tab-group-container flex-grow-1 overflow-hidden">
         <mat-tab-group class="mat-tabs-messages-contacts" [(selectedIndex)]="selectedTabIndex">
             <mat-tab label="Messages">
-                <ng-scrollbar 
-                    *ngIf="chatList.length > 0; else noMessagesPage" (scroll)="onScrollMessages($event)">
+                <ng-scrollbar *ngIf="chatList.length > 0; else noMessagesPage" (scroll)="onScrollMessages($event)">
                     <mat-selection-list>
-                        <mat-list-item *ngFor="let message of chatList; index as i" class="message-list"
-                            [ngClass]="{'selected': message.recipientId==selectedChatId}"
-                            (click)="openChatFromMessages(message)">
+                        <mat-list-item *ngFor="let chatMessage of chatList; index as i" class="message-list"
+                            [ngClass]="{'selected': chatMessage.recipientId==selectedChatId}"
+                            (click)="openChatFromMessages(chatMessage)">
                             <div class="message-card d-flex align-items-center">
                                 <div mat-card-avatar class="me-4">
                                     <img matListAvatar class="w-50px h-50px user-profile-picture"
-                                        [src]="message.recipientProfilePicture || 'img/default-avatar.png'" />
-                                </div>                                
+                                        [src]="chatMessage.recipientProfilePicture || 'img/default-avatar.png'" />
+                                </div>
                                 <div>
-                                    <span matListItemTitle [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.recipientFirstName }} {{ message.recipientLastName }}</span>
-                                    <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                        <span *ngIf="message.isSentMessage" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">You: </span>
-                                        <span *ngIf="message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">Sent {{ getMediaType(message.mediaType) }}</span>
-                                        <span *ngIf="!message.hasMedia" class="text-secondary" [ngClass]="message.isSeen ? 'seen' : 'notSeen'">{{ message.content }}</span>
-                                        
+                                    <span matListItemTitle [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">{{
+                                        chatMessage.recipientFirstName }} {{ chatMessage.recipientLastName }}</span>
+                                    <span matListItemLine [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">
+                                        <span *ngIf="chatMessage.isSentMessage" class="text-secondary"
+                                            [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">You: </span>
+                                        <span *ngIf="chatMessage.hasMedia" class="text-secondary"
+                                            [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">Sent {{
+                                            getMediaType(chatMessage.mediaType) }}</span>
+                                        <span *ngIf="!chatMessage.hasMedia" class="text-secondary"
+                                            [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">{{ chatMessage.content
+                                            }}</span>
+
                                     </span>
-                                    <span matListItemLine [ngClass]="message.isSeen ? 'seen' : 'notSeen'">
-                                        {{ message.modifiedAt | chatDate }}
+                                    <span matListItemLine [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">
+                                        {{ chatMessage.createdAt | chatDate }}
                                     </span>
                                 </div>
                             </div>
@@ -43,7 +49,7 @@
                     </mat-selection-list>
                 </ng-scrollbar>
 
-                <ng-template #noMessagesPage >
+                <ng-template #noMessagesPage>
                     <div class="text-center mt-3 mb-3" *ngIf="hasMessagesLoaded">
                         <span>No messages found</span>
                         <br>
@@ -76,8 +82,7 @@
                 <ng-scrollbar *ngIf="contactsList.length > 0; else noContactsPage" (scroll)="onScrollContacts($event)">
                     <mat-selection-list>
                         <mat-list-item *ngFor="let contact of contactsList; index as i" class="contacts-list"
-                            [ngClass]="{'selected': contact.id==selectedChatId}"
-                            (click)="openChat(contact.id)">
+                            [ngClass]="{'selected': contact.id==selectedChatId}" (click)="openChat(contact.id)">
                             <mat-card class="contact-card bg-none">
                                 <mat-card-header>
                                     <div mat-card-avatar>
