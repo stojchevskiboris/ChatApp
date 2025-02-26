@@ -136,7 +136,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.searchedMessageId = -1;
       this.hasScrolledToBottom = false;
       this.noOlderMessages = false;
-      this.oldestMessageId = 0;
       this.loadingOlderMessages = false;
       this.canLoadMessagesSemaphore = true;
       this.fetchingOlderMessages = false;
@@ -285,7 +284,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.messages.push(mediaMessage);
           var item = this.mapToMediaViewModel(mediaMessage);
           this.sharedMedia.push(item);
-          this.scrollToBottom();
+          this.scrollToBottom(true);
           this.messageService.sendMessage(mediaMessage).subscribe({
             next: (response: boolean) => {
               this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
@@ -341,7 +340,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
       this.emitNewSentMessage(textMessage);
       this.messages.push(textMessage);
-      this.scrollToBottom();
+      this.scrollToBottom(true);
       this.newMessage = '';
       this.messageService.sendMessage(textMessage).subscribe({
         next: (response: boolean) => {
@@ -395,7 +394,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               var item = this.mapToMediaViewModel(mediaMessage);
               this.sharedMedia.push(item);
 
-              this.scrollToBottom();
+              this.scrollToBottom(true);
               this.messageService.sendMessage(mediaMessage).subscribe({
                 next: (response: boolean) => {
                   this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
@@ -461,8 +460,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     });
   }
 
-  scrollToBottom() {
-    if (!this.fetchingOlderMessages){
+  scrollToBottom(forceScroll: boolean = false) {
+    if (forceScroll || !this.fetchingOlderMessages){
       this.scrollable.scrollTo({ bottom: -500, duration: 300 })
     }
   }
@@ -671,7 +670,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   fetchOlderMessages(){
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
+    this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });
     // this.scrollToTop();
+    if(this.oldestMessageId == -2){
+      this.loadingOlderMessages = false;
+      return;
+    }
+
     this.messageService.fetchOlderMessages(this.oldestMessageId, this.recipientId).subscribe({
       next: (result: MessagesChatModel) => {
         var fetchedMessages: MessageViewModel[] = result.messages;

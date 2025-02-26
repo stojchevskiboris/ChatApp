@@ -83,6 +83,8 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
         chatToUpdate.content = this.newChatMessage.content;
         chatToUpdate.createdAt = this.newChatMessage.createdAt;
         chatToUpdate.isSentMessage = this.newChatMessage.isSentMessage;
+        chatToUpdate.mediaType = this.newChatMessage.mediaType;
+        chatToUpdate.hasMedia = this.newChatMessage.hasMedia;
         if (this.selectedChatId === this.newChatMessage.recipientId) {
           chatToUpdate.isSeen = true;
         } else {

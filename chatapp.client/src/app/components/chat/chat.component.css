@@ -133,3 +133,18 @@ button.close:hover {
   padding: 5px;
   border-radius: 20px;
 }
+
+.no-older-messages {
+  text-align: center;
+  padding: 10px;
+  padding-bottom: 2px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #552;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 10px;
+  margin: 10px auto;
+  margin-bottom: 25px;
+  max-width: 80%;
+  box-shadow: -8px 7px 5px rgba(0, 0, 0, 0.1);
+}

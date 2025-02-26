@@ -290,6 +290,10 @@ namespace ChatApp.Server.Services.Implementations
             {
                 lastMessageId = -1;
             }
+            if (!result.Any())
+            {
+                lastMessageId = -2;
+            }
 
             return new MessagesChatModel()
             {
