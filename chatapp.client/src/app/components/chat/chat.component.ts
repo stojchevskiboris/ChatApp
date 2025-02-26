@@ -58,10 +58,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   noMessages: boolean = false;
   noOlderMessages: boolean = false;
   oldestMessageId: number = 0;
-  prevScrollPosMessages = 0;
-  canLoadMessagesSemaphore = true;
   loadingOlderMessages = false;
+  canLoadMessagesSemaphore = true;
   fetchingOlderMessages = false;
+  prevScrollPosMessages = 0;
 
   constructor(
     private authService: AuthService,
@@ -135,6 +135,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.focusToInput();
       this.searchedMessageId = -1;
       this.hasScrolledToBottom = false;
+      this.noOlderMessages = false;
+      this.oldestMessageId = 0;
+      this.loadingOlderMessages = false;
+      this.canLoadMessagesSemaphore = true;
+      this.fetchingOlderMessages = false;
     }
 
     this.cdr.detectChanges();
@@ -626,7 +631,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
     const threshold = 10; // Threshold for bottom and top detection
     if (!this.hasInitialized) {
-      this.hasInitialized = true; // Prevent fetch on the first scroll event
+      setTimeout(() => {
+        this.hasInitialized = true; // Prevent fetch on the first scroll event
+      }, 1000);
       return;
     }
     if (scrollDirection === ScrollDirection.Down && scrollHeight - scrollPosition <= clientHeight + threshold) {
@@ -664,7 +671,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   fetchOlderMessages(){
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
-    this.scrollToTop();
+    // this.scrollToTop();
     this.messageService.fetchOlderMessages(this.oldestMessageId, this.recipientId).subscribe({
       next: (result: MessagesChatModel) => {
         var fetchedMessages: MessageViewModel[] = result.messages;
