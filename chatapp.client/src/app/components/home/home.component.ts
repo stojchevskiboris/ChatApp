@@ -74,6 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           const newRecentChat: RecentChatViewModel = {
             id: message.id,
             recipientId: userFromId,
+            recipientUsername: '',
             recipientFirstName: '',
             recipientLastName: '',
             recipientProfilePicture: '',

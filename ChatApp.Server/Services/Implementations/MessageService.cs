@@ -200,6 +200,7 @@ namespace ChatApp.Server.Services.Implementations
                     {
                         Id = mostRecentMessage.Id,
                         RecipientId = recipient.Id,
+                        RecipientUsername = recipient.Username,
                         RecipientFirstName = recipient.FirstName,
                         RecipientLastName = recipient.LastName,
                         RecipientProfilePicture = recipient.ProfilePicture?.Url,
@@ -213,6 +214,16 @@ namespace ChatApp.Server.Services.Implementations
                         ModifiedAt = mostRecentMessage.ModifiedAt,
                     });
                 }
+            }
+
+            if (!string.IsNullOrEmpty(searchQuery))
+            {
+                result = result.Where(x =>
+                        x.RecipientFirstName.ToLower().Contains(searchQuery.ToLower()) ||
+                        x.RecipientLastName.ToLower().Contains(searchQuery.ToLower()) ||
+                        x.RecipientUsername.ToLower().Contains(searchQuery.ToLower()) ||
+                        x.Content.ToLower().Contains(searchQuery.ToLower())
+                    ).ToList();
             }
 
             return result.OrderByDescending(x => x.CreatedAt).ToList();

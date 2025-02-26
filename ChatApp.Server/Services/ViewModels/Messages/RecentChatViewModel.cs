@@ -4,6 +4,7 @@
     {
         public int Id { get; set; }
         public int RecipientId { get; set; }
+        public string RecipientUsername { get; set; }
         public string RecipientFirstName { get; set; }
         public string RecipientLastName { get; set; }
         public string RecipientProfilePicture {  get; set; }

@@ -499,6 +499,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     const newRecentChat: RecentChatViewModel = {
       id: message.id,
       recipientId: this.recipientId,
+      recipientUsername: this.recipient?.username ?? '',
       recipientFirstName: this.recipient?.firstName ?? '',
       recipientLastName: this.recipient?.lastName ?? '',
       recipientProfilePicture: this.recipient?.profilePicture,

@@ -14,6 +14,7 @@ namespace ChatApp.Server.Services.Mappers
             {
                 Id = message.Id,
                 RecipientId = message.Recipient?.RecipientUser?.Id ?? 0,
+                RecipientUsername = message.Recipient?.RecipientUser?.Username ?? "",
                 RecipientFirstName = message.Recipient?.RecipientUser?.FirstName ?? "",
                 RecipientLastName = message.Recipient?.RecipientUser?.LastName ?? "",
                 Content = message.Content ?? "",

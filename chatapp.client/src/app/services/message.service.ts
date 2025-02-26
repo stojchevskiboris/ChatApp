@@ -63,7 +63,7 @@ export class MessageService {
 
   getRecentChats(searchInput: string): Observable<RecentChatViewModel[]> {
     return this.dataService
-      .post<RecentChatViewModel[]>(this.getRecentChatsEndpoint, { Query: searchInput })
+      .post<RecentChatViewModel[]>(this.getRecentChatsEndpoint, { Query: searchInput.trim() })
       .pipe(
         tap((response) => {
           return response;

@@ -1,6 +1,7 @@
 export class RecentChatViewModel {
     id: number = 0;
     recipientId: number = 0;
+    recipientUsername: string = '';
     recipientFirstName: string = '';
     recipientLastName: string = '';
     recipientProfilePicture: string = '';
