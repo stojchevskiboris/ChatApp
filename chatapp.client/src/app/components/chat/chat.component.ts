@@ -15,6 +15,8 @@ import { MediaViewModel } from '../../models/media-view-model';
 import { MediaPreviewDialogComponent } from '../dialogs/media-preview-dialog/media-preview-dialog.component';
 import { SignalRService } from '../../services/signalr.service';
 import { RecentChatViewModel } from '../../models/recent-chat-view-model';
+import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
+import { MessagesChatModel } from '../../models/messages-chat-model';
 
 @Component({
   selector: 'app-chat',
@@ -54,6 +56,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   selectedMediaFromChat: MediaViewModel | null = null;
   sharedMedia: MediaViewModel[] = [];
   noMessages: boolean = false;
+  noOlderMessages: boolean = false;
+  oldestMessageId: number = 0;
+  prevScrollPosMessages = 0;
+  canLoadMessagesSemaphore = true;
+  loadingOlderMessages = false;
+  fetchingOlderMessages = false;
 
   constructor(
     private authService: AuthService,
@@ -74,7 +82,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       .catch((error) => {
         console.error('Error in initialization sequence:', error);
       });
-  
+
     this.setRecipientSubscription = interval(60000).subscribe(() => {
       this.setRecipient(false);
     });
@@ -142,7 +150,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   getRecentMessages(): Promise<void> {
     return new Promise((resolve, reject) => {
       this.messageService.getRecentMessages(this.recipientId).subscribe({
-        next: (messages: MessageViewModel[]) => {
+        next: (result: MessagesChatModel) => {
+          var messages: MessageViewModel[] = result.messages;
+          this.oldestMessageId = result.oldestMessageId;
           if (!messages || messages.length === 0) {
             this.noMessages = true;
           }
@@ -254,8 +264,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             id: -5,
             senderId: this.currentUserId,
             recipientId: this.recipient?.id || 0,
-            content: uploadResponse.url, 
-            type: 'image/gif', 
+            content: uploadResponse.url,
+            type: 'image/gif',
             media: media,
             hasMedia: true,
             isSeen: false,
@@ -273,7 +283,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.scrollToBottom();
           this.messageService.sendMessage(mediaMessage).subscribe({
             next: (response: boolean) => {
-              this.signalrService.sendMessage(this.recipientId, mediaMessage).then(()=>{
+              this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
                 console.log('Message sent successfully via SignalR');
               })
             },
@@ -330,7 +340,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.newMessage = '';
       this.messageService.sendMessage(textMessage).subscribe({
         next: (response: boolean) => {
-          this.signalrService.sendMessage(this.recipientId, textMessage).then(()=>{
+          this.signalrService.sendMessage(this.recipientId, textMessage).then(() => {
             console.log('Message sent successfully via SignalR');
           })
         },
@@ -383,7 +393,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               this.scrollToBottom();
               this.messageService.sendMessage(mediaMessage).subscribe({
                 next: (response: boolean) => {
-                  this.signalrService.sendMessage(this.recipientId, mediaMessage).then(()=>{
+                  this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
                     console.log('Message sent successfully via SignalR');
                   })
                 },
@@ -447,7 +457,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   scrollToBottom() {
-    this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+    if (!this.fetchingOlderMessages){
+      this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+    }
+  }
+
+  scrollToTop() {
+    this.scrollable.scrollTo({ top: 0, duration: 300 })
   }
 
   searchMessage() {
@@ -486,7 +502,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       hasMedia: message.hasMedia,
       mediaType: message.media?.fileType || '',
       isSeen: true,
-      isSentMessage: true, 
+      isSentMessage: true,
       parentMessageId: message.parentMessageId,
       createdAt: message.createdAt ? new Date(message.createdAt) : null,
       modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
@@ -596,7 +612,90 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     );
     return currentIndex < this.sharedMedia.length - 1;
   }
-  
+
+
+  private hasInitialized = false;
+
+  onScrollMessages(event: any): void {
+    const scrollPosition = event.target.scrollTop;
+    const scrollHeight = event.target.scrollHeight;
+    const clientHeight = event.target.clientHeight;
+
+    const scrollDirection = scrollPosition > this.prevScrollPosMessages ? ScrollDirection.Down : ScrollDirection.Up;
+    this.prevScrollPosMessages = scrollPosition;
+
+    const threshold = 10; // Threshold for bottom and top detection
+    if (!this.hasInitialized) {
+      this.hasInitialized = true; // Prevent fetch on the first scroll event
+      return;
+    }
+    if (scrollDirection === ScrollDirection.Down && scrollHeight - scrollPosition <= clientHeight + threshold) {
+      this.onBottomReached();
+    }
+
+    if (scrollDirection === ScrollDirection.Up && scrollPosition <= threshold) {
+      this.onTopReached();
+    }
+  }
+
+  onBottomReached(): void {
+    if (this.canLoadMessagesSemaphore) {
+      this.canLoadMessagesSemaphore = false;
+      setTimeout(() => {
+        this.canLoadMessagesSemaphore = true;
+      }, 500)
+
+      console.log('Reached the bottom of the message list');
+    }
+  }
+
+
+  onTopReached(): void {
+    if (this.canLoadMessagesSemaphore) {
+      this.canLoadMessagesSemaphore = false;
+      setTimeout(() => {
+        this.canLoadMessagesSemaphore = true;
+      }, 500)
+
+      console.log('Reached the top of the message list');
+      this.fetchOlderMessages();
+    }
+  }
+  fetchOlderMessages(){
+    this.loadingOlderMessages = true;
+    this.fetchingOlderMessages = true;
+    this.scrollToTop();
+    this.messageService.fetchOlderMessages(this.oldestMessageId, this.recipientId).subscribe({
+      next: (result: MessagesChatModel) => {
+        var fetchedMessages: MessageViewModel[] = result.messages;
+        this.oldestMessageId = result.oldestMessageId;
+        if (!fetchedMessages || fetchedMessages.length === 0) {
+          this.noOlderMessages = true;
+        }
+        this.messages.unshift(...fetchedMessages);
+        var fetchedMedia = fetchedMessages
+          .filter(x => x.hasMedia)
+          .map(msg => this.mapToMediaViewModel(msg));
+        this.sharedMedia.unshift(...fetchedMedia);
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);
+        this.cdr.detectChanges();
+      },
+      error: (error: HttpErrorResponse) => {
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);        
+        console.error('Error fetching older messages:', error);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);      
+      }
+    });
+  }
+
   private focusToInput() {
     if (this.messageInput?.nativeElement) {
       this.messageInput.nativeElement.focus();

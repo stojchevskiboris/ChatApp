@@ -34,7 +34,7 @@ namespace ChatApp.Server.Data.Implementations
                             x.Sender != null &&
                             (x.Recipient.RecipientUser.Id == user1Id && x.Sender.Id == user2Id) ||
                             (x.Recipient.RecipientUser.Id == user2Id && x.Sender.Id == user1Id))
-                .OrderBy(x => x.CreatedAt)
+                .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 
             return messages;

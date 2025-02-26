@@ -3,6 +3,7 @@ import { DataService } from './data.service';
 import { MessageViewModel } from '../models/message-view-model';
 import { Observable, tap } from 'rxjs';
 import { RecentChatViewModel } from '../models/recent-chat-view-model';
+import { MessagesChatModel } from '../models/messages-chat-model';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ export class MessageService {
   private getRecentChatsEndpoint = '/Messages/GetRecentChats';
   private setMessageSeenEndpoint = '/Messages/SetMessageSeen';
   private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
+  private fetchOlderMessagesEndpoint = '/Messages/FetchOlderMessages';
   private uploadMediaEndpoint = '/Messages/UploadMedia';
   private uploadGifEndpoint = '/Messages/UploadGif';
 
@@ -29,9 +31,9 @@ export class MessageService {
       );
   }
 
-  sendMessage(model: MessageViewModel): Observable<boolean>{
+  sendMessage(model: MessageViewModel): Observable<boolean> {
     return this.dataService
-      .post<boolean>(this.sendMessageEndpoint, model )
+      .post<boolean>(this.sendMessageEndpoint, model)
       .pipe(
         tap((response) => {
           return response;
@@ -41,27 +43,27 @@ export class MessageService {
 
   uploadMedia(data: FormData): Observable<any> {
     return this.dataService
-    .post<any>(this.uploadMediaEndpoint, data)
-    .pipe(
-      tap((response) => {
-        return response;
-      })
-    );
+      .post<any>(this.uploadMediaEndpoint, data)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
   }
 
   uploadGif(gifUrl: string): Observable<any> {
     return this.dataService
-    .post<any>(this.uploadGifEndpoint, {Query: gifUrl})
-    .pipe(
-      tap((response) => {
-        return response;
-      })
-    );
+      .post<any>(this.uploadGifEndpoint, { Query: gifUrl })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
   }
 
   getRecentChats(searchInput: string): Observable<RecentChatViewModel[]> {
     return this.dataService
-      .post<RecentChatViewModel[]>(this.getRecentChatsEndpoint, {Query: searchInput})
+      .post<RecentChatViewModel[]>(this.getRecentChatsEndpoint, { Query: searchInput })
       .pipe(
         tap((response) => {
           return response;
@@ -69,9 +71,9 @@ export class MessageService {
       );
   }
 
-  setMessageSeen(messageId: number): Observable<boolean>{
+  setMessageSeen(messageId: number): Observable<boolean> {
     return this.dataService
-      .post<boolean>(this.setMessageSeenEndpoint, {Id: messageId})
+      .post<boolean>(this.setMessageSeenEndpoint, { Id: messageId })
       .pipe(
         tap((response) => {
           return response;
@@ -79,9 +81,19 @@ export class MessageService {
       );
   }
 
-  getRecentMessages(recipientId: number): Observable<MessageViewModel[]> {
+  getRecentMessages(recipientId: number): Observable<MessagesChatModel> {
     return this.dataService
-      .post<MessageViewModel[]>(this.getRecentMessagesEndpoint, {Id: recipientId})
+      .post<MessagesChatModel>(this.getRecentMessagesEndpoint, { Id: recipientId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  fetchOlderMessages(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
+    return this.dataService
+      .post<MessagesChatModel>(this.fetchOlderMessagesEndpoint, { oldestMessageId, recipientId })
       .pipe(
         tap((response) => {
           return response;

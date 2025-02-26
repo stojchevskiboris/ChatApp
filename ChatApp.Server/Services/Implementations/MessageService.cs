@@ -233,7 +233,7 @@ namespace ChatApp.Server.Services.Implementations
             return false;
         }
 
-        public List<MessageViewModel> GetRecentMessages(int recipientUserId)
+        public MessagesChatModel GetRecentMessages(int recipientUserId)
         {
             var recipientUser = _userRepository.Get(recipientUserId);
             var currentUserId = Context.GetCurrentUserId();
@@ -241,12 +241,61 @@ namespace ChatApp.Server.Services.Implementations
 
             if (recipientUser == null)
             {
-                return new List<MessageViewModel>();
+                return new MessagesChatModel();
             }
 
-            var result = _messageRepository.GetMessagesBySenderAndRecipient(currentUserId, recipientUserId);
+            var result = _messageRepository
+                .GetMessagesBySenderAndRecipient(currentUserId, recipientUserId)
+                .Take(30)
+                .OrderBy(x => x.CreatedAt)
+                .ToList();
 
-            return result.MapToViewModelList();
+            var oldestMessage = result.FirstOrDefault();
+            var lastMessageId = oldestMessage?.Id ?? 0;
+            if (oldestMessage == null && result.Any())
+            {
+                lastMessageId = -1;
+            }
+
+            return new MessagesChatModel()
+            {
+                OldestMessageId = lastMessageId,
+                Messages = result.MapToViewModelList()
+            };
+        }
+        public MessagesChatModel FetchOlderMessages(MessagesHttpRequest model)
+        {
+            var recipientUser = _userRepository.Get(model.RecipientId);
+            var currentUserId = Context.GetCurrentUserId();
+
+
+            if (recipientUser == null)
+            {
+                return new MessagesChatModel();
+            }
+
+            var oldestMessageBefore = _messageRepository.Get(model.OldestMessageId);
+
+            var result = _messageRepository
+                .GetMessagesBySenderAndRecipient(currentUserId, model.RecipientId)
+                .Where(x => x.CreatedAt < oldestMessageBefore.CreatedAt)
+                .Take(30)
+                .OrderBy(x => x.CreatedAt)
+                .ToList();
+
+            var oldestMessageAfter = result.FirstOrDefault();
+
+            var lastMessageId = oldestMessageAfter?.Id ?? 0;
+            if (oldestMessageAfter == null && result.Any())
+            {
+                lastMessageId = -1;
+            }
+
+            return new MessagesChatModel()
+            {
+                OldestMessageId = lastMessageId,
+                Messages = result.MapToViewModelList()
+            };
         }
     }
 }

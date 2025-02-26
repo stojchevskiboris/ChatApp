@@ -30,10 +30,18 @@
   </div>
 
   <!-- Messages Window -->
-  <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar">
+  <ng-scrollbar class="messages bg-none" #scrollbarRef="ngScrollbar" (scroll)="onScrollMessages($event)">
+
+    <div *ngIf="loadingOlderMessages" class="text-center">
+      <div class="load-3">
+        <div class="line"></div>
+        <div class="line"></div>
+        <div class="line"></div>
+      </div>
+    </div>
+
     <ng-container *ngFor="let message of messages; let i = index">
 
-      <!-- Show date marker when the day changes -->
       <div *ngIf="i === 0 || (messages[i - 1].createdAt | messageDate) !== (message.createdAt | messageDate)"
         class="date-marker">
         {{ message.createdAt | messageDate }}
@@ -56,13 +64,17 @@
           <ng-template #mediaTemplate>
             <div (click)="openMediaPreview(message)" class="cursor-pointer">
               <!-- Image -->
-              <img *ngIf="isImage(message.media?.fileType)" [src]="message.content" alt="Image Preview" class="media-chat" (load)="scrollToBottom()">
+              <img *ngIf="isImage(message.media?.fileType)" [src]="message.content" alt="Image Preview"
+                class="media-chat" (load)="scrollToBottom()">
               <!-- GIF -->
-              <img *ngIf="isGif(message.media?.fileType)" [src]="message.content" alt="GIF" class="media-chat" (load)="scrollToBottom()">
+              <img *ngIf="isGif(message.media?.fileType)" [src]="message.content" alt="GIF" class="media-chat"
+                (load)="scrollToBottom()">
               <!-- Video -->
-              <video *ngIf="isVideo(message.media?.fileType)" [src]="message.content" class="media-chat" controls muted (load)="scrollToBottom()"></video>
+              <video *ngIf="isVideo(message.media?.fileType)" [src]="message.content" class="media-chat" controls muted
+                (load)="scrollToBottom()"></video>
               <!-- Audio -->
-              <audio *ngIf="isAudio(message.media?.fileType)" [src]="message.content" controls (load)="scrollToBottom()"></audio>
+              <audio *ngIf="isAudio(message.media?.fileType)" [src]="message.content" controls
+                (load)="scrollToBottom()"></audio>
               <!-- File -->
               <div *ngIf="isFile(message.media?.fileType)" class="file-message">
                 <a [href]="message.content" target="_blank" class="file-link">{{ getFileName(message.content) }}</a>

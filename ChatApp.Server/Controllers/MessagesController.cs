@@ -119,13 +119,24 @@ namespace ChatApp.Server.Controllers
 
         [HttpPost("GetRecentMessages")]
         [Authorize]
-        public List<MessageViewModel> GetRecentMessages(HttpRequestIdModel model)
+        public MessagesChatModel GetRecentMessages(HttpRequestIdModel model)
         {
             if (model.Id == 0)
             {
-                return new List<MessageViewModel>();
+                return new MessagesChatModel();
             }
             return _messageService.GetRecentMessages(model.Id);
+        }
+
+        [HttpPost("FetchOlderMessages")]
+        [Authorize]
+        public MessagesChatModel FetchOlderMessages(MessagesHttpRequest model)
+        {
+            if (model.OldestMessageId == 0 || model.OldestMessageId == -1 || model.RecipientId == 0)
+            {
+                return new MessagesChatModel();
+            }
+            return _messageService.FetchOlderMessages(model);
         }
     }
 }
