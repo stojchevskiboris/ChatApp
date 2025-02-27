@@ -5,7 +5,12 @@
   <div class="row">
 
     <div class="col-lg-4 border">
-      <app-left-pane (selectedChat)="handleSelectedChat($event)" [startChat]="startChatEvent" [updateActiveContact]="activeUserId" [newChatMessage]="recievedChatMessage"></app-left-pane>
+      <app-left-pane 
+        [startChat]="startChatEvent"
+        [updateActiveContact]="activeUserId" 
+        [newChatMessage]="recievedChatMessage"
+        (selectedChat)="handleSelectedChat($event)"> 
+      </app-left-pane>
     </div>
 
     <div class="col-lg-8">
@@ -13,12 +18,22 @@
 
         <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border"
           *ngIf="isChatSelected && selectedChatRecipientId">
-          <app-chat (toggleChatSettings)="toggleSettings()" (newSentChatMessage)="updateLeftPaneChats($event)" [recipientId]="selectedChatRecipientId" [searchedMessageId]="searchedMessageIdFromSettings"></app-chat>
+          <app-chat 
+            [recipientId]="selectedChatRecipientId" 
+            [searchedMessageId]="searchedMessageIdFromSettings"
+            (toggleChatSettings)="toggleSettings()" 
+            (newSharedMedia)="updateChatSettings($event)"
+            (newSentChatMessage)="updateLeftPaneChats($event)">
+          </app-chat>
         </div>
 
         <div class="col-lg-4 chat fadeInAnimation border"
           *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
-          <app-chat-settings [recipientId]="selectedChatRecipientId" (searchMessageId)="handleSearchedMessageId($event)"></app-chat-settings>
+          <app-chat-settings 
+            [recipientId]="selectedChatRecipientId"
+            [newMediaMessage]="recievedMediaMessage"
+            (searchMessageId)="handleSearchedMessageId($event)">
+          </app-chat-settings>
         </div>
 
         <div class="col-sm-12 start-chat fadeInAnimation border" *ngIf="!isChatSelected">

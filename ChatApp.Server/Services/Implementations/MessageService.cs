@@ -4,6 +4,7 @@ using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
+using ChatApp.Server.Services.ViewModels.Media;
 using ChatApp.Server.Services.ViewModels.Messages;
 
 namespace ChatApp.Server.Services.Implementations
@@ -216,14 +217,18 @@ namespace ChatApp.Server.Services.Implementations
                 }
             }
 
-            if (!string.IsNullOrEmpty(searchQuery))
+            if (!string.IsNullOrWhiteSpace(searchQuery))
             {
+                var queryWords = searchQuery.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
                 result = result.Where(x =>
-                        x.RecipientFirstName.ToLower().Contains(searchQuery.ToLower()) ||
-                        x.RecipientLastName.ToLower().Contains(searchQuery.ToLower()) ||
-                        x.RecipientUsername.ToLower().Contains(searchQuery.ToLower()) ||
-                        x.Content.ToLower().Contains(searchQuery.ToLower())
-                    ).ToList();
+                    queryWords.All(word =>
+                        x.RecipientFirstName.ToLower().Contains(word) ||
+                        x.RecipientLastName.ToLower().Contains(word) ||
+                        x.RecipientUsername.ToLower().Contains(word) ||
+                        x.Content.ToLower().Contains(word)
+                    )
+                ).ToList();
             }
 
             return result.OrderByDescending(x => x.CreatedAt).ToList();
@@ -274,11 +279,11 @@ namespace ChatApp.Server.Services.Implementations
                 Messages = result.MapToViewModelList()
             };
         }
+
         public MessagesChatModel FetchOlderMessages(MessagesHttpRequest model)
         {
             var recipientUser = _userRepository.Get(model.RecipientId);
             var currentUserId = Context.GetCurrentUserId();
-
 
             if (recipientUser == null)
             {
@@ -311,6 +316,24 @@ namespace ChatApp.Server.Services.Implementations
                 OldestMessageId = lastMessageId,
                 Messages = result.MapToViewModelList()
             };
+        }
+
+        public List<SharedMediaViewModel> GetSharedMedia(int recipientId)
+        {
+            var currentUserId = Context.GetCurrentUserId();
+            var currentUser = _userRepository.Get(currentUserId);
+            var recipientUser = _userRepository.Get(recipientId);
+
+            if (recipientUser == null || currentUser == null)
+            {
+                return new List<SharedMediaViewModel>();
+            }
+
+            var sharedMediaMessages = _messageRepository.GetMessagesBySenderAndRecipient(currentUserId, recipientId)
+                .Where(x => x.HasMedia && x.MediaContent != null)
+                .ToList();
+
+            return sharedMediaMessages.MapToSharedMediaModelList();
         }
     }
 }

@@ -32,6 +32,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   chatList: RecentChatViewModel[] = [];
   contactsList: UserViewModel[] = [];
+  fetchedContacts: UserViewModel[] = [];
   selectedTabIndex: number = 0;
 
   hasContactsLoaded: boolean = false;
@@ -271,6 +272,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       next: (model: UserViewModel[]) => {
         setFlag = false;
         this.contactsList = model;
+        this.fetchedContacts = this.contactsList;
         this.hasContactsLoaded = true;
       },
       error: (err: any) => {
@@ -323,7 +325,23 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
               'a message';
   }
 
-  private sortChats(){
+  onSearch() {
+    this.getRecentChats();
+
+    if (!this.searchQuery) {
+      this.getContacts();
+      return;
+    }
+
+    const queryWords = this.searchQuery.trim().toLowerCase().split(/\s+/); 
+    
+    this.contactsList = this.fetchedContacts.filter(contact => {
+      const fullName = `${contact.firstName} ${contact.lastName} ${contact.username}`.trim().toLowerCase();
+      return queryWords.every(word => fullName.includes(word));
+    });
+  }
+
+  private sortChats() {
     this.chatList = this.chatList.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }
 }

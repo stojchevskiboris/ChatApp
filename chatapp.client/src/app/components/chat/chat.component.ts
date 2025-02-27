@@ -29,6 +29,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   @Input() searchedMessageId: number = -1;
   @Output() toggleChatSettings = new EventEmitter();
   @Output() newSentChatMessage = new EventEmitter<RecentChatViewModel>();
+  @Output() newSharedMedia = new EventEmitter<MediaViewModel>();
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
@@ -193,6 +194,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             if (message.hasMedia) {
               const media = this.mapToMediaViewModel(message);
               this.sharedMedia.push(media);
+              this.addMediaToChatSettings(message);
             }
             this.cdr.detectChanges();
             this.scrollToBottom();
@@ -281,6 +283,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           console.log('Sending media message:', mediaMessage);
 
           this.emitNewSentMessage(mediaMessage);
+          this.addMediaToChatSettings(mediaMessage);
           this.messages.push(mediaMessage);
           var item = this.mapToMediaViewModel(mediaMessage);
           this.sharedMedia.push(item);
@@ -390,6 +393,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               console.log('Sending media message:', mediaMessage);
 
               this.emitNewSentMessage(mediaMessage);
+              this.addMediaToChatSettings(mediaMessage);
               this.messages.push(mediaMessage);
               var item = this.mapToMediaViewModel(mediaMessage);
               this.sharedMedia.push(item);
@@ -515,13 +519,27 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.newSentChatMessage.emit(newRecentChat);
   }
 
-  containsGiphy(content): any {
-    if (content) {
-      return content.toLowerCase().includes('giphy');
-    }
-    return false;
+  addMediaToChatSettings(message: MessageViewModel): void {
+    var sender = message.senderId == this.currentUserId ? this.currentUser : this.recipient;
+    var recipient = message.senderId != this.currentUserId ? this.currentUser : this.recipient;
+    const item: MediaViewModel = {
+      id: message.id,
+      url: message.media?.url,
+      fileType: message.media?.fileType,
+      fileSize: message.media?.fileSize,
+      sentToUsername: recipient?.username ?? '',
+      sentToFirstName: recipient?.firstName ?? '',
+      sentToLastName: recipient?.lastName ?? '',
+      sentToId: recipient?.id ?? 0,
+      sentFromFirstName: sender?.firstName ?? '',
+      sentFromUsername: sender?.username ?? '',
+      sentFromLastName: sender?.lastName ?? '',
+      sentFromId: sender?.id ?? 0,      
+      createdAt: message.createdAt ? new Date(message.createdAt) : null,
+      modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
+    };
+    this.newSharedMedia.emit(item);
   }
-
   isContactActive(lastActive: any): boolean {
     if (!lastActive || isNaN(new Date(lastActive).getTime())) {
       return false;
@@ -533,7 +551,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
     return diffInMinutes < 5;
   }
-
 
   isGif(fileType: string | undefined): boolean {
     return fileType === 'image/gif';
@@ -566,10 +583,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     media.url = msg.media!.url;
     media.fileType = msg.media!.fileType;
     media.fileSize = msg.media!.fileSize;
-    media.sentById = isSent ? this.recipient.id : this.currentUser.id;
-    media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
-    media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
-    media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
+    media.sentFromId = isSent ? this.recipient.id : this.currentUser.id;
+    media.sentFromFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
+    media.sentFromLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
+    media.sentFromUsername = isSent ? this.currentUser.username : this.recipient.username;
     media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
     media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
     media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;
@@ -722,10 +739,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     media.url = msg.media!.url;
     media.fileType = msg.media!.fileType;
     media.fileSize = msg.media!.fileSize;
-    media.sentById = isSent ? this.recipient.id : this.currentUser.id;
-    media.sentByFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
-    media.sentByLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
-    media.sentByUsername = isSent ? this.currentUser.username : this.recipient.username;
+    media.sentFromId = isSent ? this.recipient.id : this.currentUser.id;
+    media.sentFromFirstName = isSent ? this.currentUser.firstName : this.recipient.firstName;
+    media.sentFromLastName = isSent ? this.currentUser.lastName : this.recipient.lastName;
+    media.sentFromUsername = isSent ? this.currentUser.username : this.recipient.username;
     media.sentToId = isSent ? this.currentUser.id : this.recipient.id;
     media.sentToFirstName = isSent ? this.recipient.firstName : this.currentUser.firstName;
     media.sentToLastName = isSent ? this.recipient.lastName : this.currentUser.lastName;

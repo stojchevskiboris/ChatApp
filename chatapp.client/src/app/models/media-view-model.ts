@@ -3,10 +3,10 @@ export class MediaViewModel {
     url: string;
     fileType: string;
     fileSize: number;
-    sentByFirstName: string;
-    sentByLastName: string;
-    sentById: number;
-    sentByUsername: string;
+    sentFromFirstName: string;
+    sentFromLastName: string;
+    sentFromId: number;
+    sentFromUsername: string;
     sentToFirstName: string;
     sentToLastName: string;
     sentToUsername: string;

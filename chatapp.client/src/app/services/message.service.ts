@@ -4,6 +4,7 @@ import { MessageViewModel } from '../models/message-view-model';
 import { Observable, tap } from 'rxjs';
 import { RecentChatViewModel } from '../models/recent-chat-view-model';
 import { MessagesChatModel } from '../models/messages-chat-model';
+import { MediaViewModel } from '../models/media-view-model';
 
 @Injectable({
   providedIn: 'root'
@@ -20,6 +21,7 @@ export class MessageService {
   private fetchOlderMessagesEndpoint = '/Messages/FetchOlderMessages';
   private uploadMediaEndpoint = '/Messages/UploadMedia';
   private uploadGifEndpoint = '/Messages/UploadGif';
+  private getSharedMediaEndpoint = '/Messages/GetSharedMedia';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
     return this.dataService
@@ -94,6 +96,16 @@ export class MessageService {
   fetchOlderMessages(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
     return this.dataService
       .post<MessagesChatModel>(this.fetchOlderMessagesEndpoint, { oldestMessageId, recipientId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getSharedMedia(recipientId): Observable<MediaViewModel[]> {
+    return this.dataService
+      .post<MediaViewModel[]>(this.getSharedMediaEndpoint, { Id: recipientId })
       .pipe(
         tap((response) => {
           return response;

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChanges, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, Output, SimpleChange, SimpleChanges, ViewChild } from '@angular/core';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -19,6 +19,7 @@ export class ChatSettingsComponent {
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @Input() recipientId: number | null = null;
   @Output() searchMessageId = new EventEmitter<number>();
+  @Input() newMediaMessage: MediaViewModel;
   recipient: UserViewModel = null;
   defaultAvatar = 'img/default-avatar.png';
   recipientProfilePicture: string = this.defaultAvatar;
@@ -28,168 +29,8 @@ export class ChatSettingsComponent {
   searchResults: MessageViewModel[] = [];
   selectedMessageId: number;
   selectedMedia: MediaViewModel | null = null;
-  sharedMedia: MediaViewModel[] = [
-    {
-      id: 1,
-      url: 'https://picsum.photos/id/1011/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1536,
-      sentByFirstName: 'Boris',
-      sentByLastName: 'Stojchevski',
-      sentById: 2,
-      sentByUsername: 'boriss',
-      sentToFirstName: 'Test',
-      sentToLastName: 'User',
-      sentToId: 1,
-      sentToUsername: 'admin',
-      createdAt: new Date('2024-12-20T10:00:00'),
-      modifiedAt: new Date('2024-12-20T10:10:00'),
-    },
-    {
-      id: 2,
-      url: 'https://picsum.photos/id/1012/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 2048,
-      sentByFirstName: 'Anna',
-      sentByLastName: 'Smith',
-      sentById: 3,
-      sentByUsername: 'anna_s',
-      sentToFirstName: 'John',
-      sentToLastName: 'Doe',
-      sentToId: 4,
-      sentToUsername: 'johnd',
-      createdAt: new Date('2024-12-21T14:30:00'),
-      modifiedAt: new Date('2024-12-21T14:40:00'),
-    },
-    {
-      id: 3,
-      url: 'https://picsum.photos/id/1013/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1890,
-      sentByFirstName: 'James',
-      sentByLastName: 'Brown',
-      sentById: 5,
-      sentByUsername: 'jamesb',
-      sentToFirstName: 'Sarah',
-      sentToLastName: 'Johnson',
-      sentToId: 6,
-      sentToUsername: 'sarahj',
-      createdAt: new Date('2024-12-22T08:15:00'),
-      modifiedAt: new Date('2024-12-22T08:20:00'),
-    },
-    {
-      id: 4,
-      url: 'https://picsum.photos/id/1014/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1496,
-      sentByFirstName: 'Michael',
-      sentByLastName: 'Williams',
-      sentById: 7,
-      sentByUsername: 'michaelw',
-      sentToFirstName: 'Emma',
-      sentToLastName: 'Davis',
-      sentToId: 8,
-      sentToUsername: 'emmad',
-      createdAt: new Date('2024-12-23T11:00:00'),
-      modifiedAt: new Date('2024-12-23T11:05:00'),
-    },
-    {
-      id: 5,
-      url: 'https://picsum.photos/id/1015/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 2104,
-      sentByFirstName: 'David',
-      sentByLastName: 'Miller',
-      sentById: 9,
-      sentByUsername: 'davidm',
-      sentToFirstName: 'Olivia',
-      sentToLastName: 'Garcia',
-      sentToId: 10,
-      sentToUsername: 'oliviag',
-      createdAt: new Date('2024-12-24T09:00:00'),
-      modifiedAt: new Date('2024-12-24T09:10:00'),
-    },
-    {
-      id: 6,
-      url: 'https://picsum.photos/id/1016/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1784,
-      sentByFirstName: 'Sophia',
-      sentByLastName: 'Martinez',
-      sentById: 11,
-      sentByUsername: 'sophiam',
-      sentToFirstName: 'Liam',
-      sentToLastName: 'Rodriguez',
-      sentToId: 12,
-      sentToUsername: 'liamr',
-      createdAt: new Date('2024-12-25T15:00:00'),
-      modifiedAt: new Date('2024-12-25T15:05:00'),
-    },
-    {
-      id: 7,
-      url: 'https://picsum.photos/id/1017/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1982,
-      sentByFirstName: 'Isabella',
-      sentByLastName: 'Hernandez',
-      sentById: 13,
-      sentByUsername: 'isabellah',
-      sentToFirstName: 'Noah',
-      sentToLastName: 'Lopez',
-      sentToId: 14,
-      sentToUsername: 'noahl',
-      createdAt: new Date('2024-12-26T12:00:00'),
-      modifiedAt: new Date('2024-12-26T12:05:00'),
-    },
-    {
-      id: 8,
-      url: 'https://picsum.photos/id/1018/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1536,
-      sentByFirstName: 'Lucas',
-      sentByLastName: 'Gonzalez',
-      sentById: 15,
-      sentByUsername: 'lucasg',
-      sentToFirstName: 'Mia',
-      sentToLastName: 'Wilson',
-      sentToId: 16,
-      sentToUsername: 'miaw',
-      createdAt: new Date('2024-12-27T18:30:00'),
-      modifiedAt: new Date('2024-12-27T18:35:00'),
-    },
-    {
-      id: 9,
-      url: 'https://picsum.photos/id/1019/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 2048,
-      sentByFirstName: 'Charlotte',
-      sentByLastName: 'Anderson',
-      sentById: 17,
-      sentByUsername: 'charlottea',
-      sentToFirstName: 'Ethan',
-      sentToLastName: 'Thomas',
-      sentToId: 18,
-      sentToUsername: 'ethant',
-      createdAt: new Date('2024-12-28T08:45:00'),
-      modifiedAt: new Date('2024-12-28T08:50:00'),
-    },
-    {
-      id: 10,
-      url: 'https://picsum.photos/id/1020/300/200',
-      fileType: 'image/jpeg',
-      fileSize: 1890,
-      sentByFirstName: 'Amelia',
-      sentByLastName: 'Moore',
-      sentById: 19,
-      sentByUsername: 'ameliam',
-      sentToFirstName: 'Aiden',
-      sentToLastName: 'Taylor',
-      sentToId: 20,
-      sentToUsername: 'aident',
-      createdAt: new Date('2024-12-29T07:00:00'),
-      modifiedAt: new Date('2024-12-29T07:05:00'),
-    }
-  ];
+  loadingSharedMedia: boolean = true;
+  sharedMedia: MediaViewModel[] = [];
   
   constructor(
     private userService: UserService,
@@ -200,15 +41,25 @@ export class ChatSettingsComponent {
 
   ngOnInit(): void {
     this.setRecipient();
+    this.getSharedMedia();
   }
   
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
       this.searchResults = [];
+      this.sharedMedia = [];
+      this.getSharedMedia();
       this.showSearchResults = false;
       this.searchQuery = '';
       this.selectedMessageId = -1;
+    }
+
+    let mediaMessageChange: SimpleChange = changes['newMediaMessage'];
+    if (mediaMessageChange != undefined 
+      && !mediaMessageChange.firstChange 
+      && mediaMessageChange.currentValue !== undefined) {
+      this.sharedMedia.unshift(mediaMessageChange.currentValue)
     }
   }
   
@@ -238,6 +89,23 @@ export class ChatSettingsComponent {
         this.loading = false;
       },
     })
+  }
+
+  getSharedMedia(){
+    this.loadingSharedMedia = true;
+    this.messageService.getSharedMedia(this.recipientId).subscribe(
+      (media: MediaViewModel[]) => {
+        this.sharedMedia = media;
+        this.loadingSharedMedia = false;
+      },
+      (error) => {
+        console.error('Error retrieving shared media:', error);
+        this.loadingSharedMedia = false;
+      },
+      () => {
+        this.loadingSharedMedia = false;
+      }
+    );
   }
 
   searchMessages(): void {

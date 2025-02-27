@@ -9,6 +9,7 @@ import { SignalRService } from '../../services/signalr.service';
 import { ToastrService } from 'ngx-toastr';
 import { MessageViewModel } from '../../models/message-view-model';
 import { RecentChatViewModel } from '../../models/recent-chat-view-model';
+import { MediaViewModel } from '../../models/media-view-model';
 
 @Component({
   selector: 'app-home',
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   lastActiveSubscription: Subscription;
   activeUserId: number = 0;
   recievedChatMessage: RecentChatViewModel = null;
+  recievedMediaMessage: MediaViewModel = null;
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -132,6 +134,10 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   updateLeftPaneChats(sentMessageToUpdate: RecentChatViewModel): void {
     this.recievedChatMessage = sentMessageToUpdate;
+  }
+
+  updateChatSettings(sharedMediaToAdd: MediaViewModel): void {
+    this.recievedMediaMessage = sharedMediaToAdd;
   }
 
   updateLastActive() {

@@ -1,6 +1,7 @@
 ﻿using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Common;
+using ChatApp.Server.Services.ViewModels.Media;
 using ChatApp.Server.Services.ViewModels.Messages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -137,6 +138,17 @@ namespace ChatApp.Server.Controllers
                 return new MessagesChatModel();
             }
             return _messageService.FetchOlderMessages(model);
+        }
+
+        [HttpPost("GetSharedMedia")]
+        [Authorize]
+        public List<SharedMediaViewModel> GetSharedMedia(HttpRequestIdModel model)
+        {
+            if (model.Id == 0)
+            {
+                return new List<SharedMediaViewModel>();
+            }
+            return _messageService.GetSharedMedia(model.Id);
         }
     }
 }

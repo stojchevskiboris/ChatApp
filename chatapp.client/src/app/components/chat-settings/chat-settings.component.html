@@ -1,51 +1,54 @@
 <ng-scrollbar #scrollbarRef="ngScrollbar">
-<main>
-  <!-- Profile Section -->
-  <div class="text-center">
-    <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
-    <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
-    <h5 class="text-secondary">({{ recipient?.username }})</h5>
-  </div>
+  <main>
+    <!-- Profile Section -->
+    <div class="text-center">
+      <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
+      <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
+      <h5 class="text-secondary">({{ recipient?.username }})</h5>
+    </div>
 
-  <!-- Shared Media Section -->
-  <section class="section mt-4 px-3">
-    <h5 class="section-header">Shared Media</h5>
-    <div class="scrollable-container" *ngIf="sharedMedia.length > 0">
-      <ng-scrollbar class="scrollable">
-        <div *ngFor="let media of sharedMedia" class="media-item" (click)="openMediaPreview(media)">
-          <img [src]="media.url" alt="{{ media.fileType }}" class="media-thumbnail" />
-        </div>
-      </ng-scrollbar>
-    </div>
-    <div class="noMedia" *ngIf="sharedMedia.length == 0">
-      <p>No media found</p>
-    </div>
-  </section>
+    <!-- Shared Media Section -->
+    <section class="section mt-4 px-3">
+      <h5 class="section-header">Shared Media</h5>
 
-  <!-- Search Chat Section -->
-  <section class="section mt-4 px-3">
-    <h5 class="section-header">Search in chat</h5>
-    <div class="search-container d-flex align-items-center mb-3">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Search messages..."
-        [(ngModel)]="searchQuery"
-      />
-      
-      <button class="btn btn-primary" (click)="searchMessages()">Search</button>
-    </div>
-    <div class="scrollable-container" *ngIf="searchResults.length > 0">
-      <ng-scrollbar class="scrollable">
-        <div *ngFor="let message of searchResults" class="search-result-item" (click)="onSelectSearchResult(message.id)">
-          <div class="message-content">{{ message.content }}</div>
-          <div class="message-timestamp text-secondary">{{ message.createdAt | date: 'short' }}</div>
+      <div class="scrollable-container position-relative">
+        <!-- Loading Overlay (Inside Scrollable Container) -->
+        <div class="loading-overlay" *ngIf="loadingSharedMedia">
+          <div class="spinner"></div>
         </div>
-      </ng-scrollbar>
-    </div>
-    <div *ngIf="showSearchResults && searchResults.length == 0" class="scrollable scrollable-container text-center text-gray">
-      No results
-    </div>
-  </section>
-</main>
+
+        <ng-scrollbar class="scrollable" *ngIf="sharedMedia.length > 0">
+          <div *ngFor="let media of sharedMedia" class="media-item" (click)="openMediaPreview(media)">
+            <img [src]="media.url" alt="{{ media.fileType }}" class="media-thumbnail" />
+          </div>
+        </ng-scrollbar>
+
+        <div class="noMedia" *ngIf="!loadingSharedMedia && sharedMedia.length == 0">
+          <p>No media found</p>
+        </div>
+      </div>
+    </section>
+    <!-- Search Chat Section -->
+    <section class="section mt-4 px-3">
+      <h5 class="section-header">Search in chat</h5>
+      <div class="search-container d-flex align-items-center mb-3">
+        <input type="text" class="form-control" placeholder="Search messages..." [(ngModel)]="searchQuery" />
+
+        <button class="btn btn-primary" (click)="searchMessages()">Search</button>
+      </div>
+      <div class="scrollable-container" *ngIf="searchResults.length > 0">
+        <ng-scrollbar class="scrollable">
+          <div *ngFor="let message of searchResults" class="search-result-item"
+            (click)="onSelectSearchResult(message.id)">
+            <div class="message-content">{{ message.content }}</div>
+            <div class="message-timestamp text-secondary">{{ message.createdAt | date: 'short' }}</div>
+          </div>
+        </ng-scrollbar>
+      </div>
+      <div *ngIf="showSearchResults && searchResults.length == 0"
+        class="scrollable scrollable-container text-center text-gray">
+        No results
+      </div>
+    </section>
+  </main>
 </ng-scrollbar>

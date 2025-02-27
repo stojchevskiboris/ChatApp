@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Services.ViewModels.Messages;
+﻿using ChatApp.Server.Services.ViewModels.Media;
+using ChatApp.Server.Services.ViewModels.Messages;
 
 namespace ChatApp.Server.Services.Interfaces
 {
@@ -10,5 +11,6 @@ namespace ChatApp.Server.Services.Interfaces
         bool SetMessageSeen(int messageId);
         MessagesChatModel GetRecentMessages(int recipientId);
         MessagesChatModel FetchOlderMessages(MessagesHttpRequest model);
+        List<SharedMediaViewModel> GetSharedMedia(int recipientId);
     }
 }
