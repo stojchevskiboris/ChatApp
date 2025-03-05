@@ -489,7 +489,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             this.searchedMessageId = -1;
           }
           this.cdr.detectChanges();
-        }, 5000);
+        }, 7000);
       } else {
         if (!this.fetchingOlderMessages) {
           // console.log('Message not found locally. Fetching from server...');

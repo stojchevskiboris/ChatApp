@@ -31,7 +31,6 @@ import { provideToastr, ToastrModule } from 'ngx-toastr';
 import { RemoveContactDialogComponent } from './components/dialogs/remove-contact-dialog/remove-contact-dialog.component';
 import { DatePipe } from '@angular/common';
 import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-dialog/remove-media-dialog.component';
-import { ToDoComponent } from './components/to-do/to-do.component';
 import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-dialog/media-preview-dialog.component';
 import { MessageDatePipe } from './shared/pipes/message-date.pipe';
 import { SignalRService } from './services/signalr.service';
@@ -54,7 +53,6 @@ import { SignalRService } from './services/signalr.service';
     ContactsComponent,
     RemoveContactDialogComponent,
     RemoveMediaDialogComponent,
-    ToDoComponent,
     RemoveMediaDialogComponent,
     MediaPreviewDialogComponent
   ],

@@ -30,7 +30,7 @@ builder.Services.AddSingleton<IDictionary<string, int>>(opt => new Dictionary<st
 // --- Validators Registration ---
 builder.Services.ConfigureValidators();
 
-// --- Cors Configuration  ---
+// --- CORS Configuration  ---
 builder.Services.ConfigureCors();
 
 // --- Swagger Dev Authorization ---
@@ -51,7 +51,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // --- Firebase Configuration ---
-var credentialsPath = Path.Combine(AppContext.BaseDirectory, "Configs", "Firebase", "chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json");
+var credentialsPath = Path.Combine(AppContext.BaseDirectory, "Configs", "Firebase", AppParameters.FirebaseConfig);
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialsPath);
 
 var app = builder.Build();

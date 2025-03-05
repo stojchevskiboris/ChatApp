@@ -1,5 +1,4 @@
-﻿using ChatApp.Server.Controllers;
-using ChatApp.Server.Services.Interfaces;
+﻿using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Messages;
 using Microsoft.AspNetCore.SignalR;
 
