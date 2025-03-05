@@ -157,7 +157,6 @@ export class ChatSettingsComponent {
     this.dialog.closeAll();
   }
 
-
   navigateMedia(direction: number) {
     if (!this.selectedMedia) return;
     const currentIndex = this.sharedMedia.findIndex(

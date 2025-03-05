@@ -465,7 +465,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   scrollToBottom(forceScroll: boolean = false) {
-    if (forceScroll || !this.fetchingOlderMessages){
+    if (forceScroll || !this.fetchingOlderMessages) {
       this.scrollable.scrollTo({ bottom: -500, duration: 300 })
     }
   }
@@ -475,6 +475,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   searchMessage() {
+    if (this.searchedMessageId == -1 || this.searchedMessageId == -2){
+      return;
+    }
     if (this.searchedMessageId) {
       const messageExists = this.messages.some(msg => msg.id === this.searchedMessageId);
       if (messageExists) {
@@ -488,18 +491,19 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.cdr.detectChanges();
         }, 5000);
       } else {
-        console.log('Message not found locally. Fetching from server...');
-        this.fetchMessagesNewerThanMessageId()
+        if (!this.fetchingOlderMessages) {
+          console.log('Message not found locally. Fetching from server...');
+          this.fetchMessagesNewerThanMessageId()
+        }
       }
     }
   }
 
-  fetchMessagesNewerThanMessageId(){
+  fetchMessagesNewerThanMessageId() {
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
-    this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });
     // this.scrollToTop();
-    if(this.oldestMessageId == -2){
+    if (this.oldestMessageId == -2) {
       this.loadingOlderMessages = false;
       return;
     }
@@ -511,26 +515,27 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         if (!fetchedMessages || fetchedMessages.length === 0) {
           this.noOlderMessages = true;
         }
-        this.messages = fetchedMessages ;
+        this.messages = fetchedMessages;
         var fetchedMedia = fetchedMessages
           .filter(x => x.hasMedia)
           .map(msg => this.mapToMediaViewModel(msg));
         this.sharedMedia = fetchedMedia;
         setTimeout(() => {
           this.loadingOlderMessages = false;
+          this.scrollable.scrollToElement('#searchTag', { top: -10, duration: 0 });
         }, 1000);
         this.cdr.detectChanges();
       },
       error: (error: HttpErrorResponse) => {
         setTimeout(() => {
           this.loadingOlderMessages = false;
-        }, 1000);        
+        }, 1000);
         console.error('Error fetching older messages:', error);
       },
       complete: () => {
         setTimeout(() => {
           this.loadingOlderMessages = false;
-        }, 1000);      
+        }, 1000);
       }
     });
   }
@@ -575,7 +580,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       sentFromFirstName: sender?.firstName ?? '',
       sentFromUsername: sender?.username ?? '',
       sentFromLastName: sender?.lastName ?? '',
-      sentFromId: sender?.id ?? 0,      
+      sentFromId: sender?.id ?? 0,
       createdAt: message.createdAt ? new Date(message.createdAt) : null,
       modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
     };
@@ -726,12 +731,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.fetchOlderMessages();
     }
   }
-  fetchOlderMessages(){
+  fetchOlderMessages() {
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
     this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });
     // this.scrollToTop();
-    if(this.oldestMessageId == -2){
+    if (this.oldestMessageId == -2) {
       this.loadingOlderMessages = false;
       return;
     }
@@ -756,13 +761,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       error: (error: HttpErrorResponse) => {
         setTimeout(() => {
           this.loadingOlderMessages = false;
-        }, 1000);        
+        }, 1000);
         console.error('Error fetching older messages:', error);
       },
       complete: () => {
         setTimeout(() => {
           this.loadingOlderMessages = false;
-        }, 1000);      
+        }, 1000);
       }
     });
   }

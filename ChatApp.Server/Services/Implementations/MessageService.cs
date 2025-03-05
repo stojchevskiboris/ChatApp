@@ -36,14 +36,13 @@ namespace ChatApp.Server.Services.Implementations
 
             var result = new List<MessageViewModel>();
 
-
             if (!string.IsNullOrWhiteSpace(model.Query))
             {
                 var queryWords = model.Query.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 result = _messageRepository.GetMessagesBySenderAndRecipient(model.RecipientId, currentUserId).Where(x =>
                     queryWords.All(word =>
-                        x.Content.Trim().ToLower().Split(' ').Contains(word)
+                        x.Content.Trim().ToLower().Contains(word)
                     )
                 ).ToList().MapToViewModelList();
             }
@@ -304,7 +303,6 @@ namespace ChatApp.Server.Services.Implementations
                 .Where(x => x.CreatedAt >= oldestMessage.CreatedAt)
                 .OrderBy(x => x.CreatedAt)
                 .ToList();
-
 
             var oldestMessageId = oldestMessage?.Id ?? 0;
             if (oldestMessage == null && result.Any())
