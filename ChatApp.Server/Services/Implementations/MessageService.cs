@@ -14,57 +14,6 @@ namespace ChatApp.Server.Services.Implementations
         private readonly IMessageRepository _messageRepository;
         private readonly IUserRepository _userRepository;
         private readonly IRecipientRepository _recipientRepository;
-        private static readonly List<MessageViewModel> _messages = new()
-        {
-            new MessageViewModel
-            {
-                Id = 1,
-                SenderId = 101,
-                RecipientId = 201,
-                Content = "Hello, how are you?",
-                HasMedia = false,
-                IsSeen = true,
-                ParentMessage = null,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-15),
-                ModifiedAt = DateTime.UtcNow.AddMinutes(-15)
-            },
-            new MessageViewModel
-            {
-                Id = 2,
-                SenderId = 101,
-                RecipientId = 201,
-                Content = "Are we still on for the meeting?",
-                HasMedia = false,
-                IsSeen = false,
-                ParentMessage = null,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-10),
-                ModifiedAt = DateTime.UtcNow.AddMinutes(-10)
-            },
-            new MessageViewModel
-            {
-                Id = 3,
-                SenderId = 201,
-                RecipientId = 101,
-                Content = "Yes, I'll be there at 3 PM.",
-                HasMedia = false,
-                IsSeen = true,
-                ParentMessage = null,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-5),
-                ModifiedAt = DateTime.UtcNow.AddMinutes(-5)
-            },
-            new MessageViewModel
-            {
-                Id = 4,
-                SenderId = 101,
-                RecipientId = 301,
-                Content = "This is unrelated to the current recipient.",
-                HasMedia = false,
-                IsSeen = false,
-                ParentMessage = null,
-                CreatedAt = DateTime.UtcNow.AddMinutes(-20),
-                ModifiedAt = DateTime.UtcNow.AddMinutes(-20)
-            }
-        };
 
         public MessageService(
             IMessageRepository messageRepository,
@@ -78,14 +27,34 @@ namespace ChatApp.Server.Services.Implementations
 
         public List<MessageViewModel> SearchMessages(MessageSearchModel model)
         {
-            return _messages;
+            if (string.IsNullOrEmpty(model.Query))
+            {
+                return new List<MessageViewModel>();
+            }
+
+            var currentUserId = Context.GetCurrentUserId();
+
+            var result = new List<MessageViewModel>();
+
+
+            if (!string.IsNullOrWhiteSpace(model.Query))
+            {
+                var queryWords = model.Query.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+
+                result = _messageRepository.GetMessagesBySenderAndRecipient(model.RecipientId, currentUserId).Where(x =>
+                    queryWords.All(word =>
+                        x.Content.Trim().ToLower().Split(' ').Contains(word)
+                    )
+                ).ToList().MapToViewModelList();
+            }
+
+            return result;
         }
 
         public bool SendMessage(MessageViewModel model)
         {
             try
             {
-                // validate model
                 var sender = _userRepository.Get(model.SenderId);
                 var userRecipient = _userRepository.Get(model.RecipientId);
 
@@ -301,19 +270,55 @@ namespace ChatApp.Server.Services.Implementations
 
             var oldestMessageAfter = result.FirstOrDefault();
 
-            var lastMessageId = oldestMessageAfter?.Id ?? 0;
+            var oldestMessageId = oldestMessageAfter?.Id ?? 0;
             if (oldestMessageAfter == null && result.Any())
             {
-                lastMessageId = -1;
+                oldestMessageId = -1;
             }
             if (!result.Any())
             {
-                lastMessageId = -2;
+                oldestMessageId = -2;
             }
 
             return new MessagesChatModel()
             {
-                OldestMessageId = lastMessageId,
+                OldestMessageId = oldestMessageId,
+                Messages = result.MapToViewModelList()
+            };
+        }
+
+        public MessagesChatModel FetchMessagesNewerThanMessageId(MessagesHttpRequest model)
+        {
+            var recipientUser = _userRepository.Get(model.RecipientId);
+            var currentUserId = Context.GetCurrentUserId();
+
+            if (recipientUser == null)
+            {
+                return new MessagesChatModel();
+            }
+
+            var oldestMessage = _messageRepository.Get(model.OldestMessageId);
+
+            var result = _messageRepository
+                .GetMessagesBySenderAndRecipient(currentUserId, model.RecipientId)
+                .Where(x => x.CreatedAt >= oldestMessage.CreatedAt)
+                .OrderBy(x => x.CreatedAt)
+                .ToList();
+
+
+            var oldestMessageId = oldestMessage?.Id ?? 0;
+            if (oldestMessage == null && result.Any())
+            {
+                oldestMessageId = -1;
+            }
+            if (!result.Any())
+            {
+                oldestMessageId = -2;
+            }
+
+            return new MessagesChatModel()
+            {
+                OldestMessageId = oldestMessageId,
                 Messages = result.MapToViewModelList()
             };
         }

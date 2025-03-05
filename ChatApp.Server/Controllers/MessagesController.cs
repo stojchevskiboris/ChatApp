@@ -140,6 +140,17 @@ namespace ChatApp.Server.Controllers
             return _messageService.FetchOlderMessages(model);
         }
 
+        [HttpPost("FetchMessagesNewerThanMessageId")]
+        [Authorize]
+        public MessagesChatModel FetchMessagesNewerThanMessageId(MessagesHttpRequest model)
+        {
+            if (model.OldestMessageId == 0 || model.OldestMessageId == -1 || model.RecipientId == 0)
+            {
+                return new MessagesChatModel();
+            }
+            return _messageService.FetchMessagesNewerThanMessageId(model);
+        }
+
         [HttpPost("GetSharedMedia")]
         [Authorize]
         public List<SharedMediaViewModel> GetSharedMedia(HttpRequestIdModel model)

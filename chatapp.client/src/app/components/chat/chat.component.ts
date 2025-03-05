@@ -489,9 +489,50 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }, 5000);
       } else {
         console.log('Message not found locally. Fetching from server...');
-        // this.fetchMessages(this.searchedMessageId);
+        this.fetchMessagesNewerThanMessageId()
       }
     }
+  }
+
+  fetchMessagesNewerThanMessageId(){
+    this.loadingOlderMessages = true;
+    this.fetchingOlderMessages = true;
+    this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });
+    // this.scrollToTop();
+    if(this.oldestMessageId == -2){
+      this.loadingOlderMessages = false;
+      return;
+    }
+
+    this.messageService.fetchMessagesNewerThanMessageId(this.searchedMessageId, this.recipientId).subscribe({
+      next: (result: MessagesChatModel) => {
+        var fetchedMessages: MessageViewModel[] = result.messages;
+        this.oldestMessageId = result.oldestMessageId;
+        if (!fetchedMessages || fetchedMessages.length === 0) {
+          this.noOlderMessages = true;
+        }
+        this.messages = fetchedMessages ;
+        var fetchedMedia = fetchedMessages
+          .filter(x => x.hasMedia)
+          .map(msg => this.mapToMediaViewModel(msg));
+        this.sharedMedia = fetchedMedia;
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);
+        this.cdr.detectChanges();
+      },
+      error: (error: HttpErrorResponse) => {
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);        
+        console.error('Error fetching older messages:', error);
+      },
+      complete: () => {
+        setTimeout(() => {
+          this.loadingOlderMessages = false;
+        }, 1000);      
+      }
+    });
   }
 
   toggleSettings() {

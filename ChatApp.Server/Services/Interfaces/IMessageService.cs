@@ -11,6 +11,7 @@ namespace ChatApp.Server.Services.Interfaces
         bool SetMessageSeen(int messageId);
         MessagesChatModel GetRecentMessages(int recipientId);
         MessagesChatModel FetchOlderMessages(MessagesHttpRequest model);
+        MessagesChatModel FetchMessagesNewerThanMessageId(MessagesHttpRequest model);
         List<SharedMediaViewModel> GetSharedMedia(int recipientId);
     }
 }

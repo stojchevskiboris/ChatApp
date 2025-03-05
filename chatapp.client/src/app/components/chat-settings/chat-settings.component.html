@@ -36,7 +36,10 @@
 
         <button class="btn btn-primary" (click)="searchMessages()">Search</button>
       </div>
-      <div class="scrollable-container" *ngIf="searchResults.length > 0">
+      <div class="scrollable-container" *ngIf="loadingSearchResults || searchResults.length > 0">
+        <div class="loading-overlay"  *ngIf="loadingSearchResults">
+          <div class="spinner"></div>
+        </div>  
         <ng-scrollbar class="scrollable">
           <div *ngFor="let message of searchResults" class="search-result-item"
             (click)="onSelectSearchResult(message.id)">
@@ -45,7 +48,7 @@
           </div>
         </ng-scrollbar>
       </div>
-      <div *ngIf="showSearchResults && searchResults.length == 0"
+      <div *ngIf="showSearchResults && searchResults.length == 0 && !loadingSearchResults"
         class="scrollable scrollable-container text-center text-gray">
         No results
       </div>

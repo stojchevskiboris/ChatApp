@@ -27,23 +27,24 @@ export class ChatSettingsComponent {
   showSearchResults: boolean = false;
   searchQuery: string = '';
   searchResults: MessageViewModel[] = [];
+  loadingSearchResults: boolean = false;
   selectedMessageId: number;
   selectedMedia: MediaViewModel | null = null;
   loadingSharedMedia: boolean = true;
   sharedMedia: MediaViewModel[] = [];
-  
+
   constructor(
     private userService: UserService,
     private messageService: MessageService,
     private dialog: MatDialog,
     private cdr: ChangeDetectorRef
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.setRecipient();
     this.getSharedMedia();
   }
-  
+
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.setRecipient();
@@ -56,13 +57,13 @@ export class ChatSettingsComponent {
     }
 
     let mediaMessageChange: SimpleChange = changes['newMediaMessage'];
-    if (mediaMessageChange != undefined 
-      && !mediaMessageChange.firstChange 
+    if (mediaMessageChange != undefined
+      && !mediaMessageChange.firstChange
       && mediaMessageChange.currentValue !== undefined) {
       this.sharedMedia.unshift(mediaMessageChange.currentValue)
     }
   }
-  
+
   scrollToBottom() {
     this.scrollable.scrollTo({ bottom: -500, duration: 300 })
   }
@@ -91,7 +92,7 @@ export class ChatSettingsComponent {
     })
   }
 
-  getSharedMedia(){
+  getSharedMedia() {
     this.loadingSharedMedia = true;
     this.messageService.getSharedMedia(this.recipientId).subscribe(
       (media: MediaViewModel[]) => {
@@ -109,19 +110,24 @@ export class ChatSettingsComponent {
   }
 
   searchMessages(): void {
+    this.searchResults = [];
     if (!this.searchQuery.trim()) {
-      return; // Ignore empty searches
+      return;
     }
+    this.loadingSearchResults = true;
     this.messageService.searchMessages(this.recipientId, this.searchQuery).subscribe(
       (results: MessageViewModel[]) => {
         this.searchResults = results;
+        this.loadingSearchResults = false;
         this.showSearchResults = true;
         this.scrollToBottom();
       },
       (error) => {
+        this.loadingSearchResults = false;
         console.error('Error searching messages:', error);
-      }, 
+      },
       () => {
+        this.loadingSearchResults = false;
       }
     );
   }
@@ -133,7 +139,7 @@ export class ChatSettingsComponent {
     setTimeout(() => {
       this.searchMessageId.emit(messageId);
       this.selectedMessageId = messageId;
-    },50);
+    }, 50);
   }
 
   openMediaPreview(media: MediaViewModel) {

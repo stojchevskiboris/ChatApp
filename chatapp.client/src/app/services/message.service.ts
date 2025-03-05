@@ -19,6 +19,7 @@ export class MessageService {
   private setMessageSeenEndpoint = '/Messages/SetMessageSeen';
   private getRecentMessagesEndpoint = '/Messages/GetRecentMessages';
   private fetchOlderMessagesEndpoint = '/Messages/FetchOlderMessages';
+  private fetchMessagesNewerThanMessageIdEndpoint = '/Messages/FetchMessagesNewerThanMessageId';
   private uploadMediaEndpoint = '/Messages/UploadMedia';
   private uploadGifEndpoint = '/Messages/UploadGif';
   private getSharedMediaEndpoint = '/Messages/GetSharedMedia';
@@ -96,6 +97,16 @@ export class MessageService {
   fetchOlderMessages(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
     return this.dataService
       .post<MessagesChatModel>(this.fetchOlderMessagesEndpoint, { oldestMessageId, recipientId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  fetchMessagesNewerThanMessageId(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
+    return this.dataService
+      .post<MessagesChatModel>(this.fetchMessagesNewerThanMessageIdEndpoint, { oldestMessageId, recipientId })
       .pipe(
         tap((response) => {
           return response;
