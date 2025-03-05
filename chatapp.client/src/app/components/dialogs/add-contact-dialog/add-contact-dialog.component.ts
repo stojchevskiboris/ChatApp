@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-
 import { AddContactModel } from '../../../models/add-contact-model';
 import { AuthService } from '../../../services/auth.service';
 import { RequestService } from '../../../services/request.service';
@@ -69,7 +68,7 @@ export class AddContactDialogComponent implements OnInit {
           }
         },
         error: () => {
-          console.log("Error sending add request");
+          // console.log("Error sending add request");
           this.loading = false
         },
         complete: () => {
@@ -91,7 +90,7 @@ export class AddContactDialogComponent implements OnInit {
           }
         },
         error: () => {
-          console.log("Error cancelling request");
+          // console.log("Error cancelling request");
           this.loading = false
         },
         complete: () => {

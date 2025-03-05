@@ -53,7 +53,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.disconnectSignalR();
-    this.lastActiveSubscription.unsubscribe();
+    if(this.lastActiveSubscription){
+      this.lastActiveSubscription.unsubscribe();
+    }
   }
 
   connectSignalR() {
@@ -106,7 +108,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         this.currentUser = model
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
+        // console.log(err);
       }
     })
   }
@@ -143,8 +145,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   updateLastActive() {
     this.userService.updateLastActive()
       .subscribe({
-        next: () => console.log('Last active updated'),
-        error: (err: HttpErrorResponse) => console.log('Error updating last active', err),
+        next: () =>{}, // console.log('Last active updated'),
+        error: (err: HttpErrorResponse) =>{}// console.log('Error updating last active', err),
       });
   }
 

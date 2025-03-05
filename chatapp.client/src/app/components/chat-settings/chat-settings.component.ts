@@ -83,7 +83,7 @@ export class ChatSettingsComponent {
         }
       },
       error: (err: HttpErrorResponse) => {
-        console.log(err);
+        // console.log(err);
         this.loading = false;
       },
       complete: () => {
@@ -100,7 +100,7 @@ export class ChatSettingsComponent {
         this.loadingSharedMedia = false;
       },
       (error) => {
-        console.error('Error retrieving shared media:', error);
+        // console.error('Error retrieving shared media:', error);
         this.loadingSharedMedia = false;
       },
       () => {
@@ -124,7 +124,7 @@ export class ChatSettingsComponent {
       },
       (error) => {
         this.loadingSearchResults = false;
-        console.error('Error searching messages:', error);
+        // console.error('Error searching messages:', error);
       },
       () => {
         this.loadingSearchResults = false;
@@ -133,7 +133,7 @@ export class ChatSettingsComponent {
   }
 
   onSelectSearchResult(messageId: number): void {
-    console.log('Selected message ID:', messageId);
+    // console.log('Selected message ID:', messageId);
     this.searchMessageId.emit(-1);
     // this.cdr.detectChanges();
     setTimeout(() => {

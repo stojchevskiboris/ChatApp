@@ -137,17 +137,17 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     const scrollDirection = scrollPosition > this.prevScrollPosContacts ? ScrollDirection.Down : ScrollDirection.Up;
     this.prevScrollPosContacts = scrollPosition;
 
-    console.log('Contacts Scroll Direction:', scrollDirection);
+    // console.log('Contacts Scroll Direction:', scrollDirection);
 
     const threshold = 10; // Threshold for bottom and top detection
 
     if (scrollDirection === ScrollDirection.Down && scrollHeight - scrollPosition <= clientHeight + threshold) {
-      console.log('Bottom reached in contacts!');
+      // console.log('Bottom reached in contacts!');
       this.onBottomReached(2);
     }
 
     if (scrollDirection === ScrollDirection.Up && scrollPosition <= threshold) {
-      console.log('Top reached in contacts!');
+      // console.log('Top reached in contacts!');
       this.onTopReached(2);
     }
   }
@@ -159,22 +159,22 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
         this.canLoadMessagesSemaphore = true;
       }, 500)
       // TODO: this should fetch messages
-      console.log('Reached the bottom of the message list');
+      // console.log('Reached the bottom of the message list');
     } else if (tab === 2 && this.canLoadContactsSemaphore) {
       this.canLoadContactsSemaphore = false;
       setTimeout(() => {
         this.canLoadContactsSemaphore = true;
       }, 500)
       // TODO: this should fetch contacts
-      console.log('Reached the bottom of the contact list');
+      // console.log('Reached the bottom of the contact list');
     }
   }
 
   onTopReached(tab: number): void {
     if (tab === 1) {
-      console.log('Reached the top of the message list');
+      // console.log('Reached the top of the message list');
     } else if (tab === 2) {
-      console.log('Reached the top of the contact list');
+      // console.log('Reached the top of the contact list');
     }
   }
   // #endregion
@@ -232,7 +232,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
     dialogRef.afterClosed().subscribe(result => {
       this.getContacts();
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
     });
 
   }
@@ -299,7 +299,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
         this.contactsList = [...updatedList];
       },
       error: (err: any) => {
-        console.error('Error updating last active', err);
+        // console.error('Error updating last active', err);
       }
     });
   }

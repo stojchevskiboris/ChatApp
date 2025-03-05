@@ -81,7 +81,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       .then(() => this.getRecentMessages())
       .then(() => this.connectSignalR())
       .catch((error) => {
-        console.error('Error in initialization sequence:', error);
+        // console.error('Error in initialization sequence:', error);
       });
 
     this.setRecipientSubscription = interval(60000).subscribe(() => {
@@ -100,7 +100,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             }
           },
           error: (error) => {
-            console.error('Error loading user data:', error);
+            // console.error('Error loading user data:', error);
             reject(error);
           }
         });
@@ -121,7 +121,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.scrollToBottom();
         this.hasScrolledToBottom = true;
       } catch (e) {
-        console.log(e);
+        // console.log(e);
       }
     }
   }
@@ -172,7 +172,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         },
         error: (error: HttpErrorResponse) => {
           this.hasFetchedMessages = true;
-          console.error('Error fetching messages:', error);
+          // console.error('Error fetching messages:', error);
           this.scrollToBottom();
           reject(error);
         },
@@ -252,7 +252,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   handleGifSelected(gifUrl: string): void {
-    console.log('Selected GIF:', gifUrl);
+    // console.log('Selected GIF:', gifUrl);
 
     this.messageService.uploadGif(gifUrl).subscribe({
       next: (uploadResponse) => {
@@ -280,7 +280,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             modifiedAt: new Date().toISOString(),
           };
 
-          console.log('Sending media message:', mediaMessage);
+          // console.log('Sending media message:', mediaMessage);
 
           this.emitNewSentMessage(mediaMessage);
           this.addMediaToChatSettings(mediaMessage);
@@ -291,11 +291,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.messageService.sendMessage(mediaMessage).subscribe({
             next: (response: boolean) => {
               this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
-                console.log('Message sent successfully via SignalR');
+                // console.log('Message sent successfully via SignalR');
               })
             },
             error: (err: HttpErrorResponse) => {
-              console.log(err);
+              // console.log(err);
               // this.toastr.error('Failed to send media message');
             },
             complete: () => {
@@ -305,7 +305,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }
       },
       error: (err) => {
-        console.log(err);
+        // console.log(err);
         // this.toastr.error('Failed to upload media');
         this.loading = false;
       },
@@ -348,7 +348,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.messageService.sendMessage(textMessage).subscribe({
         next: (response: boolean) => {
           this.signalrService.sendMessage(this.recipientId, textMessage).then(() => {
-            console.log('Message sent successfully via SignalR');
+            // console.log('Message sent successfully via SignalR');
           })
         },
         error: (err: HttpErrorResponse) => {
@@ -390,7 +390,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
                 modifiedAt: new Date().toISOString(),
               };
 
-              console.log('Sending media message:', mediaMessage);
+              // console.log('Sending media message:', mediaMessage);
 
               this.emitNewSentMessage(mediaMessage);
               this.addMediaToChatSettings(mediaMessage);
@@ -402,11 +402,11 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               this.messageService.sendMessage(mediaMessage).subscribe({
                 next: (response: boolean) => {
                   this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
-                    console.log('Message sent successfully via SignalR');
+                    // console.log('Message sent successfully via SignalR');
                   })
                 },
                 error: (err: HttpErrorResponse) => {
-                  console.log(err);
+                  // console.log(err);
                   // this.toastr.error('Failed to send media message');
                 },
                 complete: () => {
@@ -418,7 +418,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             }
           },
           error: (err) => {
-            console.log(err);
+            // console.log(err);
             // this.toastr.error('Failed to upload media');
             if (index === this.selectedMedia.length - 1) {
               this.loading = false;
@@ -452,7 +452,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           resolve();
         },
         error: (err: HttpErrorResponse) => {
-          console.error('Error setting recipient:', err);
+          // console.error('Error setting recipient:', err);
           this.loading = false;
           reject(err);
         },
@@ -492,7 +492,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }, 5000);
       } else {
         if (!this.fetchingOlderMessages) {
-          console.log('Message not found locally. Fetching from server...');
+          // console.log('Message not found locally. Fetching from server...');
           this.fetchMessagesNewerThanMessageId()
         }
       }
@@ -530,7 +530,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         setTimeout(() => {
           this.loadingOlderMessages = false;
         }, 1000);
-        console.error('Error fetching older messages:', error);
+        // console.error('Error fetching older messages:', error);
       },
       complete: () => {
         setTimeout(() => {
@@ -715,7 +715,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.canLoadMessagesSemaphore = true;
       }, 500)
 
-      console.log('Reached the bottom of the message list');
+      // console.log('Reached the bottom of the message list');
     }
   }
 
@@ -727,7 +727,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         this.canLoadMessagesSemaphore = true;
       }, 500)
 
-      console.log('Reached the top of the message list');
+      // console.log('Reached the top of the message list');
       this.fetchOlderMessages();
     }
   }
@@ -762,7 +762,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         setTimeout(() => {
           this.loadingOlderMessages = false;
         }, 1000);
-        console.error('Error fetching older messages:', error);
+        // console.error('Error fetching older messages:', error);
       },
       complete: () => {
         setTimeout(() => {

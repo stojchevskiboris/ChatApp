@@ -20,7 +20,6 @@ import { ChatComponent } from './components/chat/chat.component';
 import { ChatSettingsComponent } from './components/chat-settings/chat-settings.component';
 import { AccountSettingsComponent } from './components/account-settings/account-settings.component';
 import { LeftPaneComponent } from './components/left-pane/left-pane.component';
-import { HeaderComponent } from './components/header/header.component'
 import { ChatDatePipe } from './shared/pipes/chat-date.pipe';
 import { LastActivePipe } from './shared/pipes/last-active.pipe';
 import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
@@ -46,7 +45,6 @@ import { SignalRService } from './services/signalr.service';
     ChatSettingsComponent,
     AccountSettingsComponent,
     LeftPaneComponent,
-    HeaderComponent,
     ChatDatePipe,
     LastActivePipe,
     MessageDatePipe,

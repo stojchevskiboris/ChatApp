@@ -38,27 +38,27 @@ export class SignalRService {
   async connect(): Promise<void> {
     try {
       await this.hubConnection.start();
-      console.log('SignalR connected');
+      // console.log('SignalR connected');
     } catch (err) {
-      console.error('Error establishing SignalR connection', err);
+      // console.error('Error establishing SignalR connection', err);
     }
   }
 
   async disconnect(): Promise<void>{
     try {
       await this.hubConnection.stop();
-      console.log('SignalR disconnected');
+      // console.log('SignalR disconnected');
     } catch (err) {
-      console.error('Error disconnecting SignalR', err);
+      // console.error('Error disconnecting SignalR', err);
     }
   }
 
   async sendMessage(toUserId: number, message: MessageViewModel): Promise<void>{
     try {
       await this.hubConnection.invoke('SendMessage', +this.currentUserId, toUserId, message);
-      console.log('SignalR message sent');
+      // console.log('SignalR message sent');
     } catch (err) {
-      console.error('Error sending SignalR message', err);
+      // console.error('Error sending SignalR message', err);
     }
   }
 }

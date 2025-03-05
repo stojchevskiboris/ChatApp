@@ -56,7 +56,7 @@ export class AccountOverviewComponent {
           this.loading = false;
         },
         (error) => {
-          console.error('Error loading user data:', error);
+          // console.error('Error loading user data:', error);
           this.loading = false;
           this.toastr.warning('An unexpected error has occurred');
         },
@@ -75,7 +75,7 @@ export class AccountOverviewComponent {
             this.hasRequests = count>0;
           },
           error: (err: any) => {
-            console.log(err);
+            // console.log(err);
           }
         })
   }
@@ -91,7 +91,7 @@ export class AccountOverviewComponent {
 
     dialogRef.afterClosed().subscribe(result => {
       this.contactsEmitter.emit();
-      console.log(`Dialog result: ${result}`);
+      // console.log(`Dialog result: ${result}`);
     });
 
   }

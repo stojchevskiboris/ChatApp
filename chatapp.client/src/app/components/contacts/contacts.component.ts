@@ -76,7 +76,7 @@ export class ContactsComponent implements OnInit {
         this.requests = model;
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
       }
     })
   }
@@ -101,7 +101,7 @@ export class ContactsComponent implements OnInit {
         this.hasRequests = count > 0;
       },
       error: (err: any) => {
-        console.log(err);
+        // console.log(err);
       },
       complete: () => {
       }

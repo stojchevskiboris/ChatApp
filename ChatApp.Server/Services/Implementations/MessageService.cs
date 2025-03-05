@@ -41,6 +41,7 @@ namespace ChatApp.Server.Services.Implementations
                 var queryWords = model.Query.ToLower().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
 
                 result = _messageRepository.GetMessagesBySenderAndRecipient(model.RecipientId, currentUserId).Where(x =>
+                    !x.HasMedia &&
                     queryWords.All(word =>
                         x.Content.Trim().ToLower().Contains(word)
                     )

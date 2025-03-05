@@ -23,7 +23,7 @@ export class GifSearchComponent {
     if(this.gifSearchDiv != null){
       this.gifSearchDiv.nativeElement.addEventListener('focusout', () => {
         // error: clicks on the input in the div triggers focusout
-        console.log("item-clicked");
+        // console.log("item-clicked");
       });
     }
   }

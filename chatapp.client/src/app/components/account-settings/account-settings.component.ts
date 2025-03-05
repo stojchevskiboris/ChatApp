@@ -71,7 +71,7 @@ export class AccountSettingsComponent {
           this.loading = false;
         },
         (error) => {
-          console.error('Error loading user data:', error);
+          // console.error('Error loading user data:', error);
           this.loading = false;
           this.toastr.warning('An unexpected error has occurred');
         },
@@ -103,7 +103,7 @@ export class AccountSettingsComponent {
         }
       },
       error: (err) => {
-        console.log(err)
+        // console.log(err)
         this.toastr.error('Failed to upload profile picture');
         this.loading = false;
       },
@@ -129,7 +129,7 @@ export class AccountSettingsComponent {
           },
           error: (err) => {
             this.loading = false;
-            console.error('Error removing profile picture:', err);
+            // console.error('Error removing profile picture:', err);
             this.toastr.error('Failed to remove profile picture');
           },
           complete: () => {
@@ -165,7 +165,7 @@ export class AccountSettingsComponent {
           }
         });
 
-      console.log('Updating user details:', this.userForm.value);
+      // console.log('Updating user details:', this.userForm.value);
     }
   }
 
