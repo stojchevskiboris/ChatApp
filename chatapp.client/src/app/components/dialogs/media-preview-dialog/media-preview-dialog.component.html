@@ -14,15 +14,16 @@
                 <video *ngIf="data.media.fileType.startsWith('video/')" controls class="preview-video">
                     <source [src]="data.media.url" [type]="data.media.fileType" />
                 </video>
-                <!-- add shared by and shared on -->
-                <p>
-                    <strong>Shared by:</strong>
-                    {{ data.media.sentFromFirstName }} {{ data.media.sentFromLastName }}
-                    <span class="text-secondary"> ({{ data.media.sentFromUsername }}) </span>
-                </p>
-                <p>
-                    {{ data.media.modifiedAt | date:'dd.MM.yyyy, HH:mm' }}
-                </p>
+                <div class="p-3">
+                    <p>
+                        <strong>Shared by:</strong>
+                        {{ data.media.sentFromFirstName }} {{ data.media.sentFromLastName }}
+                        <span class="text-secondary"> ({{ data.media.sentFromUsername }}) </span>
+                    </p>
+                    <p>
+                        {{ data.media.modifiedAt | date:'dd.MM.yyyy, HH:mm' }}
+                    </p>
+                </div>
             </div>
             <ng-template #noMedia>
                 <div class="load-3">

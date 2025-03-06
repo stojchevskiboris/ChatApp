@@ -1,8 +1,15 @@
+<div class="p-3 position-absolute z-30" *ngIf="mobileQuery.matches">
+  <button mat-mini-fab color="secondary" (click)="closeChatSettingsWindow()">
+    <mat-icon>arrow_back</mat-icon>
+  </button>
+</div>
+
 <ng-scrollbar #scrollbarRef="ngScrollbar">
   <main>
     <!-- Profile Section -->
+   
     <div class="text-center">
-      <img matListAvatar class="w-50px h-50px user-profile-picture mt-5 mb-2" [src]="recipientProfilePicture" />
+      <img matListAvatar class="w-100px h-100px user-profile-picture mb-2 mt-3" [src]="recipientProfilePicture" />
       <h2>{{ recipient?.firstName }} {{ recipient?.lastName }}</h2>
       <h5 class="text-secondary">({{ recipient?.username }})</h5>
     </div>

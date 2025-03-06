@@ -1,39 +1,55 @@
 <div class="container-fluid fadeInAnimation">
 
   <div class="row">
-    <div class="col-lg-4 border">
+    <div [ngClass]="{
+        'd-block': showLeftPane,
+        'd-none': !showLeftPane,
+        'border': !mobileQuery.matches
+      }" class="col-lg-4">
       <app-left-pane 
-        [startChat]="startChatEvent"
-        [updateActiveContact]="activeUserId" 
-        [newChatMessage]="recievedChatMessage"
-        (selectedChat)="handleSelectedChat($event)"> 
+        [startChat]="startChatEvent" 
+        [updateActiveContact]="activeUserId"
+        [newChatMessage]="recievedChatMessage" 
+        [closedChatWindow]="selectedChatRecipientId" 
+        (selectedChat)="handleSelectedChat($event)">
       </app-left-pane>
     </div>
 
-    <div class="col-lg-8">
+    <div class="col-lg-8" [ngClass]="!showChat && !showChatSettings ? 'd-none' : 'd-block'">
       <div class="row h-100">
 
-        <div [ngClass]="isChatSettingsEnabled ? 'col-lg-8' : 'col-lg-12'" class=" chat fadeInAnimation border"
-          *ngIf="isChatSelected && selectedChatRecipientId">
+        <div [ngClass]="{
+            'col-lg-8': isChatSettingsEnabled,
+            'col-lg-12': !isChatSettingsEnabled,
+            'd-block': showChat,
+            'd-none': !showChat,
+            'border': !mobileQuery.matches
+          }" class="chat fadeInAnimation " *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat 
             [recipientId]="selectedChatRecipientId" 
             [searchedMessageId]="searchedMessageIdFromSettings"
             (toggleChatSettings)="toggleSettings()" 
             (newSharedMedia)="updateChatSettings($event)"
-            (newSentChatMessage)="updateLeftPaneChats($event)">
+            (newSentChatMessage)="updateLeftPaneChats($event)"
+            (closeChatBtnEmitter)="closeChatWindow()">
           </app-chat>
         </div>
 
-        <div class="col-lg-4 chat fadeInAnimation border"
+        <div [ngClass]="{
+            'd-block': showChatSettings,
+            'd-none': !showChatSettings,
+            'border': !mobileQuery.matches
+          }" class="col-lg-4 chat fadeInAnimation"
           *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
           <app-chat-settings 
-            [recipientId]="selectedChatRecipientId"
+            [recipientId]="selectedChatRecipientId" 
             [newMediaMessage]="recievedMediaMessage"
-            (searchMessageId)="handleSearchedMessageId($event)">
+            (searchMessageId)="handleSearchedMessageId($event)"
+            (closeChatSettingsBtnEmitter)="closeChatSettings()">
           </app-chat-settings>
         </div>
 
-        <div class="col-sm-12 start-chat fadeInAnimation border" *ngIf="!isChatSelected">
+        <div class="col-sm-12 start-chat fadeInAnimation border" *ngIf="!isChatSelected && !mobileQuery.matches">
           <div>
             <p>Your messages</p>
             <p>Send a message to start a chat.</p>

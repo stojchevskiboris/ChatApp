@@ -17,6 +17,7 @@ import { SignalRService } from '../../services/signalr.service';
 import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
 import { MessagesChatModel } from '../../models/messages-chat-model';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-chat',
@@ -30,6 +31,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   @Output() toggleChatSettings = new EventEmitter();
   @Output() newSentChatMessage = new EventEmitter<RecentChatViewModel>();
   @Output() newSharedMedia = new EventEmitter<MediaViewModel>();
+  @Output() closeChatBtnEmitter = new EventEmitter();
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
@@ -67,6 +69,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   recipientIsTypingCounter: number = 0;
   typingText: string = "Typing";
   typingInterval: any;
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
 
   constructor(
     private authService: AuthService,
@@ -74,9 +78,13 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     private messageService: MessageService,
     private signalrService: SignalRService,
     private cdr: ChangeDetectorRef,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private media: MediaMatcher
   ) {
     this.currentUserId = +this.authService.getUserId();
+    this.mobileQuery = media.matchMedia('(max-width: 991px)');
+    this._mobileQueryListener = () => cdr.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit(): void {
@@ -113,6 +121,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   ngOnDestroy() {
     this.setRecipientSubscription.unsubscribe();
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
   ngAfterViewInit(): void {
@@ -778,6 +787,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.fetchOlderMessages();
     }
   }
+
   fetchOlderMessages() {
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
@@ -817,6 +827,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }, 1000);
       }
     });
+  }
+
+  closeChatWindow(){
+    this.closeChatBtnEmitter.emit();
   }
 
   private focusToInput() {

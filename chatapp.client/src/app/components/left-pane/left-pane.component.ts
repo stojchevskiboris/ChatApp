@@ -23,6 +23,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   @Input() startChat: any;
   @Input() updateActiveContact: number;
   @Input() newChatMessage: RecentChatViewModel;
+  @Input() closedChatWindow: number;
   selectedChatId: number = null;
 
   prevScrollPosMessages = 0;
@@ -106,6 +107,13 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       }
       this.sortChats();
       this.cdr.detectChanges();
+    }
+
+    let closedChatWindowChange: SimpleChange = changes['closedChatWindow'];
+    if (closedChatWindowChange != undefined && !closedChatWindowChange.firstChange) {
+      if (closedChatWindowChange.currentValue == 0){
+        this.selectedChatId = null;
+      }
     }
   }
 

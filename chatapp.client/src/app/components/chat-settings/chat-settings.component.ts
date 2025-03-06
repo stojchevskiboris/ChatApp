@@ -8,6 +8,7 @@ import { MessageViewModel } from '../../models/message-view-model';
 import { MessageService } from '../../services/message.service';
 import { NgScrollbar } from 'ngx-scrollbar';
 import { MediaViewModel } from '../../models/media-view-model';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-chat-settings',
@@ -18,8 +19,9 @@ export class ChatSettingsComponent {
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @Input() recipientId: number | null = null;
-  @Output() searchMessageId = new EventEmitter<number>();
   @Input() newMediaMessage: MediaViewModel;
+  @Output() searchMessageId = new EventEmitter<number>();
+  @Output() closeChatSettingsBtnEmitter = new EventEmitter();
   recipient: UserViewModel = null;
   defaultAvatar = 'img/default-avatar.png';
   recipientProfilePicture: string = this.defaultAvatar;
@@ -32,13 +34,20 @@ export class ChatSettingsComponent {
   selectedMedia: MediaViewModel | null = null;
   loadingSharedMedia: boolean = true;
   sharedMedia: MediaViewModel[] = [];
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
 
   constructor(
     private userService: UserService,
     private messageService: MessageService,
     private dialog: MatDialog,
-    private cdr: ChangeDetectorRef
-  ) { }
+    private cdr: ChangeDetectorRef,
+    private media: MediaMatcher
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 991px)');
+    this._mobileQueryListener = () => cdr.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+  }
 
   ngOnInit(): void {
     this.setRecipient();
@@ -62,6 +71,10 @@ export class ChatSettingsComponent {
       && mediaMessageChange.currentValue !== undefined) {
       this.sharedMedia.unshift(mediaMessageChange.currentValue)
     }
+  }
+
+  ngOnDestroy() {
+    this.mobileQuery.removeListener(this._mobileQueryListener);
   }
 
   scrollToBottom() {
@@ -155,6 +168,10 @@ export class ChatSettingsComponent {
 
   closeMediaPreview() {
     this.dialog.closeAll();
+  }
+
+  closeChatSettingsWindow() {
+    this.closeChatSettingsBtnEmitter.emit();
   }
 
   navigateMedia(direction: number) {

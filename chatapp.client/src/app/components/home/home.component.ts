@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MessageViewModel } from '../../models/message-view-model';
 import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 import { MediaViewModel } from '../../models/media-view-model';
+import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
   selector: 'app-home',
@@ -17,14 +18,6 @@ import { MediaViewModel } from '../../models/media-view-model';
   styleUrl: './home.component.css'
 })
 export class HomeComponent implements OnInit, OnDestroy {
-
-  constructor(
-    private router: Router,
-    private userService: UserService,
-    private signalrService: SignalRService,
-    private toastr: ToastrService,
-    private authService: AuthService
-  ) { }
 
   isChatSelected: boolean = false;
   selectedChatRecipientId: number = 0;
@@ -37,6 +30,31 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeUserId: number = 0;
   recievedChatMessage: RecentChatViewModel = null;
   recievedMediaMessage: MediaViewModel = null;
+
+  showLeftPane: boolean = true;
+  showChat: boolean = true;
+  showChatSettings: boolean = true;
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
+
+  constructor(
+    private router: Router,
+    private userService: UserService,
+    private signalrService: SignalRService,
+    private toastr: ToastrService,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private media: MediaMatcher
+  ) {
+    this.mobileQuery = media.matchMedia('(max-width: 991px)');
+    this._mobileQueryListener = () => cdr.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+    if (this.mobileQuery.matches){
+      this.showChat = false;
+      this.showChatSettings = false;
+      this.isChatSettingsEnabled = false;
+    }
+  }
 
   ngOnInit(): void {
     this.userId = this.authService.getUserId();
@@ -51,9 +69,30 @@ export class HomeComponent implements OnInit, OnDestroy {
     });
   }
 
+  closeChatWindow() {
+    this.showChatSettings = false;
+    this.searchedMessageIdFromSettings = 0;
+    this.isChatSettingsEnabled = false;
+
+    this.showLeftPane = true;
+    this.showChat = false;
+    this.isChatSelected = false;
+    this.selectedChatRecipientId = 0;
+  }
+
+  closeChatSettings(resetMessage: boolean = true) {
+    this.showChat = true;
+    this.showLeftPane = false;
+    this.showChatSettings = false;
+    this.isChatSettingsEnabled = false;
+    if (resetMessage) {
+      this.searchedMessageIdFromSettings = 0;
+    }
+  }
+
   ngOnDestroy() {
     this.disconnectSignalR();
-    if(this.lastActiveSubscription){
+    if (this.lastActiveSubscription) {
       this.lastActiveSubscription.unsubscribe();
     }
   }
@@ -123,15 +162,29 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.isChatSelected = false;
     } else {
       this.isChatSelected = true;
+      if (this.mobileQuery.matches) {
+        this.showLeftPane = false;
+        this.showChat = true;
+        this.showChatSettings = false;
+      }
     }
   }
 
   handleSearchedMessageId(messageId: number) {
     this.searchedMessageIdFromSettings = messageId;
+    if(this.mobileQuery.matches && messageId != -1){
+      this.closeChatSettings(false);
+    }
   }
 
   toggleSettings(): void {
     this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
+    if (this.mobileQuery.matches){
+      if (this.isChatSettingsEnabled){
+        this.showChat = false;
+        this.showChatSettings = true;
+      }
+    }
   }
 
   updateLeftPaneChats(sentMessageToUpdate: RecentChatViewModel): void {
@@ -145,8 +198,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   updateLastActive() {
     this.userService.updateLastActive()
       .subscribe({
-        next: () =>{}, // console.log('Last active updated'),
-        error: (err: HttpErrorResponse) =>{}// console.log('Error updating last active', err),
+        next: () => { },
+        error: (err: HttpErrorResponse) => { }
       });
   }
 

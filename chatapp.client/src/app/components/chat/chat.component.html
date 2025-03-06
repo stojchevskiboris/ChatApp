@@ -6,28 +6,35 @@
   <!-- Chat Header -->
   <div class="h-100px card p-3 mb-3">
     <div class="d-flex justify-content-between">
-      <div>
-        <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
-        <div class="d-inline-block">
-          <div class="d-flex flex-column">
-            <h3 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
-            <div>
-              <span class="text-muted">
-                <span *ngIf="recipientIsTyping">{{ typingText }}</span> 
-                &nbsp;
-              </span>
+      <div class="d-flex">
+        <div class="me-4" *ngIf="mobileQuery.matches">
+          <button mat-mini-fab color="secondary" (click)="closeChatWindow()">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+        </div>
+        <div>
+          <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
+          <div class="d-inline-block">
+            <div class="d-flex flex-column">
+              <h3 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+              <div>
+                <span class="text-muted">
+                  <span *ngIf="recipientIsTyping">{{ typingText }}</span>
+                  &nbsp;
+                </span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="d-flex align-items-center" *ngIf="recipient">
-          <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
-            <mat-icon class="active-icon">circle</mat-icon>
-            Active now
-          </ng-container>
-          <ng-template #lastActiveTemplate>
-            {{ recipient.lastActive | lastActive }}
-          </ng-template>
+          <div class="d-flex align-items-center" *ngIf="recipient">
+            <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
+              <mat-icon class="active-icon">circle</mat-icon>
+              Active now
+            </ng-container>
+            <ng-template #lastActiveTemplate>
+              {{ recipient.lastActive | lastActive }}
+            </ng-template>
 
+          </div>
         </div>
       </div>
       <div>
