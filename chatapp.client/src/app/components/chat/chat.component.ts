@@ -63,6 +63,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   canLoadMessagesSemaphore = true;
   fetchingOlderMessages = false;
   prevScrollPosMessages = 0;
+  recipientIsTyping: boolean = false;
+  recipientIsTypingCounter: number = 0;
+  typingText: string = "Typing";
+  typingInterval: any;
 
   constructor(
     private authService: AuthService,
@@ -140,6 +144,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.loadingOlderMessages = false;
       this.canLoadMessagesSemaphore = true;
       this.fetchingOlderMessages = false;
+      this.recipientIsTyping = false;
+      this.recipientIsTypingCounter = 0;
     }
 
     this.cdr.detectChanges();
@@ -187,21 +193,62 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   connectSignalR(): Promise<void> {
     return new Promise((resolve) => {
-      this.signalrService.getHubConnection()
-        .on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {
-          if (userFromId === this.recipientId) {
-            this.messages.push(message);
-            if (message.hasMedia) {
-              const media = this.mapToMediaViewModel(message);
-              this.sharedMedia.push(media);
-              this.addMediaToChatSettings(message);
-            }
-            this.cdr.detectChanges();
-            this.scrollToBottom();
+
+      var connection = this.signalrService.getHubConnection();
+      connection.on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {
+        if (userFromId === this.recipientId) {
+          this.recipientIsTyping = false;
+          this.messages.push(message);
+          if (message.hasMedia) {
+            const media = this.mapToMediaViewModel(message);
+            this.sharedMedia.push(media);
+            this.addMediaToChatSettings(message);
           }
-        });
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+        }
+      });
+
+      connection.on('OnUserTyping', (userFromId: number) => {
+        if (userFromId === this.recipientId) {
+          this.recipientIsTyping = true;
+          this.recipientIsTypingCounter++;
+          this.startTypingAnimation();
+          setTimeout(() => {
+            this.recipientIsTypingCounter--;
+            if (this.recipientIsTypingCounter === 0) {
+              this.recipientIsTyping = false;
+              this.stopTypingAnimation();
+            }
+          }, 3500);
+          this.cdr.detectChanges();
+          this.scrollToBottom();
+        }
+      });
       resolve();
     });
+  }
+
+  typing() {
+    this.signalrService.onTypingEvent(this.recipientId).then(() => { })
+  }
+
+  startTypingAnimation() {
+    if (!this.typingInterval) {
+      let dots = 0;
+      this.typingInterval = setInterval(() => {
+        dots = (dots + 1) % 4;
+        this.typingText = "Typing" + ".".repeat(dots);
+      }, 500);
+    }
+  }
+
+  stopTypingAnimation() {
+    if (this.typingInterval) {
+      clearInterval(this.typingInterval);
+      this.typingInterval = null;
+      this.typingText = "Typing";
+    }
   }
 
   handleMediaUpload(event: Event): void {
@@ -475,7 +522,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   searchMessage() {
-    if (this.searchedMessageId == -1 || this.searchedMessageId == -2){
+    if (this.searchedMessageId == -1 || this.searchedMessageId == -2) {
       return;
     }
     if (this.searchedMessageId) {

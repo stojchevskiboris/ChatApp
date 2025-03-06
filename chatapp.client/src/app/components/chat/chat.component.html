@@ -9,9 +9,17 @@
       <div>
         <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
         <div class="d-inline-block">
-          <h3>{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+          <div class="d-flex flex-column">
+            <h3 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+            <div>
+              <span class="text-muted">
+                <span *ngIf="recipientIsTyping">{{ typingText }}</span> 
+                &nbsp;
+              </span>
+            </div>
+          </div>
         </div>
-        <div class="d-flex align-items-center mt-1" *ngIf="recipient">
+        <div class="d-flex align-items-center" *ngIf="recipient">
           <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
             <mat-icon class="active-icon">circle</mat-icon>
             Active now
@@ -19,6 +27,7 @@
           <ng-template #lastActiveTemplate>
             {{ recipient.lastActive | lastActive }}
           </ng-template>
+
         </div>
       </div>
       <div>
@@ -107,7 +116,7 @@
     <div class="w-100 d-flex align-items-end">
       <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" placeholder="Message..." matInput #messageInput
         (focus)="hideGifSearch()" [(ngModel)]="newMessage" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()">
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()" (keydown)="typing()">
       </textarea>
 
       <div id="selectedMediaInput" class="w-100" *ngIf="isMediaSelected">
