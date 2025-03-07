@@ -27,7 +27,7 @@
         </div>
 
         <!-- User Details Form Column -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 mb-5">
             <form [formGroup]="userForm" (ngSubmit)="updateUserDetails()">
                 <mat-form-field class="w-100 mb-2">
                     <mat-label>First Name</mat-label>
@@ -74,13 +74,13 @@
                 <mat-error *ngIf="userForm.controls['gender'].hasError('required')">
                     Gender is required
                 </mat-error>
-                <button class="mb-5" mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
+                <button mat-raised-button color="primary" type="submit" [disabled]="userForm.invalid">
                     Update Details</button>
             </form>
         </div>
 
         <!-- Change Password Form Column -->
-        <div class="col-lg-4">
+        <div class="col-lg-4 mb-5">
             <form [formGroup]="passwordForm" (ngSubmit)="changePassword()">
                 <mat-form-field class="w-100 mb-2">
                     <mat-label>Old Password</mat-label>
