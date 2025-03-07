@@ -4,7 +4,8 @@
     <div [ngClass]="{
         'd-block': showLeftPane,
         'd-none': !showLeftPane,
-        'border': !mobileQuery.matches
+        'br-r': !mobileQuery.matches,
+        'fadeInAnimation': mobileQuery.matches
       }" class="col-lg-4">
       <app-left-pane 
         [startChat]="startChatEvent" 
@@ -23,7 +24,7 @@
             'col-lg-12': !isChatSettingsEnabled,
             'd-block': showChat,
             'd-none': !showChat,
-            'border': !mobileQuery.matches
+            'br-r': !mobileQuery.matches
           }" class="chat fadeInAnimation " *ngIf="isChatSelected && selectedChatRecipientId">
           <app-chat 
             [recipientId]="selectedChatRecipientId" 
@@ -38,7 +39,6 @@
         <div [ngClass]="{
             'd-block': showChatSettings,
             'd-none': !showChatSettings,
-            'border': !mobileQuery.matches
           }" class="col-lg-4 chat fadeInAnimation"
           *ngIf="isChatSelected && selectedChatRecipientId && isChatSettingsEnabled">
           <app-chat-settings 

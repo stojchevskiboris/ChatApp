@@ -49,11 +49,23 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.mobileQuery = media.matchMedia('(max-width: 991px)');
     this._mobileQueryListener = () => cdr.detectChanges();
     this.mobileQuery.addListener(this._mobileQueryListener);
-    if (this.mobileQuery.matches){
+    if (this.mobileQuery.matches) {
       this.showChat = false;
       this.showChatSettings = false;
       this.isChatSettingsEnabled = false;
     }
+    
+    let previousState = this.mobileQuery.matches;
+    this._mobileQueryListener = () => {
+      this.cdr.detectChanges();
+      const currentState = this.mobileQuery.matches;
+      if (previousState !== currentState) {
+        window.location.reload();
+      }
+      previousState = currentState;
+    };
+
+    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
   ngOnInit(): void {
@@ -172,15 +184,15 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   handleSearchedMessageId(messageId: number) {
     this.searchedMessageIdFromSettings = messageId;
-    if(this.mobileQuery.matches && messageId != -1){
+    if (this.mobileQuery.matches && messageId != -1) {
       this.closeChatSettings(false);
     }
   }
 
   toggleSettings(): void {
     this.isChatSettingsEnabled = !this.isChatSettingsEnabled;
-    if (this.mobileQuery.matches){
-      if (this.isChatSettingsEnabled){
+    if (this.mobileQuery.matches) {
+      if (this.isChatSettingsEnabled) {
         this.showChat = false;
         this.showChatSettings = true;
       }
