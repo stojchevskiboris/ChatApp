@@ -7,7 +7,7 @@
   <div class="h-100px card p-3 mb-3">
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <div class="me-4" *ngIf="mobileQuery.matches">
+        <div class="me-2" *ngIf="mobileQuery.matches">
           <button mat-mini-fab color="secondary" (click)="closeChatWindow()">
             <mat-icon>arrow_back</mat-icon>
           </button>
@@ -16,7 +16,7 @@
           <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
           <div class="d-inline-block">
             <div class="d-flex flex-column">
-              <h3 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h3>
+              <h4 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h4>
               <div>
                 <span class="text-muted">
                   <span *ngIf="recipientIsTyping">{{ typingText }}</span>

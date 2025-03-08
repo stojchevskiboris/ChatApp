@@ -8,6 +8,7 @@ import { SignOutDialogComponent } from '../dialogs/sign-out-dialog/sign-out-dial
 import { RequestService } from '../../services/request.service';
 import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
+import { SignalRService } from '../../services/signalr.service';
 
 @Component({
   selector: 'app-account-overview',
@@ -20,7 +21,8 @@ export class AccountOverviewComponent {
     private userService: UserService,
     private toastr: ToastrService,
     private requestService: RequestService,
-    private router: Router
+    private router: Router,
+    private signalrService: SignalRService
   ) { }
 
   @Output() resetChat = new EventEmitter<number>();
@@ -66,6 +68,15 @@ export class AccountOverviewComponent {
       );    }
 
     this.getRequestsCount();
+
+    this.connectSignalR();
+  }
+  
+  connectSignalR() {
+      var connection = this.signalrService.getHubConnection();
+      connection.on('OnNewRequest', () => {
+        this.getRequestsCount();
+      });
   }
 
   getRequestsCount() {

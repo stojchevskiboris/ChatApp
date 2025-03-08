@@ -28,7 +28,7 @@ namespace ChatApp.Server.Hubs
             }
 
             var currentUser = _userService.GetCurrentUserDetailsOrDefault(userIdString);
-            await Clients.AllExcept(Context.ConnectionId).SendAsync("Join", Context.ConnectionId, currentUser);
+            await Clients.AllExcept(Context.ConnectionId).SendAsync("Join", Context.ConnectionId, currentUser); 
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)
@@ -52,6 +52,15 @@ namespace ChatApp.Server.Hubs
             if (connectionIds.Any())
             {
                 await Clients.Clients(connectionIds).SendAsync("OnUserTyping", userFromId);
+            }
+        }
+
+        public async Task NewRequest(int userToId)
+        {
+            var connectionIds = _connection.Where(x => x.Value == userToId).Select(x => x.Key).ToList();
+            if (connectionIds.Any())
+            {
+                await Clients.Clients(connectionIds).SendAsync("OnNewRequest");
             }
         }
     }

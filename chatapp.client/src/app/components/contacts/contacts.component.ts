@@ -8,6 +8,7 @@ import { RequestDetailsModel } from '../../models/request-details-model';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { RemoveContactDialogComponent } from '../dialogs/remove-contact-dialog/remove-contact-dialog.component';
+import { SignalRService } from '../../services/signalr.service';
 
 @Component({
   selector: 'app-contacts',
@@ -32,11 +33,14 @@ export class ContactsComponent implements OnInit {
   constructor(
     private userService: UserService,
     private requestService: RequestService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private signalrService: SignalRService
   ) { }
 
   ngOnInit(): void {
     this.loadData();
+    this.connectSignalR();
+
   }
 
   loadData() {
@@ -105,6 +109,11 @@ export class ContactsComponent implements OnInit {
       },
       complete: () => {
       }
+    })
+  }
+
+  connectSignalR() {
+    this.signalrService.connect().then(() => {
     })
   }
 

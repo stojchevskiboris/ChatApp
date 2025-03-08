@@ -10,9 +10,13 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="Data\Mappings\**" />
 	  <Compile Remove="Services\SearchModels\**" />
+	  <Content Remove="Data\Mappings\**" />
 	  <Content Remove="Services\SearchModels\**" />
+	  <EmbeddedResource Remove="Data\Mappings\**" />
 	  <EmbeddedResource Remove="Services\SearchModels\**" />
+	  <None Remove="Data\Mappings\**" />
 	  <None Remove="Services\SearchModels\**" />
 	</ItemGroup>
 
@@ -63,7 +67,6 @@
 	</ItemGroup>-->
 
 	<ItemGroup>
-		<Folder Include="Data\Mappings\" />
 		<Folder Include="Migrations\" />
 	</ItemGroup>
 

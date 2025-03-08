@@ -3,6 +3,7 @@ import { AddContactModel } from '../../../models/add-contact-model';
 import { AuthService } from '../../../services/auth.service';
 import { RequestService } from '../../../services/request.service';
 import { ToastrService } from 'ngx-toastr';
+import { SignalRService } from '../../../services/signalr.service';
 
 @Component({
   selector: 'app-add-contact-dialog',
@@ -15,6 +16,7 @@ export class AddContactDialogComponent implements OnInit {
     private authService: AuthService,
     private requestService: RequestService,
     private toastr: ToastrService,
+    private signalrService: SignalRService
   ) { }
 
   query: string = '';
@@ -61,6 +63,7 @@ export class AddContactDialogComponent implements OnInit {
           if (response) {
             user.isAdded = true;
             this.loading = false;
+            this.newRequestEvent(user.id);
             // toastr: succesfully sent request
           } else {
             this.loading = false;
@@ -75,6 +78,10 @@ export class AddContactDialogComponent implements OnInit {
           this.loading = false;
         }
       });
+  }
+    
+  newRequestEvent(userToId) {
+    this.signalrService.newRequest(userToId).then(() => { })
   }
 
   cancelRequest(user: AddContactModel): void {
