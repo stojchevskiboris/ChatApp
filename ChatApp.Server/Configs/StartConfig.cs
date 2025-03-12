@@ -60,7 +60,9 @@ namespace ChatApp.Server.Configs
                                           "https://localhost:4200",
                                           "http://localhost:4200",
                                           "https://127.0.0.1:4200",
-                                          "http://127.0.0.1:4200")
+                                          "http://127.0.0.1:4200",
+                                          "https://chat-mk.com",
+                                          "http://chat-mk.com")
                                       .AllowAnyHeader()
                                       .AllowAnyMethod();
                                   });
