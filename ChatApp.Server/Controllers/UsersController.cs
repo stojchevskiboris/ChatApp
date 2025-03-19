@@ -159,8 +159,15 @@ namespace ChatApp.Server.Controllers
         [HttpPost("Register")]
         public UserViewModel CreateUser(UserRegisterModel model)
         {
-            var newUser = _userService.CreateUser(model);
-            return newUser;
+            try
+            {
+                var newUser = _userService.CreateUser(model);
+                return newUser;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpPost("Login")]

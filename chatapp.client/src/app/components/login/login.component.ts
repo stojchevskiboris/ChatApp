@@ -13,6 +13,20 @@ import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
   styleUrl: './login.component.css'
 })
 export class LoginComponent implements OnInit {
+  loginModel = new UserLoginModel();
+  registerModel = new UserRegisterModel();
+
+  loading: boolean = false;
+  errorMessage: string = '';
+  isModelInvalid: boolean = false;
+  container: any;
+  isSignUpPanelActive: boolean = false;
+  minDate: string = new Date(new Date().setFullYear(1900))
+    .toISOString()
+    .split("T")[0];
+  maxDate: string = new Date(new Date().setFullYear(new Date().getFullYear() - 10))
+    .toISOString()
+    .split("T")[0];
 
   constructor(
     private el: ElementRef,
@@ -22,24 +36,17 @@ export class LoginComponent implements OnInit {
     private toastr: ToastrService
   ) { }
 
-  loginModel = new UserLoginModel();
-  registerModel = new UserRegisterModel();
-
-  loading: boolean = false;
-  errorMessage: string = '';
-  isModelInvalid: boolean = false;
-  container: any;
 
   ngOnInit() {
-    this.container = this.el.nativeElement.querySelector(".container");
+    this.container = this.el.nativeElement.querySelector(".container-login");
     this.authService.sessionLogin().subscribe({
       next: (response) => {
-        if(response){
+        if (response) {
           this.router.navigate(['/home']);
           this.loading = false;
         }
       },
-      error: (err: any) => {        
+      error: (err: any) => {
         this.loading = false;
       },
       complete: () => {
@@ -57,7 +64,7 @@ export class LoginComponent implements OnInit {
       this.registerModel.firstName.trim() === '' ||
       this.registerModel.lastName.trim() === '' ||
       this.registerModel.dateOfBirth.trim() === '' ||
-      this.registerModel.phone.trim() === '' || 
+      this.registerModel.phone.trim() === '' ||
       this.registerModel.gender == undefined
     ) {
       this.errorMessage = 'All fields are required';
@@ -124,15 +131,21 @@ export class LoginComponent implements OnInit {
   }
 
 
-  navToRegister() {
+  navToRegister() { // nav to sign up
     this.errorMessage = null;
     this.isModelInvalid = false;
     this.container.classList.add('right-panel-active');
+    setTimeout(() => {
+      this.isSignUpPanelActive = true;
+    }, 400);
   }
 
-  navToLogin() {
+  navToLogin() { // nav to sign in
     this.errorMessage = null;
     this.isModelInvalid = false;
     this.container.classList.remove('right-panel-active');
+    setTimeout(() => {
+      this.isSignUpPanelActive = false;
+    }, 400);
   }
 }

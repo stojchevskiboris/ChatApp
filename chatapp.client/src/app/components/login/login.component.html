@@ -1,10 +1,11 @@
 <div *ngIf="loading" class="loading-container flex-content-center">
     <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>
-<div class="container fadeInAnimation" id="container">
+<div class="container-login fadeInAnimation" id="container">
+    <!-- Form Sign Up -->
     <div class="form-container sign-up-container">
-        <form>
-            <h1>Create Account</h1> <!-- NEW USER -->
+        <form action="#">
+            <h1>Create Account</h1>
             <input type="text" placeholder="First name" id="firstName" [(ngModel)]="registerModel.firstName"
                 name="firstName" required />
             <input type="text" placeholder="Last name" id="lastName" [(ngModel)]="registerModel.lastName"
@@ -15,8 +16,8 @@
                 name="password" required autocomplete="off" />
             <input type="password" placeholder="Confirm password" id="confirmPassword"
                 [(ngModel)]="registerModel.confirmPassword" name="confirmPassword" required />
-            <input type="date" placeholder="Date of Birth" id="dateOfBirthN" [(ngModel)]="registerModel.dateOfBirth"
-                name="dateOfBirth" required />
+            <input type="date" placeholder="Date of Birth" id="dateOfBirthN" [(ngModel)]="registerModel.dateOfBirth" 
+                [min]="minDate" [max]="maxDate" name="dateOfBirth" required />
             <input type="text" placeholder="Phone number" id="phone" [(ngModel)]="registerModel.phone" name="phone"
                 required />
             <div>
@@ -29,37 +30,43 @@
                     Female
                 </label>
             </div>
-            <button (click)="register()">Sign Up</button>
+            <button class="mt-3" mat-stroked-button (click)="register()">Sign Up</button>
             <p class="error-message"><span>&nbsp;</span>
                 <span *ngIf="errorMessage">{{ errorMessage }} </span>
             </p>
         </form>
     </div>
-    <div class="form-container sign-in-container">
-        <form>
-            <h1>Sign In</h1> <!-- EXISTING USER -->
+
+    <div class="form-container sign-in-container" *ngIf="!isSignUpPanelActive">
+        <!-- Forms Sign In-->
+        <form action="#">
+            <h1>Sign in</h1>
             <input type="username" placeholder="Username" id="username" [(ngModel)]="loginModel.username" name="username"
                 required />
             <input type="password" placeholder="Password" id="password" [(ngModel)]="loginModel.password"
                 name="password" required />
-            <button (click)="login()">Sign In</button>
+            <button class="mt-3" mat-stroked-button (click)="login()">Sign In</button>
             <p class="error-message"><span>&nbsp;</span>
                 <span *ngIf="errorMessage">{{ errorMessage }} </span>
             </p>
         </form>
     </div>
+
     <div class="overlay-container">
         <div class="overlay">
-            <div class="overlay-panel overlay-left">
+            <!-- Overlay Sign In -->
+            <div class="overlay-panel overlay-left py-5">
                 <h1>Already An User?</h1>
                 <p>To keep connected with us please login here</p>
-                <button (click)="navToLogin()" class="ghost" id="signIn">Sign In</button>
+                <button (click)="navToLogin()" class="ghost navButton" id="signIn">Sign In</button>
             </div>
-            <div class="overlay-panel overlay-right">
+
+            <!-- Overlay Sign Up -->
+            <div class="overlay-panel overlay-right py-5">
                 <h1>New User?</h1>
                 <p>Create your account and start journey with us</p>
-                <button (click)="navToRegister()" class="ghost" id="signUp">Sign Up</button>
+                <button (click)="navToRegister()" class="ghost navButton" id="signUp">Sign Up</button>
             </div>
         </div>
-    </div>
+    </div>		
 </div>
