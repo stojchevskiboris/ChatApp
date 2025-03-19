@@ -78,7 +78,30 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.loading = true;
 
+    this.authService.checkUsernameAvailability(this.registerModel.username).subscribe({
+      next: (isUsernameAvailable) => {        
+        this.loading = false;
+        if (!isUsernameAvailable) {
+          this.errorMessage = 'Username is already taken';
+          return;
+        } else {
+          this.createNewUser();
+        }
+      },
+      error: (err: HttpErrorResponse) => {
+        this.errorMessage = 'Something went wrong, please try again later';
+        this.loading = false;
+        this.toastr.warning('An unexpected error has occurred');
+      },
+      complete: () => {
+        this.loading = false;
+      }
+    });
+  }
+
+  createNewUser() {
     this.loading = true;
     const rawPassword = this.registerModel.password;
     const encryptedPassword = this.encryptDecryptService.encryptUsingAES256(this.registerModel.password);

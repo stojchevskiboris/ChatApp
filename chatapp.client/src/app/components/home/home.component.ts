@@ -107,6 +107,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.lastActiveSubscription) {
       this.lastActiveSubscription.unsubscribe();
     }
+    if (this.mobileQuery) {
+      this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
+    }
   }
 
   connectSignalR() {

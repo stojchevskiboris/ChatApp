@@ -15,6 +15,7 @@ namespace ChatApp.Server.Services.Interfaces
         bool RemoveContact(int contactId);
         bool UpdateProfilePicture(string imageUrl, long fileLength, string contentType);
         bool RemoveCurrentProfilePicture();
+        bool CheckUsername(string username);
         UserViewModel CreateUser(UserRegisterModel model);
         UserViewModel UpdateUser(UpdateUserViewModel user);
         bool DeleteUser(int id);

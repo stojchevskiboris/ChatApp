@@ -14,6 +14,7 @@ export class AuthService {
   private loginEndpoint = '/Users/Login';
   private sessionLoginEndpoint = '/Users/SessionLogin';
   private registerEndpoint = '/Users/Register';
+  private checkUsernameEndpoint = '/Users/CheckUsername';
   private getCurrentUserDetailsEndpoint = '/Users/GetCurrentUserDetails';
   currentUser: string = '';
   token: string = '';
@@ -22,6 +23,17 @@ export class AuthService {
     private dataService: DataService,
     private toastr: ToastrService
   ) { }
+
+  checkUsernameAvailability(username: string): Observable<boolean> {
+    return this.dataService
+      .post<boolean>(this.checkUsernameEndpoint, {Query: username})
+      .pipe(
+        tap((response: boolean) => {
+          return response;
+        })
+      );
+  }
+
 
   register(model: UserRegisterModel): Observable<UserViewModel> {
     return this.dataService
