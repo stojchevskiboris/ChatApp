@@ -3,7 +3,7 @@
 </div>
 <div class="container-login fadeInAnimation" id="container">
     <!-- Form Sign Up -->
-    <div class="form-container sign-up-container">
+    <div class="form-container sign-up-container" #signUpContainer >
         <form action="#">
             <h1>Create Account</h1>
             <input type="text" placeholder="First name" id="firstName" [(ngModel)]="registerModel.firstName"
@@ -37,9 +37,9 @@
         </form>
     </div>
 
-    <div class="form-container sign-in-container" *ngIf="!isSignUpPanelActive">
+    <div class="form-container sign-in-container" #signInContainer>
         <!-- Forms Sign In-->
-        <form action="#">
+        <form action="#"  *ngIf="!isSignUpPanelActive">
             <h1>Sign in</h1>
             <input type="username" placeholder="Username" id="username" [(ngModel)]="loginModel.username" name="username"
                 required />
@@ -58,14 +58,14 @@
             <div class="overlay-panel overlay-left py-5">
                 <h1>Already An User?</h1>
                 <p>To keep connected with us please login here</p>
-                <button (click)="navToLogin()" class="ghost navButton" id="signIn">Sign In</button>
+                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">Sign In</button>
             </div>
 
             <!-- Overlay Sign Up -->
             <div class="overlay-panel overlay-right py-5">
                 <h1>New User?</h1>
                 <p>Create your account and start journey with us</p>
-                <button (click)="navToRegister()" class="ghost navButton" id="signUp">Sign Up</button>
+                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">Sign Up</button>
             </div>
         </div>
     </div>		

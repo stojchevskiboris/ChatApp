@@ -169,6 +169,6 @@ export class LoginComponent implements OnInit {
     this.container.classList.remove('right-panel-active');
     setTimeout(() => {
       this.isSignUpPanelActive = false;
-    }, 400);
+    }, 200);
   }
 }
