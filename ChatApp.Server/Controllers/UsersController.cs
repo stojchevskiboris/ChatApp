@@ -156,11 +156,27 @@ namespace ChatApp.Server.Controllers
             return _userService.ChangePassword(model);
         }
 
+
+        [HttpPost("CheckUsername")]
+        public bool CheckUsername(HttpRequestQueryModel model)
+        {
+            var isUsernameAvailable = _userService.CheckUsername(model.Query);
+            return isUsernameAvailable;
+
+        }
+
         [HttpPost("Register")]
         public UserViewModel CreateUser(UserRegisterModel model)
         {
-            var newUser = _userService.CreateUser(model);
-            return newUser;
+            try
+            {
+                var newUser = _userService.CreateUser(model);
+                return newUser;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         [HttpPost("Login")]

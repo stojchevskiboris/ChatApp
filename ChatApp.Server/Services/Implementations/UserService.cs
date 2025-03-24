@@ -150,6 +150,26 @@ namespace ChatApp.Server.Services.Implementations
             }
         }
 
+        public bool CheckUsername(string username)
+        {
+            if (string.IsNullOrEmpty(username))
+            {
+                return false;
+            }
+
+            var allUsernames = _userRepository.GetAll().Select(x => x.Username.ToLower()).ToList();
+
+            foreach (var existingUsername in allUsernames)
+            {
+                if (existingUsername == username.ToLower())
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public UserViewModel CreateUser(UserRegisterModel model)
         {
             if (_userRepository.GetAll().Where(x => x.Username == model.Username).Any())
