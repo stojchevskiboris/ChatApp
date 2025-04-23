@@ -1,5 +1,5 @@
 export const environment = {
     production: true,
-    apiUrl: 'http://127.0.0.1:5000/api',
-    signalRUrl: 'http://127.0.0.1:5000/chatHub'
+    apiUrl: 'https://chatsmk.azurewebsites.net/api',
+    signalRUrl: 'https://chatsmk.azurewebsites.net/chatHub'
   };
