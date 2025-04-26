@@ -54,8 +54,8 @@ namespace ChatApp.Server.Services.Implementations
             var group = new Group();
             group.Name = model.Name;
             group.CreatedByUser = createdByUser;
-            group.CreatedAt = DateTime.Now;
-            group.ModifiedAt = DateTime.Now;
+            group.CreatedAt = DateTime.UtcNow;
+            group.ModifiedAt = DateTime.UtcNow;
 
             var newGroup = _groupRepository.Create(group);
 
@@ -64,8 +64,8 @@ namespace ChatApp.Server.Services.Implementations
             {
                 GroupId = newGroup.Id,
                 UserId = createdByUser.Id,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow
             };
 
             _groupUserService.CreateGroupUser(groupUser);
@@ -78,7 +78,7 @@ namespace ChatApp.Server.Services.Implementations
             var group = GetGroupDomainById(model.Id);
 
             group.Name = model.Name;
-            group.ModifiedAt = DateTime.Now;
+            group.ModifiedAt = DateTime.UtcNow;
 
             _groupRepository.Update(group);
 

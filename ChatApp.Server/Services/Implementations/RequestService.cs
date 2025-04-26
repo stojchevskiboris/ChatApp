@@ -145,8 +145,8 @@ namespace ChatApp.Server.Services.Implementations
                 UserTo = userTo,
                 RequestStatus = (int)RequestStatusEnum.Pending,
                 IsDeleted = false,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now,
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow,
             };
 
             _requestRepository.Create(request);
@@ -180,7 +180,7 @@ namespace ChatApp.Server.Services.Implementations
             {
                 request.RequestStatus = (int)RequestStatusEnum.Canceled;
                 request.IsDeleted = true;
-                request.ModifiedAt = DateTime.Now;
+                request.ModifiedAt = DateTime.UtcNow;
 
                 _requestRepository.Update(request);
             }
@@ -214,7 +214,7 @@ namespace ChatApp.Server.Services.Implementations
                         User = user1,
                         ContactId = user2.Id,
                         Contact = user2,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.UtcNow
                     };
                     user1.Contacts.Add(contact);
                     _userRepository.Update(user1);
@@ -228,7 +228,7 @@ namespace ChatApp.Server.Services.Implementations
                         User = user2,
                         ContactId = user1.Id,
                         Contact = user1,
-                        CreatedAt = DateTime.Now
+                        CreatedAt = DateTime.UtcNow
                     };
                     user2.Contacts.Add(contact);
                     _userRepository.Update(user2);

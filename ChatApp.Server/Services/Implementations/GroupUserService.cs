@@ -45,8 +45,8 @@ namespace ChatApp.Server.Services.Implementations
             {
                 User = user,
                 Group = group,
-                CreatedAt = DateTime.Now,
-                ModifiedAt = DateTime.Now
+                CreatedAt = DateTime.UtcNow,
+                ModifiedAt = DateTime.UtcNow
             };
 
             var newGroupUser = _groupUserRepository.Create(groupUser);
