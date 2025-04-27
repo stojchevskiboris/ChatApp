@@ -34,6 +34,8 @@ import { RemoveMediaDialogComponent } from './components/dialogs/remove-media-di
 import { MediaPreviewDialogComponent } from './components/dialogs/media-preview-dialog/media-preview-dialog.component';
 import { MessageDatePipe } from './shared/pipes/message-date.pipe';
 import { SignalRService } from './services/signalr.service';
+import { TimeStampLocalePipe } from './shared/pipes/time-stamp-locale.pipe';
+import { DateTimeLocalePipe } from './shared/pipes/date-time-locale.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -54,7 +56,9 @@ import { SignalRService } from './services/signalr.service';
     RemoveContactDialogComponent,
     RemoveMediaDialogComponent,
     RemoveMediaDialogComponent,
-    MediaPreviewDialogComponent
+    MediaPreviewDialogComponent,
+    TimeStampLocalePipe,
+    DateTimeLocalePipe
   ],
   imports: [
     BrowserModule,

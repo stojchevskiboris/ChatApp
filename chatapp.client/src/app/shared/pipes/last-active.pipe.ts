@@ -5,12 +5,24 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class LastActivePipe implements PipeTransform {
   transform(value: Date | any): string | null {
-    if (!value || isNaN(new Date(value as any).getTime())) {
+
+    var date: Date;
+
+    if (typeof value === 'string') {
+      if (value.includes('T')) {
+        date = new Date(value.endsWith('Z') ? value : value + 'Z');
+      } else {
+        date = new Date(value + ' UTC');
+      }
+    } else {
+      date = new Date(value);
+    }
+
+    if (isNaN(date.getTime())) {
       return null;
     }
 
     const now = new Date();
-    const date = new Date(value);
     const diffInMinutes = Math.floor((now.getTime() - date.getTime()) / (1000 * 60));
     const diffInHours = Math.floor(diffInMinutes / 60);
     const diffInDays = Math.floor(diffInHours / 24);

@@ -103,7 +103,7 @@
           </ng-template>
 
           <span class="timestamp" [ngClass]="{'float-right': message.senderId == currentUserId}">
-            {{ message.createdAt | date:'shortTime' }}
+            {{ message.createdAt | timeStampLocale }}
           </span>
         </div>
         <div id="searchTag" *ngIf="searchedMessageId == message.id"></div>
