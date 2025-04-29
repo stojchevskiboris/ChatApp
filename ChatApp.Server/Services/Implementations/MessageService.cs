@@ -73,8 +73,8 @@ namespace ChatApp.Server.Services.Implementations
                     HasMedia = model.HasMedia,
                     IsSeen = false,
                     ParentMessage = null,
-                    CreatedAt = DateTime.Now,
-                    ModifiedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
+                    ModifiedAt = DateTime.UtcNow,
                 };
 
                 _messageRepository.Create(message);
@@ -92,8 +92,8 @@ namespace ChatApp.Server.Services.Implementations
                         Url = model.Media.Url,
                         FileType = model.Media.FileType,
                         FileSize = model.Media.FileSize,
-                        CreatedAt = DateTime.Now,
-                        ModifiedAt = DateTime.Now
+                        CreatedAt = DateTime.UtcNow,
+                        ModifiedAt = DateTime.UtcNow
                     };
 
                     message.MediaContent = mediaContent;
@@ -118,8 +118,8 @@ namespace ChatApp.Server.Services.Implementations
                 {
                     RecipientUser = userRecipient,
                     RecipientTypeId = 1,
-                    CreatedAt = DateTime.Now,
-                    ModifiedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
+                    ModifiedAt = DateTime.UtcNow,
                 };
 
                 _recipientRepository.Create(recipient);

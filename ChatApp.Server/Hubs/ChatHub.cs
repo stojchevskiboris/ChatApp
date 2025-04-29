@@ -28,7 +28,8 @@ namespace ChatApp.Server.Hubs
             }
 
             var currentUser = _userService.GetCurrentUserDetailsOrDefault(userIdString);
-            await Clients.AllExcept(Context.ConnectionId).SendAsync("Join", Context.ConnectionId, currentUser); 
+            var connectionIds = _connection.Where(x => x.Value == userId).Select(x => x.Key).ToList();
+            await Clients.AllExcept(connectionIds).SendAsync("Join", Context.ConnectionId, currentUser); 
         }
 
         public override Task OnDisconnectedAsync(Exception? exception)

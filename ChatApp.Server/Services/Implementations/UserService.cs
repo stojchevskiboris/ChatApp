@@ -190,8 +190,8 @@ namespace ChatApp.Server.Services.Implementations
             user.Gender = model.Gender;
             user.Password = PasswordHelper.HashPassword(PasswordHelper.DecryptString(model.Password));
             user.DateOfBirth = DateTime.Parse(model.DateOfBirth);
-            user.CreatedAt = DateTime.Now;
-            user.ModifiedAt = DateTime.Now;
+            user.CreatedAt = DateTime.UtcNow;
+            user.ModifiedAt = DateTime.UtcNow;
 
             var newUser = _userRepository.Create(user);
             return newUser.MapToViewModel();
@@ -208,7 +208,7 @@ namespace ChatApp.Server.Services.Implementations
             user.Phone = model.Phone;
             user.Gender = model.Gender;
             user.DateOfBirth = model.DateOfBirth;
-            user.ModifiedAt = DateTime.Now;
+            user.ModifiedAt = DateTime.UtcNow;
 
             _userRepository.Update(user);
 
@@ -288,8 +288,8 @@ namespace ChatApp.Server.Services.Implementations
                     Url = imageUrl,
                     FileType = contentType,
                     FileSize = (int)fileLength,
-                    CreatedAt = DateTime.Now,
-                    ModifiedAt = DateTime.Now,
+                    CreatedAt = DateTime.UtcNow,
+                    ModifiedAt = DateTime.UtcNow,
                 };
 
                 _mediaRepository.Create(media);
@@ -330,7 +330,7 @@ namespace ChatApp.Server.Services.Implementations
             var currentUserId = Context.GetCurrentUserId();
             var user = GetUserDomainById(currentUserId);
 
-            user.LastActive = DateTime.Now;
+            user.LastActive = DateTime.UtcNow;
             _userRepository.Update(user);
 
             return;

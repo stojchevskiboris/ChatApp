@@ -150,6 +150,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.searchedMessageId = -1;
       this.hasScrolledToBottom = false;
       this.noOlderMessages = false;
+      this.oldestMessageId = 0;
       this.loadingOlderMessages = false;
       this.canLoadMessagesSemaphore = true;
       this.fetchingOlderMessages = false;

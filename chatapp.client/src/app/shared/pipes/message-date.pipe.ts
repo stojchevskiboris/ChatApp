@@ -6,23 +6,39 @@ import { format } from 'date-fns';
 })
 export class MessageDatePipe implements PipeTransform {
 
-  transform(value: Date | any): string | null {
+  transform(value: Date | string | number): string | null {
     if (!value) return null;
 
-    const date = new Date(value);
-    if (isNaN(date.getTime())) return null;
+    const locale = 'en-US';
+    let date: Date;
 
-    const today = new Date();
-    const todayStart = new Date(today.setHours(0, 0, 0, 0));
+if (typeof value === 'string') {
+      if (value.includes('T')) {
+        // ISO string, append 'Z' if missing (tells JS it's UTC)
+        date = new Date(value.endsWith('Z') ? value : value + 'Z');
+      } else {
+        // Basic datetime string, add ' UTC' at the end
+        date = new Date(value + ' UTC');
+      }
+    } else {
+      date = new Date(value);
+    }
+
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const daysAgo7 = new Date(todayStart);
     daysAgo7.setDate(todayStart.getDate() - 6);
 
     if (date >= todayStart) {
       return 'Today';
     } else if (date >= daysAgo7) {
-      return format(date, 'EEEE');
+      return format(date, 'EEEE'); // Ex: "Sunday"
     } else {
-      return format(date, 'dd.MM.yyyy'); 
+      return format(date, 'dd.MM.yyyy'); // Ex: "27.04.2025"
     }
   }
 }

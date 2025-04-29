@@ -51,7 +51,7 @@
           <div *ngFor="let message of searchResults" class="search-result-item"
             (click)="onSelectSearchResult(message.id)">
             <div class="message-content">{{ message.content }}</div>
-            <div class="message-timestamp text-secondary">{{ message.createdAt | date: 'short' }}</div>
+            <div class="message-timestamp text-secondary">{{ message.createdAt | dateTimeLocale }}</div>
           </div>
         </ng-scrollbar>
       </div>
