@@ -97,7 +97,7 @@ export class AccountOverviewComponent {
 
   addContacts() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
-      width: '50%',
+      width: '90%',
     });
 
     dialogRef.afterClosed().subscribe(result => {

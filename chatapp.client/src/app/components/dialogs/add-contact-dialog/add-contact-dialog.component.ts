@@ -12,18 +12,19 @@ import { SignalRService } from '../../../services/signalr.service';
 })
 export class AddContactDialogComponent implements OnInit {
 
+  query: string = '';
+  isLoading: boolean = false;
+  searchResults: Array<AddContactModel> = [];
+  currentUserId: number = 0;
+  loading: boolean = false;
+  private searchDebounceTimeout: any;
+
   constructor(
     private authService: AuthService,
     private requestService: RequestService,
     private toastr: ToastrService,
     private signalrService: SignalRService
   ) { }
-
-  query: string = '';
-  isLoading: boolean = false;
-  searchResults: Array<AddContactModel> = [];
-  currentUserId: number = 0;
-  loading: boolean = false;
 
   ngOnInit(): void {
     this.currentUserId = +(this.authService.getUserId() ?? 0);
@@ -33,7 +34,14 @@ export class AddContactDialogComponent implements OnInit {
     }
   }
 
-  onSearch(): void {
+  onSearch(debounce: boolean = false): void {
+
+    if (debounce) {
+      clearTimeout(this.searchDebounceTimeout);
+      this.searchDebounceTimeout = setTimeout(() => this.onSearch(false), 500); // 300ms debounce
+      return;
+    }
+
     if (this.query.trim() === '') {
       this.searchResults = [];
       return;

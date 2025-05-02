@@ -25,6 +25,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   @Input() newChatMessage: RecentChatViewModel;
   @Input() closedChatWindow: number;
   selectedChatId: number = null;
+  private searchDebounceTimeout: any;
 
   prevScrollPosMessages = 0;
   prevScrollPosContacts = 0;
@@ -111,7 +112,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
     let closedChatWindowChange: SimpleChange = changes['closedChatWindow'];
     if (closedChatWindowChange != undefined && !closedChatWindowChange.firstChange) {
-      if (closedChatWindowChange.currentValue == 0){
+      if (closedChatWindowChange.currentValue == 0) {
         this.selectedChatId = null;
       }
     }
@@ -235,7 +236,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   addContacts() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
-      width: '50%',
+      width: '90%',
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -349,7 +350,13 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
               'a message';
   }
 
-  onSearch() {
+  onSearch(debounce: boolean = false) {
+    if (debounce) {
+      clearTimeout(this.searchDebounceTimeout);
+      this.searchDebounceTimeout = setTimeout(() => this.onSearch(false), 500); // 300ms debounce
+      return;
+    }
+
     this.getRecentChats();
 
     if (!this.searchQuery) {
@@ -357,8 +364,8 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
       return;
     }
 
-    const queryWords = this.searchQuery.trim().toLowerCase().split(/\s+/); 
-    
+    const queryWords = this.searchQuery.trim().toLowerCase().split(/\s+/);
+
     this.contactsList = this.fetchedContacts.filter(contact => {
       const fullName = `${contact.firstName} ${contact.lastName} ${contact.username}`.trim().toLowerCase();
       return queryWords.every(word => fullName.includes(word));

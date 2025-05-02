@@ -119,7 +119,7 @@ export class ContactsComponent implements OnInit {
 
   addContacts() {
     const dialogRef = this.dialog.open(AddContactDialogComponent, {
-      width: '50%',
+      width: '90%',
     });
 
     dialogRef.afterClosed().subscribe(result => {

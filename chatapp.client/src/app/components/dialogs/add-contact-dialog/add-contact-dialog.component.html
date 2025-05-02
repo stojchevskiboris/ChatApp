@@ -10,7 +10,7 @@
   </mat-form-field> -->
   <mat-form-field appearance="outline" class="w-100">
     <mat-label>Search</mat-label>
-    <input matInput [(ngModel)]="query" (input)="onSearch()" placeholder="Name" />
+    <input matInput [(ngModel)]="query" (input)="onSearch(true)" placeholder="Name" />
     <button matSuffix mat-icon-button aria-label="Search" (click)="onSearch()" class="me-2">
       <mat-icon>search</mat-icon>
     </button>

@@ -7,7 +7,7 @@
     <div class="search-bar mb-2">
         <mat-form-field class="w-100 search-bar-field">
             <mat-label>Search</mat-label>
-            <input matInput type="text" #searchInput [(ngModel)]="searchQuery" (keyup)="onSearch()">
+            <input matInput type="text" #searchInput [(ngModel)]="searchQuery" (keyup)="onSearch(true)">
             <button matSuffix mat-icon-button aria-label="Search" class="me-2" (click)="onSearch()">
                 <mat-icon>search</mat-icon>
             </button>
