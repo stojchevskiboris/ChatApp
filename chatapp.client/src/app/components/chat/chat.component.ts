@@ -643,13 +643,30 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     };
     this.newSharedMedia.emit(item);
   }
+
   isContactActive(lastActive: any): boolean {
     if (!lastActive || isNaN(new Date(lastActive).getTime())) {
       return false;
     }
 
+    var date: Date;
+
+    if (typeof lastActive === 'string') {
+      if (lastActive.includes('T')) {
+        date = new Date(lastActive.endsWith('Z') ? lastActive : lastActive + 'Z');
+      } else {
+        date = new Date(lastActive + ' UTC');
+      }
+    } else {
+      date = new Date(lastActive);
+    }
+
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
     const now = new Date();
-    const lastActiveDate = new Date(lastActive);
+    const lastActiveDate = new Date(date);
     const diffInMinutes = Math.floor((now.getTime() - lastActiveDate.getTime()) / (1000 * 60));
 
     return diffInMinutes < 5;
