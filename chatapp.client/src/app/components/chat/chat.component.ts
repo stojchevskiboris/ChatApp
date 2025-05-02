@@ -44,6 +44,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   messages: MessageViewModel[] = [];
 
   hasScrolledToBottom: boolean = false;
+  showScrollToBottom = false;
   canBlurSearchMessage: number = 0;
   defaultAvatar = 'img/default-avatar.png';
   newMessage: string = '';
@@ -525,6 +526,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   scrollToBottom(forceScroll: boolean = false) {
     if (forceScroll || !this.fetchingOlderMessages) {
+      this.showScrollToBottom = false;
       this.scrollable.scrollTo({ bottom: -500, duration: 300 })
     }
   }
@@ -809,6 +811,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   fetchOlderMessages() {
+    this.showScrollToBottom = true;
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
     this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });

@@ -118,6 +118,9 @@
       <span>No messages yet. Start chatting by sending a message.</span>
     </div>
   </ng-scrollbar>
+  <button class="scroll-to-bottom-btn" mat-mini-fab color="primary" (click)="scrollToBottom(true)" *ngIf="showScrollToBottom">
+    <mat-icon>arrow_downward</mat-icon>
+  </button>
 
   <!-- Input container -->
   <div class="input-container d-flex align-items-end p-2">
