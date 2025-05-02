@@ -4,7 +4,7 @@
 
 <div class="chat-window">
   <!-- Chat Header -->
-  <div class="card py-2 px-3 mb-1">
+  <div class="card py-2 px-3 mb-1 minH-70px">
     <div class="d-flex justify-content-between">
       <div class="d-flex">
         <div class="me-2" *ngIf="mobileQuery.matches">
@@ -68,10 +68,10 @@
           matTooltip="{{message.createdAt | messageDate}}">
 
           <!-- Text message -->
-          <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere">
-            {{ message.content }}
-            <br>
+          <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere"
+            [innerHTML]="message.content | linkify">
           </span>
+          <span *ngIf="!message.hasMedia"><br></span>
 
           <!-- Media message -->
           <ng-template #mediaTemplate>

@@ -36,6 +36,7 @@ import { MessageDatePipe } from './shared/pipes/message-date.pipe';
 import { SignalRService } from './services/signalr.service';
 import { TimeStampLocalePipe } from './shared/pipes/time-stamp-locale.pipe';
 import { DateTimeLocalePipe } from './shared/pipes/date-time-locale.pipe';
+import { LinkifyPipe } from './shared/pipes/linkify.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -58,7 +59,8 @@ import { DateTimeLocalePipe } from './shared/pipes/date-time-locale.pipe';
     RemoveMediaDialogComponent,
     MediaPreviewDialogComponent,
     TimeStampLocalePipe,
-    DateTimeLocalePipe
+    DateTimeLocalePipe,
+    LinkifyPipe
   ],
   imports: [
     BrowserModule,

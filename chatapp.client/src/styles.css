@@ -269,6 +269,10 @@ body {
   height: 100px !important;
 }
 
+.minH-70px{
+  min-height: 70px;
+}
+
 .chat,
 .account-settings,
 .contacts-view {
