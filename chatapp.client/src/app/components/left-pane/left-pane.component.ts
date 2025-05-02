@@ -312,9 +312,25 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     });
   }
 
-  isContactActive(date: any): boolean {
-    if (!date || isNaN(new Date(date).getTime())) {
+  isContactActive(lastActive: any): boolean {
+    if (!lastActive || isNaN(new Date(lastActive).getTime())) {
       return false;
+    }
+
+    var date: Date;
+
+    if (typeof lastActive === 'string') {
+      if (lastActive.includes('T')) {
+        date = new Date(lastActive.endsWith('Z') ? lastActive : lastActive + 'Z');
+      } else {
+        date = new Date(lastActive + ' UTC');
+      }
+    } else {
+      date = new Date(lastActive);
+    }
+
+    if (isNaN(date.getTime())) {
+      return null;
     }
 
     const now = new Date();

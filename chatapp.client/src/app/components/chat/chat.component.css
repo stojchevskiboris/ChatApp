@@ -148,3 +148,45 @@ button.close:hover {
   max-width: 80%;
   box-shadow: -8px 7px 5px rgba(0, 0, 0, 0.1);
 }
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  margin: 0.5rem 0;
+}
+
+.typing-indicator .message-content {
+  background-color: #e0e0e0;
+  border-radius: 1rem;
+  padding: 0.5rem 1rem;
+  max-width: fit-content;
+  display: flex;
+  align-items: center;
+}
+
+.typing-dots span {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  margin: 0 2px;
+  background-color: #555;
+  border-radius: 50%;
+  animation: blink 1.2s infinite ease-in-out both;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% {
+    opacity: 0.2;
+  }
+  40% {
+    opacity: 1;
+  }
+}

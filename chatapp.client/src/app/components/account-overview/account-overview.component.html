@@ -4,7 +4,7 @@
 
 <div class="acc-overview d-flex align-items-center justify-content-between">
 
-    <div class="cursor-pointer" (click)="resetChats()">
+    <div class="cursor-pointer" routerLink="/settings">
         <div *ngIf="hasProfilePicture" class="d-inline-block">
             <img [src]="profilePicture" alt="" class="rounded-circle profile-pic-home">
         </div>

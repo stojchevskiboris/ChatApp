@@ -26,12 +26,6 @@
                   {{ recipient.lastActive | lastActive }}
                 </ng-template>
               </div>
-              <!-- <div>
-                <span class="text-muted">
-                  <span *ngIf="recipientIsTyping">{{ typingText }}</span>
-                  &nbsp;
-                </span>
-              </div> -->
             </div>
           </div>
         </div>
@@ -110,6 +104,14 @@
       </div>
 
     </ng-container>
+    <div class="message received typing-indicator" *ngIf="recipientIsTyping">
+      <img class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" alt="Recipient Picture" />
+      <div class="message-content">
+        <span class="typing-dots">
+          <span></span><span></span><span></span>
+        </span>
+      </div>
+    </div>
 
     <div class="startChat" *ngIf="noMessages && messages.length == 0">
       <mat-icon class="h-50px w-50px">chat_bubble_outline</mat-icon>
@@ -122,7 +124,7 @@
     <div class="w-100 d-flex align-items-end">
       <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" placeholder="Message..." matInput #messageInput
         (focus)="hideGifSearch()" [(ngModel)]="newMessage" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()" (keydown)="typing()">
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()" (keyup)="typing()">
       </textarea>
 
       <div id="selectedMediaInput" class="w-100" *ngIf="isMediaSelected">

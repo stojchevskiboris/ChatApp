@@ -240,7 +240,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   typing() {
-    this.signalrService.onTypingEvent(this.recipientId).then(() => { })
+    if (this.newMessage != ""){
+      this.signalrService.onTypingEvent(this.recipientId).then(() => { })
+    }
   }
 
   startTypingAnimation() {
