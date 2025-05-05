@@ -6,4 +6,6 @@ export class RequestDetailsModel {
     userTo: AddContactModel;
     requestStatus: number = 0;
     isDeleted: boolean = false;
+    createdAt: string = '';
+    modifiedAt: string = '';
 }

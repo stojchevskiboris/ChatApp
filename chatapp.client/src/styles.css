@@ -429,3 +429,8 @@ body {
   white-space: nowrap;
   /* Add max width to parent element */
 }
+
+.timestamp {
+  font-size: 0.8em;
+  color: #888;
+}

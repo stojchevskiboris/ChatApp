@@ -69,11 +69,9 @@ namespace ChatApp.Server.Data.Implementations
         public List<Request> GetArchivedRequests(int currentUserId)
         {
             var archivedRequests = _context.Requests
-                .Where(x => x.UserFrom.Id != currentUserId
-                         && x.UserTo.Id == currentUserId
-                         && x.IsDeleted == false
-                         && (x.RequestStatus == (int)RequestStatusEnum.Accepted || 
-                             x.RequestStatus == (int)RequestStatusEnum.Rejected))
+                .Where(x => 
+                         (x.UserFrom.Id == currentUserId || x.UserTo.Id == currentUserId)
+                         && x.IsDeleted == false)
                 .ToList();
 
             return archivedRequests;

@@ -9,6 +9,7 @@ import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
 import { RemoveContactDialogComponent } from '../dialogs/remove-contact-dialog/remove-contact-dialog.component';
 import { SignalRService } from '../../services/signalr.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-contacts',
@@ -19,7 +20,7 @@ export class ContactsComponent implements OnInit {
 
   dialog = inject(MatDialog);
   showArchivedRequests: boolean = false;
-  currentUserId: string = null;
+  currentUserId: number = null;
   requestStatusEnum: typeof RequestStatusEnum = RequestStatusEnum;
   loading: boolean = false;
   hasContactsLoaded: boolean = false;
@@ -29,13 +30,18 @@ export class ContactsComponent implements OnInit {
   contacts: UserViewModel[] = [];
   requests: RequestDetailsModel[] = [];
   archivedRequests: RequestDetailsModel[] = [];
+  archivedRequestsSentFromCurrent: RequestDetailsModel[] = [];
+  archivedRequestsSentToCurrent: RequestDetailsModel[] = [];
 
   constructor(
+    private authService: AuthService,
     private userService: UserService,
     private requestService: RequestService,
     private toastr: ToastrService,
     private signalrService: SignalRService
-  ) { }
+  ) { 
+    this.currentUserId = +this.authService.getUserId();
+  }
 
   ngOnInit(): void {
     this.loadData();
@@ -89,6 +95,13 @@ export class ContactsComponent implements OnInit {
     this.requestService.getArchivedRequests().subscribe({
       next: (model: RequestDetailsModel[]) => {
         this.archivedRequests = model;
+        if (this.archivedRequests.length > 0){
+          this.archivedRequestsSentFromCurrent = this.archivedRequests
+            .filter(x => x.userFrom.id == this.currentUserId);
+
+          this.archivedRequestsSentToCurrent = this.archivedRequests
+            .filter(x => x.userTo.id == this.currentUserId);          
+        }
       },
       error: (err: any) => {
         this.toastr.warning('An unexpected error has occurred');
@@ -212,6 +225,28 @@ export class ContactsComponent implements OnInit {
         },
         complete: () => {
           this.loading = false;
+        }
+      });
+  }
+
+  cancelRequest(userId): void {
+    this.loading = true;
+    this.requestService.cancelRequest(userId)
+      .subscribe({
+        next: (response: any) => {
+          if (response) {
+            this.loading = false
+          } else {
+            this.loading = false
+          }
+        },
+        error: () => {
+          // console.log("Error cancelling request");
+          this.loading = false
+        },
+        complete: () => {
+          this.loading = false;
+          this.loadData();
         }
       });
   }

@@ -33,7 +33,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <button mat-stroked-button class="archived-requests" (click)="addContacts()"
                     *ngIf="contacts.length == 0 && hasContactsLoaded">
                     <mat-icon>person_add</mat-icon>Add Contacts
@@ -43,7 +43,8 @@
                     <div class="d-flex align-items-center">
                         <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="contact.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} <span class="text-secondary">({{contact.username}})</span></div>
+                        <div class="ms-2">{{ contact.firstName }} {{ contact.lastName }} <span
+                                class="text-secondary">({{contact.username}})</span></div>
                     </div>
                     <button mat-icon-button [matMenuTriggerFor]="contactMenu">
                         <mat-icon>more_vert</mat-icon>
@@ -73,7 +74,8 @@
                         <img matListAvatar class="w-40px h-40px user-profile-picture"
                             [src]="request.userFrom.profilePicture || 'img/default-avatar.png'" />
                         <div class="ms-2">{{ request.userFrom.firstName }} {{ request.userFrom.lastName }}
-                            <span class="text-secondary">({{request.userFrom.username}})</span></div>
+                            <span class="text-secondary">({{request.userFrom.username}})</span>
+                        </div>
                     </div>
                     <div class="actions">
                         <button mat-stroked-button color="primary" (click)="acceptRequest(request.id)">
@@ -94,20 +96,66 @@
                 <button mat-stroked-button class="archived-requests" (click)="toggleArchivedRequests()">
                     <mat-icon>list_alt</mat-icon> Show current requests
                 </button>
-                <div *ngFor="let archivedRequest of archivedRequests" class="request-item">
-                    <div class="d-flex align-items-center">
-                        <img matListAvatar class="w-40px h-40px user-profile-picture"
-                            [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
-                        <div class="ms-2">{{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName
-                            }} <span class="text-secondary">({{ archivedRequest.userFrom.username }})</span></div>
-                    </div>
-                    <div class="actions">
-                        {{ getRequestStatus(archivedRequest.requestStatus) }}
-                    </div>
-                </div>
                 <div *ngIf="archivedRequests.length === 0" class="text-center mt-3">
                     No archived requests
                 </div>
+                <div *ngIf="archivedRequestsSentFromCurrent.length > 0" class="text-center mt-3">
+                    <h5>Requests sent by you</h5>
+                    <div *ngFor="let archivedRequest of archivedRequestsSentFromCurrent" class="request-item mb-1">
+                        <div class="d-flex align-items-center">
+                            <img matListAvatar class="w-40px h-40px user-profile-picture"
+                                [src]="archivedRequest.userTo.profilePicture || 'img/default-avatar.png'" />
+                            <div class="ms-2">
+                                <div>
+                                    {{ archivedRequest.userTo.firstName }} {{ archivedRequest.userTo.lastName }}
+                                    <span class="text-secondary">({{ archivedRequest.userTo.username }})</span>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <div class="d-flex justify-content-center">
+                                <span>
+                                    {{ getRequestStatus(archivedRequest.requestStatus) }}
+                                </span>
+                                <button class="btn btn-sm btn-outline-secondary ms-1"
+                                    *ngIf="archivedRequest.requestStatus == requestStatusEnum.Pending"
+                                    (click)="cancelRequest(archivedRequest.userTo.id)">
+                                    Cancel
+                                </button>
+                            </div>
+                            <span class="timestamp">
+                                {{ archivedRequest.modifiedAt | dateTimeLocale }}
+                            </span>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div *ngIf="archivedRequestsSentToCurrent.length > 0" class="text-center mt-3">
+                    <h5>Requests sent to you</h5>
+                    <div *ngFor="let archivedRequest of archivedRequestsSentToCurrent" class="request-item">
+                        <div class="d-flex align-items-center">
+                            <img matListAvatar class="w-40px h-40px user-profile-picture"
+                                [src]="archivedRequest.userFrom.profilePicture || 'img/default-avatar.png'" />
+                            <div class="ms-2">
+                                <div>
+                                    {{ archivedRequest.userFrom.firstName }} {{ archivedRequest.userFrom.lastName }}
+                                    <span class="text-secondary">({{ archivedRequest.userFrom.username }})</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="actions">
+                            <span>
+                                {{ getRequestStatus(archivedRequest.requestStatus) }}
+                            </span>
+                            <span class="timestamp">
+                                {{ archivedRequest.modifiedAt | dateTimeLocale }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </mat-tab>
     </mat-tab-group>
