@@ -159,7 +159,7 @@ export class ChatSettingsComponent {
     this.dialog.open(MediaPreviewDialogComponent, {
       data: { media, sharedMedia: this.sharedMedia },
       maxWidth: '90vw',
-      maxHeight: '90vh',
+      maxHeight: '90svh',
       height: '90%',
       width: '90%',
       autoFocus: false,

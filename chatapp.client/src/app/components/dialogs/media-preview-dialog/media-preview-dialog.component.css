@@ -37,7 +37,7 @@
 
 .preview-image {
   max-width: 80vw;
-  max-height: 60vh;
+  max-height: 60svh;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
@@ -45,7 +45,7 @@
 
 .preview-video {
   max-width: 90vw;
-  max-height: 50vh;
+  max-height: 50svh;
   object-fit: contain;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
