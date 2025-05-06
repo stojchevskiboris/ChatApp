@@ -3,52 +3,96 @@
 </div>
 <div class="container-login fadeInAnimation" id="container">
     <!-- Form Sign Up -->
-    <div class="form-container sign-up-container" #signUpContainer >
-        <form action="#">
+    <div class="form-container sign-up-container" #signUpContainer>
+        <form>
             <h1>Create Account</h1>
-            <input type="text" placeholder="First name" id="firstName" [(ngModel)]="registerModel.firstName"
-                name="firstName" required />
-            <input type="text" placeholder="Last name" id="lastName" [(ngModel)]="registerModel.lastName"
-                name="lastName" required />
-            <input type="username" placeholder="Username" id="username" [(ngModel)]="registerModel.username" name="username" required
-                autocomplete="off" />
-            <input type="password" placeholder="Password" id="password" [(ngModel)]="registerModel.password"
-                name="password" required autocomplete="off" />
-            <input type="password" placeholder="Confirm password" id="confirmPassword"
-                [(ngModel)]="registerModel.confirmPassword" name="confirmPassword" required />
-            <input type="date" placeholder="Date of Birth" id="dateOfBirthN" [(ngModel)]="registerModel.dateOfBirth" 
-                [min]="minDate" [max]="maxDate" name="dateOfBirth" required />
-            <input type="text" placeholder="Phone number" id="phone" [(ngModel)]="registerModel.phone" name="phone"
-                required />
-            <div>
-                <label>
-                    <input type="radio" [(ngModel)]="registerModel.gender" name="gender" [value]="0" required />
-                    Male
-                </label>
-                <label>
-                    <input type="radio" [(ngModel)]="registerModel.gender" name="gender" [value]="1" required />
-                    Female
-                </label>
+
+            <mat-form-field appearance="fill" class="w-100"> 
+                <mat-label>First name</mat-label>
+                <input matInput [(ngModel)]="registerModel.firstName" name="firstName" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Last name</mat-label>
+                <input matInput [(ngModel)]="registerModel.lastName" name="lastName" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Username</mat-label>
+                <input matInput [(ngModel)]="registerModel.username" name="username" required autocomplete="off" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Password</mat-label>
+                <input matInput [(ngModel)]="registerModel.password" name="password" type="password" required
+                    autocomplete="off" />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Confirm Password</mat-label>
+                <input matInput [(ngModel)]="registerModel.confirmPassword" name="confirmPassword" type="password"
+                    required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Date of Birth</mat-label>
+                <input matInput [min]="minDate" [max]="maxDate" [matDatepicker]="picker"
+                    [(ngModel)]="registerModel.dateOfBirth" name="dateOfBirth" required (focus)="picker.open()" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Phone number</mat-label>
+                <input matInput [(ngModel)]="registerModel.phone" name="phone" required />
+            </mat-form-field>
+
+            <div class="my-2">
+                <mat-radio-group [(ngModel)]="registerModel.gender" name="gender" required>
+                    <mat-radio-button [value]="0">Male</mat-radio-button>
+                    <mat-radio-button [value]="1" class="ml-2">Female</mat-radio-button>
+                </mat-radio-group>
             </div>
+
             <button class="mt-3" mat-stroked-button (click)="register()">Sign Up</button>
             <p class="error-message"><span>&nbsp;</span>
                 <span *ngIf="errorMessage">{{ errorMessage }} </span>
             </p>
+            <div *ngIf="mobileQuery.matches">
+                <span>Already An User?</span>
+                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">
+                    Sign In
+                </button>
+            </div>
         </form>
     </div>
 
     <div class="form-container sign-in-container" #signInContainer>
         <!-- Forms Sign In-->
-        <form action="#"  *ngIf="!isSignUpPanelActive">
+        <form *ngIf="!isSignUpPanelActive">
             <h1>Sign in</h1>
-            <input type="username" placeholder="Username" id="username" [(ngModel)]="loginModel.username" name="username"
-                required />
-            <input type="password" placeholder="Password" id="password" [(ngModel)]="loginModel.password"
-                name="password" required />
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Username</mat-label>
+                <input class="bg-babyBlue" matInput [(ngModel)]="loginModel.username" name="username" required />
+            </mat-form-field>
+
+            <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Password</mat-label>
+                <input matInput [(ngModel)]="loginModel.password" name="password" type="password" required />
+            </mat-form-field>
+
             <button class="mt-3" mat-stroked-button (click)="login()">Sign In</button>
             <p class="error-message"><span>&nbsp;</span>
                 <span *ngIf="errorMessage">{{ errorMessage }} </span>
             </p>
+
+            <div *ngIf="mobileQuery.matches">
+                <span>New user?</span>
+                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">
+                    Sign Up
+                </button>
+            </div>
         </form>
     </div>
 
@@ -58,15 +102,19 @@
             <div class="overlay-panel overlay-left py-5">
                 <h1>Already An User?</h1>
                 <p>To keep connected with us please login here</p>
-                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">Sign In</button>
+                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">
+                    Sign In
+                </button>
             </div>
 
             <!-- Overlay Sign Up -->
             <div class="overlay-panel overlay-right py-5">
                 <h1>New User?</h1>
                 <p>Create your account and start journey with us</p>
-                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">Sign Up</button>
+                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">
+                    Sign Up
+                </button>
             </div>
         </div>
-    </div>		
+    </div>
 </div>

@@ -88,20 +88,23 @@ a {
 	text-align: center;
 }
 
-.form-container input {
-	background: white;
-	border: 1px solid gray;
-	border-radius: 15px;
-	padding: 1rem 1.2rem;
-	margin: .6rem 0;
-	width: 100%;
-}
-
 button {
 	font-size: 1.2rem;
 	font-weight: bold;
 	letter-spacing: .1rem;
 	transition: transform 80ms ease-in;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:focus, 
+input:-webkit-autofill:hover,
+input:-webkit-autofill:active{
+    -webkit-box-shadow: 0 0 0 30px #dfe2ec inset !important;
+	box-shadow: 0 0 0 30px #dfe2ec inset !important;
+}
+
+.mat-mdc-form-field {
+    margin-bottom: 8px;
 }
 
 .navButton{
@@ -291,3 +294,43 @@ button.ghost {
 		transform: translateX(20%);
 	}
 }
+
+@media only screen and (max-width: 991px) {
+
+	.form-container form {
+		padding: 0 2rem;
+	}
+
+	.sign-in-container,
+	.sign-up-container {
+	  width: 100%;
+	  height: 100%;
+	}
+  
+	.container-login.right-panel-active .sign-in-container {
+	  transform: translateY(100%);
+	}
+  
+	.container-login.right-panel-active .sign-up-container {
+	  transform: translateY(0);
+	  opacity: 1;
+	  z-index: 5;
+	}
+  
+	.container-login:not(.right-panel-active) .sign-in-container {
+	  transform: translateY(0);
+	  opacity: 1;
+	  z-index: 5;
+	}
+  
+	.container-login:not(.right-panel-active) .sign-up-container {
+	  transform: translateY(-100%);
+	  opacity: 0;
+	  z-index: 1;
+	}
+  
+	.overlay-container,
+	.overlay {
+	  display: none; /* Hide the overlay completely */
+	}
+  }

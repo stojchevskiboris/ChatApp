@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
@@ -6,6 +6,8 @@ import { UserRegisterModel } from '../../models/user-register-model';
 import { UserLoginModel } from '../../models/user-login-model';
 import { ToastrService } from 'ngx-toastr';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
+import { MediaMatcher } from '@angular/cdk/layout';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -15,6 +17,9 @@ import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 export class LoginComponent implements OnInit {
   loginModel = new UserLoginModel();
   registerModel = new UserRegisterModel();
+
+  mobileQuery: MediaQueryList;
+  private _mobileQueryListener: () => void;
 
   loading: boolean = false;
   errorMessage: string = '';
@@ -33,8 +38,27 @@ export class LoginComponent implements OnInit {
     private authService: AuthService,
     private encryptDecryptService: EncryptDecryptService,
     private router: Router,
-    private toastr: ToastrService
-  ) { }
+    private toastr: ToastrService,
+    private datePipe: DatePipe,
+    private cdr: ChangeDetectorRef,
+    private media: MediaMatcher
+  ) { 
+    this.mobileQuery = media.matchMedia('(max-width: 991px)');
+    this._mobileQueryListener = () => cdr.detectChanges();
+    this.mobileQuery.addListener(this._mobileQueryListener);
+    
+    let previousState = this.mobileQuery.matches;
+    this._mobileQueryListener = () => {
+      this.cdr.detectChanges();
+      const currentState = this.mobileQuery.matches;
+      if (previousState !== currentState) {
+        window.location.reload();
+      }
+      previousState = currentState;
+    };
+
+    this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+  }
 
 
   ngOnInit() {
@@ -63,7 +87,7 @@ export class LoginComponent implements OnInit {
       this.registerModel.confirmPassword.trim() === '' ||
       this.registerModel.firstName.trim() === '' ||
       this.registerModel.lastName.trim() === '' ||
-      this.registerModel.dateOfBirth.trim() === '' ||
+      this.registerModel.dateOfBirth == null ||
       this.registerModel.phone.trim() === '' ||
       this.registerModel.gender == undefined
     ) {
@@ -109,6 +133,9 @@ export class LoginComponent implements OnInit {
     const encryptedConfirmPassword = this.encryptDecryptService.encryptUsingAES256(this.registerModel.confirmPassword);
     this.registerModel.password = encryptedPassword;
     this.registerModel.confirmPassword = encryptedConfirmPassword;
+
+    this.registerModel.dateOfBirth =  this.datePipe.transform(this.registerModel.dateOfBirth, 'yyyy-MM-dd')
+
     this.authService.register(this.registerModel).subscribe({
       next: (r) => {
         this.loginModel.username = this.registerModel.username;
