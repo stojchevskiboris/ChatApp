@@ -1,0 +1,10 @@
+.Net Core:  https://learn.microsoft.com/en-us/aspnet/core/
+Azure SQL:  https://learn.microsoft.com/en-us/azure/azure-sql/
+Firebase:   https://firebase.google.com/docs/
+SignalR     https://learn.microsoft.com/en-us/aspnet/signalr/
+Angular:		https://devdocs.io/angular/
+Material:   https://material.angular.dev/
+Bootstrap:	https://devdocs.io/bootstrap~5/
+HTML:		    https://devdocs.io/html/
+CSS:		    https://devdocs.io/css/
+TypeScript:	https://devdocs.io/typescript/
