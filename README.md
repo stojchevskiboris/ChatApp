@@ -1,11 +1,11 @@
-# ChatsApp - Real-time Chat Application
-<p align="center"> <a href="https://github.com/stojchevskiboris/ChatsApp"><kbd> <img src="chatapp.client/public/favicon.ico" alt="Chat Interface"> </kbd> </a> <h3 align="center">ChatsApp - Real-time Chat Application</h3> <p align="center"> A real-time messaging application built with .NET Core, Angular, and SignalR. 
+# ChatApp - Real-time Chat Application
+<p align="center"> <a href="https://github.com/stojchevskiboris/ChatApp"><kbd> <img src="chatapp.client/public/favicon.ico" alt="Chat Interface"> </kbd> </a> <h3 align="center">ChatsApp - Real-time Chat Application</h3> <p align="center"> A real-time messaging application built with .NET Core, Angular, and SignalR. 
   <br/> <br/> 
   <a href="https://dotnet.microsoft.com/"><strong>Explore the docs »</strong></a> <br/> <br/> 
-  <a href="https://chatsmk.azurewebsites.net/"><strong>Try ChatsApp »</strong></a> </p> </p>
+  <a href="https://chatsmk.azurewebsites.net/"><strong>Try ChatApp »</strong></a> </p> </p>
 
 ## About The Project
-ChatsApp is a real-time chat application that allows users to communicate seamlessly. With the combination of Angular for the frontend, .NET Core 8 for the backend, and SignalR for real-time communication, ChatsApp provides an engaging chat experience.
+ChatApp is a real-time chat application that allows users to communicate seamlessly. With the combination of Angular for the frontend, .NET Core 8 for the backend, and SignalR for real-time communication, ChatApp provides an engaging chat experience.
 
 ## Screenshots 
 ### Screen 1 - Login Page
@@ -43,7 +43,7 @@ This project is built using the following technologies:
 Clone the repo
 
 ```sh
-git clone https://github.com/stojchevskiboris/ChatsApp
+git clone https://github.com/stojchevskiboris/ChatApp
 ```
 
 ## Project Setup
