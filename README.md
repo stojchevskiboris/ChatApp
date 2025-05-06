@@ -7,8 +7,19 @@
 ## About The Project
 ChatsApp is a real-time chat application that allows users to communicate seamlessly. With the combination of Angular for the frontend, .NET Core 8 for the backend, and SignalR for real-time communication, ChatsApp provides an engaging chat experience.
 
-<p align="center">  <br><br><br> <h1> Screenshots</h1> <h2>Screen 1</h2> <kbd> <img src="src/public/scr2.png" alt="Chat Feature"> </kbd> <br><br><br> <h2>Screen 2</h2> <kbd> <img src="src/public/scr3.png" alt="User Interface"> </kbd> </p>
-Built With
+## Screenshots 
+### Screen 1 - Login Page
+<kbd> <img src="docs/images/1.png" alt="Login Page"> </kbd>
+### Screen 2 - Home Page
+<kbd> <img src="docs/images/2.png" alt="Home Page"> </kbd>
+### Screen 3 - Chat
+<kbd> <img src="docs/images/3.png" alt="Chat"> </kbd>
+### Screen 4 - Contacts
+<kbd> <img src="docs/images/4.png" alt="Contacts"> </kbd>
+### Screen 5 - Settings
+<kbd> <img src="docs/images/5.png" alt="Settings"> </kbd>
+
+## Built With
 This project is built using the following technologies:
 
 <a href='https://angular.io/'>Angular 18</a> (Frontend)
