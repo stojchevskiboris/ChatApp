@@ -1,5 +1,5 @@
 # ChatApp - Real-time Chat Application
-<p align="center"> <a href="https://github.com/stojchevskiboris/ChatApp"><kbd> <img src="chatapp.client/public/favicon.ico" alt="Chat Interface"> </kbd> </a> <h3 align="center">ChatsApp - Real-time Chat Application</h3> <p align="center"> A real-time messaging application built with .NET Core, Angular, and SignalR. 
+<p align="center"> <a href="https://github.com/stojchevskiboris/ChatApp"><kbd> <img src="chatapp.client/public/favicon.ico" alt="Chat Interface"> </kbd> </a> <h3 align="center">ChatApp - Real-time Chat Application</h3> <p align="center"> A real-time messaging application built with .NET Core, Angular, and SignalR. 
   <br/> <br/> 
   <a href="https://dotnet.microsoft.com/"><strong>Explore the docs »</strong></a> <br/> <br/> 
   <a href="https://chatsmk.azurewebsites.net/"><strong>Try ChatApp »</strong></a> </p> </p>
