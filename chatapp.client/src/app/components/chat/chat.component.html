@@ -16,8 +16,8 @@
           <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
           <div class="d-inline-block">
             <div class="d-flex flex-column">
-              <h4 class="m-0 lh-1">{{ recipient?.firstName }} {{ recipient?.lastName }}</h4>
-              <div class="d-flex align-items-center" *ngIf="recipient">
+              <h4 class="m-0 lh-1 chat-recipient-name">{{ recipient?.firstName }} {{ recipient?.lastName }}</h4>
+              <div class="d-flex align-items-center last-active" *ngIf="recipient">
                 <ng-container *ngIf="isContactActive(recipient.lastActive); else lastActiveTemplate">
                   <mat-icon class="active-icon">circle</mat-icon>
                   Active now
@@ -50,7 +50,7 @@
     </div>
 
     <div *ngIf="oldestMessageId == -2" class="no-older-messages">
-      <h5>No older messages</h5>
+      <h5 class="no-older-messages-header">No older messages</h5>
     </div>
 
     <ng-container *ngFor="let message of messages; let i = index">
