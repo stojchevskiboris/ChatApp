@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationStart, Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { UserService } from '../../services/user.service';
 import { UserViewModel } from '../../models/user-view-model';
@@ -66,6 +66,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     };
 
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
+
+    router.events.subscribe((event: NavigationStart) => {
+      if (event.navigationTrigger === 'popstate' && this.mobileQuery.matches) {
+        router.navigate(['/home'])
+        if (this.showChatSettings) {
+          this.closeChatSettings();
+        } else if(this.showChat){
+          this.closeChatWindow();
+        }        
+    }})
   }
 
   ngOnInit(): void {
