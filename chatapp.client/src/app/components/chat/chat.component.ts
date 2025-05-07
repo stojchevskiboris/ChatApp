@@ -241,7 +241,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   }
 
   typing() {
-    if (this.newMessage != ""){
+    if (this.newMessage != "") {
       this.signalrService.onTypingEvent(this.recipientId).then(() => { })
     }
   }
@@ -852,8 +852,34 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     });
   }
 
-  closeChatWindow(){
+  closeChatWindow() {
     this.closeChatBtnEmitter.emit();
+  }
+
+  isMoreThanSevenDays(value) {
+    const locale = 'en-US';
+    let date: Date;
+
+    if (typeof value === 'string') {
+      if (value.includes('T')) {
+        date = new Date(value.endsWith('Z') ? value : value + 'Z');
+      } else {
+        date = new Date(value + ' UTC');
+      }
+    } else {
+      date = new Date(value);
+    }
+
+    if (isNaN(date.getTime())) {
+      return null;
+    }
+
+    const now = new Date();
+    const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    const daysAgo7 = new Date(todayStart);
+    daysAgo7.setDate(todayStart.getDate() - 6);
+
+    return date < daysAgo7;
   }
 
   private focusToInput() {

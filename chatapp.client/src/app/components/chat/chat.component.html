@@ -57,15 +57,16 @@
 
       <div *ngIf="i === 0 || (messages[i - 1].createdAt | messageDate) !== (message.createdAt | messageDate)"
         class="date-marker">
-        {{ message.createdAt | messageDate }}
+        {{ message.createdAt | messageDate }} 
+        <span *ngIf="isMoreThanSevenDays(message.createdAt)">
+          ({{ message.createdAt | date:'cccc' }})
+        </span>
       </div>
 
       <!-- Message Block -->
       <div class="message" [class.highlight]="searchedMessageId == message.id"
         [ngClass]="message.senderId == currentUserId ? 'sent' : 'received'">
-        <div class="message-content" #tooltip="matTooltip" matTooltipPosition="above"
-          [matTooltipPositionAtOrigin]="true" (click)="tooltip.toggle()"
-          matTooltip="{{message.createdAt | messageDate}}">
+        <div class="message-content">
 
           <!-- Text message -->
           <span *ngIf="!message.hasMedia; else mediaTemplate" class="wrap-anywhere"
