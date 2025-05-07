@@ -2,7 +2,7 @@
   <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
 </div>
 
-<h2 mat-dialog-title>Add New Contact</h2>
+<h4 mat-dialog-title class="fs-20">Add New Contact</h4>
 <div mat-dialog-content class="pt-2">
   <!-- <mat-form-field appearance="outline" class="w-100">
     <mat-label>Search</mat-label>
@@ -27,23 +27,23 @@
   <div class="add-contacts-list">
     <ng-scrollbar>
       <mat-list *ngIf="!isLoading && searchResults.length > 0">
-        <mat-list-item *ngFor="let user of searchResults">
+        <mat-list-item *ngFor="let user of searchResults" class=" mb-2">
           <div class="d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-              <img matListAvatar class="w-40px h-40px user-profile-picture"
-                [src]="user.profilePicture || 'img/default-avatar.png'" />
+            <div class="d-flex align-items-center contact-name-img">
+              <img matListAvatar class="w-40px h-40px user-profile-picture" [src]="user.profilePicture || 'img/default-avatar.png'" />
               <div class="ms-2 d-flex flex-column">
-                <div>
-                  <span>{{ user.firstName }} {{ user.lastName }}</span> <span class="text-secondary"> ({{ user.username }})</span>
+                <div class="d-flex flex-column">
+                  <span class="fs-12">{{ user.firstName }} {{ user.lastName }}</span> 
+                  <span class="fs-12 text-secondary"> ({{ user.username }})</span>
                 </div>
                 <span *ngIf="user.hasRequestedBack" class="has-requested-back-text">Has requested to connect with you</span>
               </div>
             </div>
             <div *ngIf="!user.hasRequestedBack">
-              <button mat-flat-button (click)="newRequest(user)" *ngIf="!user.isAdded">
+              <button mat-flat-button class="fs-12" (click)="newRequest(user)" *ngIf="!user.isAdded">
                 Add
               </button>
-              <button mat-stroked-button (click)="cancelRequest(user)" *ngIf="user.isAdded">
+              <button mat-stroked-button class="fs-12" (click)="cancelRequest(user)" *ngIf="user.isAdded">
                 Requested
               </button>
             </div>
@@ -53,15 +53,15 @@
               </button>
             </div>
             <mat-menu #menu="matMenu">
-              <button mat-menu-item (click)="acceptRequest(user.requestId)">
-                  <mat-icon>check</mat-icon>
-                  <span>Accept</span>
+              <button mat-menu-item class="fs-12" (click)="acceptRequest(user.requestId)">
+                <mat-icon>check</mat-icon>
+                <span>Accept</span>
               </button>
-              <button mat-menu-item (click)="rejectRequest(user.requestId)">
+              <button mat-menu-item class="fs-12" (click)="rejectRequest(user.requestId)">
                 <mat-icon>clear</mat-icon>
                 <span>Reject</span>
-            </button>
-          </mat-menu>
+              </button>
+            </mat-menu>
           </div>
         </mat-list-item>
       </mat-list>

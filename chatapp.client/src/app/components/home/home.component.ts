@@ -127,7 +127,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       var connection = this.signalrService.getHubConnection();
       connection.on('Join', (userId: string, user: UserViewModel) => {
         if (user! && user.id != this.activeUserId) {
-          this.toastr.info(`${user.username} is active`, 'User Online', {
+          this.toastr.info(`${user.firstName} ${user.lastName} (${user.username}) is active`, 'User Online', {
             timeOut: 2000,
             positionClass: 'toast-top-right',
             progressBar: true,

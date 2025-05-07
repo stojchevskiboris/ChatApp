@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../environments/environment';
-import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr'
-import { MessageViewModel } from '../models/message-view-model';
-import { AuthService } from './auth.service';
 import { Router } from '@angular/router';
+import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr'
+import { AuthService } from './auth.service';
+import { MessageViewModel } from '../models/message-view-model';
+import { environment } from '../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
