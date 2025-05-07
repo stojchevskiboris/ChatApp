@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, ElementRef, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
@@ -8,6 +8,7 @@ import { ToastrService } from 'ngx-toastr';
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { DatePipe } from '@angular/common';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-login',
@@ -17,6 +18,8 @@ import { DatePipe } from '@angular/common';
 export class LoginComponent implements OnInit {
   loginModel = new UserLoginModel();
   registerModel = new UserRegisterModel();
+  @ViewChild('signUpForm') signUpForm!: NgForm;
+  @ViewChild('signInForm') signInForm!: NgForm;
 
   mobileQuery: MediaQueryList;
   private _mobileQueryListener: () => void;
@@ -60,7 +63,6 @@ export class LoginComponent implements OnInit {
     this.mobileQuery.addEventListener('change', this._mobileQueryListener);
   }
 
-
   ngOnInit() {
     this.container = this.el.nativeElement.querySelector(".container-login");
     this.authService.sessionLogin().subscribe({
@@ -82,14 +84,14 @@ export class LoginComponent implements OnInit {
   register() {
     this.isModelInvalid = false;
     if (
-      this.registerModel.username.trim() === '' ||
-      this.registerModel.password.trim() === '' ||
-      this.registerModel.confirmPassword.trim() === '' ||
-      this.registerModel.firstName.trim() === '' ||
-      this.registerModel.lastName.trim() === '' ||
-      this.registerModel.dateOfBirth == null ||
-      this.registerModel.phone.trim() === '' ||
-      this.registerModel.gender == undefined
+      this.registerModel?.username?.trim() === '' ||
+      this.registerModel?.password?.trim() === '' ||
+      this.registerModel?.confirmPassword?.trim() === '' ||
+      this.registerModel?.firstName?.trim() === '' ||
+      this.registerModel?.lastName?.trim() === '' ||
+      this.registerModel?.dateOfBirth == null ||
+      this.registerModel?.phone?.trim() === '' ||
+      this.registerModel?.gender == undefined
     ) {
       this.errorMessage = 'All fields are required';
       return;
@@ -140,6 +142,7 @@ export class LoginComponent implements OnInit {
       next: (r) => {
         this.loginModel.username = this.registerModel.username;
         this.loginModel.password = rawPassword;
+        this.toastr.info('Successfully registered');
         this.login();
       },
       error: (err: HttpErrorResponse) => {
@@ -182,6 +185,7 @@ export class LoginComponent implements OnInit {
 
 
   navToRegister() { // nav to sign up
+    this.signUpForm?.resetForm(); // Reset login form
     this.errorMessage = null;
     this.isModelInvalid = false;
     this.container.classList.add('right-panel-active');
@@ -191,6 +195,7 @@ export class LoginComponent implements OnInit {
   }
 
   navToLogin() { // nav to sign in
+    this.signInForm?.resetForm(); // Reset login form
     this.errorMessage = null;
     this.isModelInvalid = false;
     this.container.classList.remove('right-panel-active');

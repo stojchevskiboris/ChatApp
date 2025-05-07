@@ -4,7 +4,7 @@
 <div class="container-login fadeInAnimation" id="container">
     <!-- Form Sign Up -->
     <div class="form-container sign-up-container" #signUpContainer>
-        <form>
+        <form #signUpForm="ngForm">
             <h1>Create Account</h1>
 
             <mat-form-field appearance="fill" class="w-100"> 
@@ -48,7 +48,7 @@
             <div class="my-2">
                 <mat-radio-group [(ngModel)]="registerModel.gender" name="gender" required>
                     <mat-radio-button [value]="0">Male</mat-radio-button>
-                    <mat-radio-button [value]="1" class="ml-2">Female</mat-radio-button>
+                    <mat-radio-button [value]="1" class="ms-5">Female</mat-radio-button>
                 </mat-radio-group>
             </div>
 
@@ -67,7 +67,7 @@
 
     <div class="form-container sign-in-container" #signInContainer>
         <!-- Forms Sign In-->
-        <form *ngIf="!isSignUpPanelActive">
+        <form *ngIf="!isSignUpPanelActive" #signInForm="ngForm">
             <h1>Sign in</h1>
 
             <mat-form-field appearance="fill" class="w-100">
