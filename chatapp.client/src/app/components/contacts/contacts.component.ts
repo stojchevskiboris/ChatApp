@@ -46,7 +46,10 @@ export class ContactsComponent implements OnInit {
   ngOnInit(): void {
     this.loadData();
     this.connectSignalR();
+  }
 
+  ngOnDestroy() {
+    this.disconnectSignalR();
   }
 
   loadData() {
@@ -128,6 +131,10 @@ export class ContactsComponent implements OnInit {
   connectSignalR() {
     this.signalrService.connect().then(() => {
     })
+  }
+  
+  disconnectSignalR() {
+    this.signalrService.disconnect();
   }
 
   addContacts() {

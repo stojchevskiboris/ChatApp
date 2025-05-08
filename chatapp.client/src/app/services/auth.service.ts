@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { DataService } from './data.service';
@@ -6,6 +6,7 @@ import { UserViewModel } from '../models/user-view-model';
 import { UserRegisterModel } from '../models/user-register-model';
 import { UserLoginModel } from '../models/user-login-model';
 import { ToastrService } from 'ngx-toastr';
+import { SignalRService } from './signalr.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +22,7 @@ export class AuthService {
 
   constructor(
     private dataService: DataService,
+    private injector: Injector,
     private toastr: ToastrService
   ) { }
 
@@ -95,6 +97,8 @@ export class AuthService {
   }
 
   logout(showInfo: boolean = true) {
+    this.disconnectSignalR();
+
     localStorage.clear();
 
     if (showInfo){
@@ -109,5 +113,10 @@ export class AuthService {
   getUserId(): string {
     this.setDetailedUser().subscribe();
     return localStorage.getItem('userId');
+  }
+
+  private disconnectSignalR() {
+    const signalrService = this.injector.get(SignalRService);
+    signalrService.disconnect();
   }
 }

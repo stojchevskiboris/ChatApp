@@ -45,6 +45,8 @@ export class SignalRService {
   async disconnect(): Promise<void> {
     try {
       await this.hubConnection.stop();
+      localStorage.clear();
+      window.location.reload();
     } catch (err) {
     }
   }

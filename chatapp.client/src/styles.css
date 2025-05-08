@@ -471,7 +471,7 @@ body {
 
 @media screen and (max-width: 991px) {
   .message {
-    font-size: 12px !important;
+    font-size: 14px !important;
   }
 
   .timestamp {
