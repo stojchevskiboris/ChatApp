@@ -72,19 +72,11 @@ export class AccountOverviewComponent {
     this.connectSignalR();
   }
 
-  ngOnDestroy() {
-    this.disconnectSignalR();
-  }
-  
   connectSignalR() {
       var connection = this.signalrService.getHubConnection();
       connection.on('OnNewRequest', () => {
         this.getRequestsCount();
       });
-  }
-
-  disconnectSignalR() {
-    this.signalrService.disconnect();
   }
 
   getRequestsCount() {

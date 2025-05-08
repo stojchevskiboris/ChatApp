@@ -42,11 +42,14 @@ export class SignalRService {
     }
   }
 
-  async disconnect(): Promise<void> {
+  async disconnect(clearCache: boolean = true): Promise<void> {
     try {
       await this.hubConnection.stop();
+      
+      if (clearCache){
       localStorage.clear();
       window.location.reload();
+      }
     } catch (err) {
     }
   }

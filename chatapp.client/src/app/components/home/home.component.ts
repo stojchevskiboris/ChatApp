@@ -163,7 +163,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   disconnectSignalR() {
-    this.signalrService.disconnect();
+    this.signalrService.disconnect(false);
   }
 
   getUserDetails() {

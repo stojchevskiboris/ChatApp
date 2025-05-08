@@ -48,10 +48,6 @@ export class ContactsComponent implements OnInit {
     this.connectSignalR();
   }
 
-  ngOnDestroy() {
-    this.disconnectSignalR();
-  }
-
   loadData() {
     this.getContacts();
     this.getPendingRequests();
@@ -131,10 +127,6 @@ export class ContactsComponent implements OnInit {
   connectSignalR() {
     this.signalrService.connect().then(() => {
     })
-  }
-  
-  disconnectSignalR() {
-    this.signalrService.disconnect();
   }
 
   addContacts() {
