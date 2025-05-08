@@ -26,10 +26,12 @@ export class HomeComponent implements OnInit, OnDestroy {
   currentUser: UserViewModel = new UserViewModel();
   isChatSettingsEnabled: boolean = true;
   startChatEvent: boolean = false;
-  lastActiveSubscription: Subscription;
   activeUserId: number = 0;
   recievedChatMessage: RecentChatViewModel = null;
   recievedMediaMessage: MediaViewModel = null;
+
+  lastActiveSubscription: Subscription;
+  signalRHealthCheckSub: Subscription;
 
   showLeftPane: boolean = true;
   showChat: boolean = true;
@@ -54,7 +56,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       this.showChatSettings = false;
       this.isChatSettingsEnabled = false;
     }
-    
+
     let previousState = this.mobileQuery.matches;
     this._mobileQueryListener = () => {
       this.cdr.detectChanges();
@@ -72,10 +74,11 @@ export class HomeComponent implements OnInit, OnDestroy {
         router.navigate(['/home'])
         if (this.showChatSettings) {
           this.closeChatSettings();
-        } else if(this.showChat){
+        } else if (this.showChat) {
           this.closeChatWindow();
-        }        
-    }})
+        }
+      }
+    })
   }
 
   ngOnInit(): void {
@@ -88,6 +91,10 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.updateLastActive();
     this.lastActiveSubscription = interval(60000).subscribe(x => {
       this.updateLastActive();
+    });
+
+    this.signalRHealthCheckSub = interval(5000).subscribe(x => {
+      this.checkAndReconnectHub()
     });
   }
 
@@ -112,11 +119,25 @@ export class HomeComponent implements OnInit, OnDestroy {
     }
   }
 
+  checkAndReconnectHub(): void {
+    const connection = this.signalrService.getHubConnection();
+    if (!connection || connection.state !== 'Connected') {
+      this.signalrService.connect().then(() => {
+        console.info('SignalR reconnected (HomeComponent)');
+      }).catch(err => console.warn('SignalR reconnection failed:', err));
+    }
+  }
+
   ngOnDestroy() {
     this.disconnectSignalR();
     if (this.lastActiveSubscription) {
       this.lastActiveSubscription.unsubscribe();
     }
+    
+    if (this.signalRHealthCheckSub) { 
+      this.signalRHealthCheckSub.unsubscribe(); 
+    }
+
     if (this.mobileQuery) {
       this.mobileQuery.removeEventListener('change', this._mobileQueryListener);
     }
