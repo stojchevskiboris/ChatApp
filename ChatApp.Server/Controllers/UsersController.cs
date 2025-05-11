@@ -22,6 +22,24 @@ namespace ChatApp.Server.Controllers
             _firebaseStorageService = firebaseStorageService;
         }
 
+        [HttpGet("GetC")]
+        public int GetC()
+        {
+            return 210;
+        }
+
+        [HttpGet("GetS")]
+        public int GetS()
+        {
+            return _userService.GetS();
+        }
+
+        [HttpGet("GetD")]
+        public int GetD()
+        {
+            return _userService.GetD();
+        }
+
         [HttpGet("GetAllUsers")]
         [Authorize]
         public List<UserViewModel> GetAllUsers()

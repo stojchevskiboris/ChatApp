@@ -31,6 +31,16 @@ namespace ChatApp.Server.Services.Implementations
             _appSettings = appSettings.Value;
         }
 
+        public int GetS()
+        {
+            return 410;
+        }
+
+        public int GetD()
+        {
+            return _userRepository.GetAll().Count(); 
+        }            
+
         public List<UserViewModel> GetAllUsers()
         {
             return _userRepository.GetAll()

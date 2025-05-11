@@ -5,6 +5,8 @@ namespace ChatApp.Server.Services.Interfaces
 {
     public interface IUserService
     {
+        int GetS();
+        int GetD();
         #region UserServices
         List<UserViewModel> GetAllUsers();
         UserViewModel GetUserById(int id);
