@@ -365,3 +365,4 @@ ChatApp.Server/wwwroot/
 /ChatApp.Server/appsettings.json
 /ChatApp.Server/Configs/Firebase/*
 ChatApp.Server/.gitignore
+ChatApp.Server/Configs/Migration Scripts/
