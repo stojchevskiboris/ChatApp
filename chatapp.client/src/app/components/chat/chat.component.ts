@@ -383,8 +383,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.showGifSearch = false;
   }
 
-  sendMessage(): void {
-    event.preventDefault();
+  sendMessage(event:any = null): void {
+    if (event){
+      event.preventDefault();
+    }
     // Text Message
     if (this.newMessage.trim()) {
       const textMessage: MessageViewModel = {
@@ -492,10 +494,6 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     }
 
     this.scrollToBottom();
-
-    setTimeout(() => {
-      this.focusToInput();
-    }, 100);
   }
 
   setRecipient(withLoading: boolean = true): Promise<void> {

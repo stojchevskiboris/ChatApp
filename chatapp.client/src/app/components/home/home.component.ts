@@ -101,11 +101,15 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getContactIds() {
-    this.userService.getContactIds().subscribe({
-      next: (model: number[]) => {
-        this.contactIds = model;
-      }
-    })
+    this.userService.getContactIds().subscribe(
+        (response: any) => {
+          if (response) {
+            this.contactIds = response;
+          }
+        },
+        () => { },
+        () => { }
+      );
   }
 
   closeChatWindow() {
