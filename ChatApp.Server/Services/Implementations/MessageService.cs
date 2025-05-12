@@ -1,6 +1,7 @@
 ﻿using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Data.Interfaces;
+using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
@@ -117,12 +118,12 @@ namespace ChatApp.Server.Services.Implementations
                 recipient = new Recipient()
                 {
                     RecipientUser = userRecipient,
-                    RecipientTypeId = 1,
+                    RecipientTypeId = (int)RecipientTypeEnum.User,
                     CreatedAt = DateTime.UtcNow,
                     ModifiedAt = DateTime.UtcNow,
                 };
 
-                _recipientRepository.Create(recipient);
+                return _recipientRepository.Create(recipient);
             }
 
             return recipient;
