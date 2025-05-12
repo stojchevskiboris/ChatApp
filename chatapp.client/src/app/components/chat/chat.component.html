@@ -128,7 +128,7 @@
     <div class="w-100 d-flex align-items-end">
       <textarea *ngIf="!isMediaSelected" class="w-100 messageTextArea" placeholder="Message..." matInput #messageInput
         (focus)="hideGifSearch()" [(ngModel)]="newMessage" cdkTextareaAutosize #autosize="cdkTextareaAutosize"
-        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown.enter)="sendMessage()" (keyup)="typing()">
+        cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" (keydown)="handleKeydown($event)" (keyup)="typing()">
       </textarea>
 
       <div id="selectedMediaInput" class="w-100" *ngIf="isMediaSelected">

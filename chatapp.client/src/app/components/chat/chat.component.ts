@@ -382,6 +382,18 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   hideGifSearch() {
     this.showGifSearch = false;
   }
+  
+  handleKeydown(event: KeyboardEvent): void {
+    var isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+    if (event.key === 'Enter') {
+      if (event.shiftKey || isMobile) {
+        return;
+      }
+
+      this.sendMessage();
+    }
+  }
 
   sendMessage(event:any = null): void {
     if (event){
