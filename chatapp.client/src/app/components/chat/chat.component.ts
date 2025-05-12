@@ -390,8 +390,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       if (event.shiftKey || isMobile) {
         return;
       }
-
+      event.preventDefault();
       this.sendMessage();
+      this.newMessage = '';
     }
   }
 
