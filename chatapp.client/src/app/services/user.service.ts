@@ -13,6 +13,7 @@ export class UserService {
   private getUserEndpoint = '/Users/GetUserById';
   private getCurrentUserDetailsEndpoint = '/Users/GetCurrentUserDetails';
   private getContactsEndpoint = '/Users/GetContacts';
+  private getContactIdsEndpoint = '/Users/GetContactIds';
   private removeContactEndpoint = '/Users/RemoveContact';
   private updateUserEndpoint = '/Users/UpdateUser';
   private changePasswordEndpoint = '/Users/ChangePassword';
@@ -46,6 +47,16 @@ export class UserService {
   getContacts(): Observable<UserViewModel[]> {
     return this.dataService
       .get<UserViewModel[]>(this.getContactsEndpoint)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getContactIds(): Observable<number[]> {
+    return this.dataService
+      .get<number[]>(this.getContactIdsEndpoint)
       .pipe(
         tap((response) => {
           return response;

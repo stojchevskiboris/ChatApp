@@ -29,6 +29,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   activeUserId: number = 0;
   recievedChatMessage: RecentChatViewModel = null;
   recievedMediaMessage: MediaViewModel = null;
+  contactIds: number[] = [];
 
   lastActiveSubscription: Subscription;
   signalRHealthCheckSub: Subscription;
@@ -85,6 +86,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.userId = this.authService.getUserId();
     if (this.userId) {
       this.getUserDetails();
+      this.getContactIds();
     }
     this.connectSignalR();
 
@@ -96,6 +98,14 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.signalRHealthCheckSub = interval(5000).subscribe(x => {
       this.checkAndReconnectHub()
     });
+  }
+
+  getContactIds() {
+    this.userService.getContactIds().subscribe({
+      next: (model: number[]) => {
+        this.contactIds = model;
+      }
+    })
   }
 
   closeChatWindow() {
@@ -148,14 +158,16 @@ export class HomeComponent implements OnInit, OnDestroy {
       var connection = this.signalrService.getHubConnection();
       connection.on('Join', (userId: string, user: UserViewModel) => {
         if (user! && user.id != this.activeUserId) {
-          this.toastr.info(`${user.firstName} ${user.lastName} (${user.username}) is active`, 'User Online', {
-            timeOut: 2000,
-            positionClass: 'toast-top-right',
-            progressBar: true,
-            closeButton: false,
-          });
-          this.activeUserId = user.id;
-        }
+          if (this.contactIds.includes(user.id)) {
+            this.toastr.info(`${user.firstName} ${user.lastName} (${user.username}) is active`, 'User Online', {
+              timeOut: 2000,
+              positionClass: 'toast-top-right',
+              progressBar: true,
+              closeButton: false,
+            });
+            this.activeUserId = user.id;
+          }
+         }
       })
 
       connection.on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {

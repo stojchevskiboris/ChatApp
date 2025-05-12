@@ -105,6 +105,20 @@ namespace ChatApp.Server.Services.Implementations
             return contacts.OrderByDescending(x => x.LastActive).ToList();
         }
 
+        public List<int> GetContactIds()
+        {
+            var contactIds = new List<int>();
+
+            var currentUserId = Context.GetCurrentUserId();
+            var currentUser = _userRepository.Get(currentUserId);
+            if (currentUser == null)
+            {
+                throw new CustomException("User not existing");
+            }
+
+            return _userRepository.GetContactsByUserId(currentUserId);            
+        }
+
         public UserViewModel GetUserByUsername(string username)
         {
             var user = _userRepository.GetByUsername(username.Trim());

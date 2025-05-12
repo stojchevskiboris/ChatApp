@@ -75,6 +75,13 @@ namespace ChatApp.Server.Controllers
             return _userService.GetContacts();
         }
 
+        [HttpGet("GetContactIds")]
+        [Authorize]
+        public List<int> GetContactIds()
+        {
+            return _userService.GetContactIds();
+        }
+
         [HttpPost("GetUserByUsername")]
         [Authorize]
         public UserViewModel GetUserByUsername(string username)
