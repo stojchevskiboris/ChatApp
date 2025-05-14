@@ -43,9 +43,14 @@ export class LastActivePipe implements PipeTransform {
       return `${diffInHours}h ago`;
     }
 
-    // If within 1 to 3 days
-    if (diffInDays >= 1 && diffInDays <= 3) {
+    // If within 1 to 6 days
+    if (diffInDays >= 1 && diffInDays <= 6) {
       return diffInDays === 1 ? '1 day ago' : `${diffInDays} days ago`;
+    }
+
+    // If within 7 to 14 days
+    if (diffInDays >= 7 && diffInDays <= 14) {
+      return 'about a week ago';
     }
 
     // For dates older than 3 days, you can return null or a default value
