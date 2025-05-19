@@ -8,7 +8,7 @@ import { SignalRService } from '../../../services/signalr.service';
 @Component({
   selector: 'app-add-contact-dialog',
   templateUrl: './add-contact-dialog.component.html',
-  styleUrls: ['./add-contact-dialog.component.scss'],
+  styleUrls: ['./add-contact-dialog.component.css'],
 })
 export class AddContactDialogComponent implements OnInit {
 

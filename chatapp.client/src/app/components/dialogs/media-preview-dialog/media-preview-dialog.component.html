@@ -7,7 +7,7 @@
             </button>
         </div>
         <div class="media-preview-content">
-            <div *ngIf="data.media; else noMedia">
+            <div *ngIf="data.media; else noMedia" class="justify-items-center">
 
                 <img *ngIf="data.media.fileType.startsWith('image/')" [src]="data.media.url"
                     alt="{{ data.media.fileType }}" class="preview-image" />

@@ -143,15 +143,15 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['recipientId'] && !changes['recipientId'].firstChange) {
       this.noMessages = false;
+      this.oldestMessageId = 0;
+      this.searchedMessageId = -1;
       this.emptyMessages();
       this.setRecipient();
       this.getRecentMessages();
       this.newMessage = '';
       this.focusToInput();
-      this.searchedMessageId = -1;
       this.hasScrolledToBottom = false;
       this.noOlderMessages = false;
-      this.oldestMessageId = 0;
       this.loadingOlderMessages = false;
       this.canLoadMessagesSemaphore = true;
       this.fetchingOlderMessages = false;
@@ -184,18 +184,16 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             .map(msg => this.mapToMediaViewModel(msg));
           this.hasFetchedMessages = true;
           this.cdr.detectChanges();
-          this.scrollToBottom();
           resolve();
         },
         error: (error: HttpErrorResponse) => {
           this.hasFetchedMessages = true;
           // console.error('Error fetching messages:', error);
-          this.scrollToBottom();
           reject(error);
         },
         complete: () => {
           this.hasFetchedMessages = true;
-          this.scrollToBottom();
+          this.scrollToBottom(true);
           resolve();
         }
       });
@@ -539,6 +537,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     if (forceScroll || !this.fetchingOlderMessages) {
       this.showScrollToBottom = false;
       this.scrollable.scrollTo({ bottom: -500, duration: 300 })
+      this.cdr.detectChanges();
     }
   }
 
@@ -826,6 +825,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.loadingOlderMessages = true;
     this.fetchingOlderMessages = true;
     this.scrollable.scrollToElement('#oldestMessageTag', { top: 10, duration: 0 });
+    this.cdr.detectChanges();
     // this.scrollToTop();
     if (this.oldestMessageId == -2) {
       this.loadingOlderMessages = false;

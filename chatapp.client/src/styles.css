@@ -441,6 +441,10 @@ body {
   margin-right: 5px;
 }
 
+.justify-items-center{
+  justify-items: center !important;
+}
+
 .fs-8 {
   font-size: 8px !important;
 }
