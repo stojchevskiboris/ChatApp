@@ -2,9 +2,10 @@ import { Component } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
-  selector: 'app-remove-media-dialog',
-  templateUrl: './remove-media-dialog.component.html',
-  styleUrl: './remove-media-dialog.component.css'
+    selector: 'app-remove-media-dialog',
+    templateUrl: './remove-media-dialog.component.html',
+    styleUrl: './remove-media-dialog.component.css',
+    standalone: false
 })
 export class RemoveMediaDialogComponent {
   constructor(

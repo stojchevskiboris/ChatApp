@@ -11,9 +11,10 @@ import { ToastrService } from 'ngx-toastr';
 import { SignalRService } from '../../services/signalr.service';
 
 @Component({
-  selector: 'app-account-overview',
-  templateUrl: './account-overview.component.html',
-  styleUrl: './account-overview.component.css'
+    selector: 'app-account-overview',
+    templateUrl: './account-overview.component.html',
+    styleUrl: './account-overview.component.css',
+    standalone: false
 })
 export class AccountOverviewComponent {
   constructor(

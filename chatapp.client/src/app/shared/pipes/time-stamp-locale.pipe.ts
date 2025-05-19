@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'timeStampLocale'
+    name: 'timeStampLocale',
+    standalone: false
 })
 export class TimeStampLocalePipe implements PipeTransform {
   transform(value: Date | string | number): string | null {

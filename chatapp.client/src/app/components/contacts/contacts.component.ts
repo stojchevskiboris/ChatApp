@@ -12,9 +12,10 @@ import { SignalRService } from '../../services/signalr.service';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
-  selector: 'app-contacts',
-  templateUrl: './contacts.component.html',
-  styleUrls: ['./contacts.component.scss'],
+    selector: 'app-contacts',
+    templateUrl: './contacts.component.html',
+    styleUrls: ['./contacts.component.css'],
+    standalone: false
 })
 export class ContactsComponent implements OnInit {
 

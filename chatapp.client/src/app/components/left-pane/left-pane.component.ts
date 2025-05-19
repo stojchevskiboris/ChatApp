@@ -10,9 +10,10 @@ import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 import { MessageService } from '../../services/message.service';
 
 @Component({
-  selector: 'app-left-pane',
-  templateUrl: './left-pane.component.html',
-  styleUrl: './left-pane.component.css'
+    selector: 'app-left-pane',
+    templateUrl: './left-pane.component.html',
+    styleUrl: './left-pane.component.css',
+    standalone: false
 })
 export class LeftPaneComponent implements OnInit, OnDestroy {
 

@@ -6,9 +6,10 @@ import { ToastrService } from 'ngx-toastr';
 import { SignalRService } from '../../../services/signalr.service';
 
 @Component({
-  selector: 'app-add-contact-dialog',
-  templateUrl: './add-contact-dialog.component.html',
-  styleUrls: ['./add-contact-dialog.component.scss'],
+    selector: 'app-add-contact-dialog',
+    templateUrl: './add-contact-dialog.component.html',
+    styleUrls: ['./add-contact-dialog.component.css'],
+    standalone: false
 })
 export class AddContactDialogComponent implements OnInit {
 
