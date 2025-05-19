@@ -19,8 +19,9 @@ namespace ChatApp.Server.Data.Implementations
             var messages = _context.Messages
                 .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&
                             x.Sender != null &&
-                            (x.Recipient.RecipientUser.Id == userId) ||
-                            (x.Sender.Id == userId))
+                                ((x.Sender.Id == userId) || 
+                                (x.Recipient.RecipientUser.Id == userId)) &&
+                            x.IsDeleted == false)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 
@@ -32,8 +33,9 @@ namespace ChatApp.Server.Data.Implementations
             var messages = _context.Messages
                 .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&
                             x.Sender != null &&
-                            (x.Recipient.RecipientUser.Id == user1Id && x.Sender.Id == user2Id) ||
-                            (x.Recipient.RecipientUser.Id == user2Id && x.Sender.Id == user1Id))
+                                ((x.Recipient.RecipientUser.Id == user1Id && x.Sender.Id == user2Id) ||
+                                (x.Recipient.RecipientUser.Id == user2Id && x.Sender.Id == user1Id)) &&
+                            x.IsDeleted == false)
                 .OrderByDescending(x => x.CreatedAt)
                 .ToList();
 

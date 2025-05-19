@@ -73,6 +73,7 @@ namespace ChatApp.Server.Services.Implementations
                     Content = model.Content,
                     HasMedia = model.HasMedia,
                     IsSeen = false,
+                    IsDeleted = false,
                     ParentMessage = null,
                     CreatedAt = DateTime.UtcNow,
                     ModifiedAt = DateTime.UtcNow,
@@ -212,6 +213,26 @@ namespace ChatApp.Server.Services.Implementations
             if (message != null)
             {
                 message.IsSeen = true;
+                _messageRepository.Update(message);
+                return true;
+            }
+
+            return false;
+        }
+
+        public bool DeleteMessage(int messageId)
+        {
+            var currentUserId = Context.GetCurrentUserId();
+
+            var message = _messageRepository.Get(messageId);
+            if (message != null)
+            {
+                if (message.Sender?.Id != currentUserId)
+                {
+                    return false;
+                }
+
+                message.IsDeleted = true;
                 _messageRepository.Update(message);
                 return true;
             }

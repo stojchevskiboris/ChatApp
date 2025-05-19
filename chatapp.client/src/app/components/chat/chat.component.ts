@@ -18,6 +18,7 @@ import { RecentChatViewModel } from '../../models/recent-chat-view-model';
 import { ScrollDirection } from '../../models/enums/scroll-direction-enum';
 import { MessagesChatModel } from '../../models/messages-chat-model';
 import { MediaMatcher } from '@angular/cdk/layout';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-chat',
@@ -80,7 +81,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     private signalrService: SignalRService,
     private cdr: ChangeDetectorRef,
     private dialog: MatDialog,
-    private media: MediaMatcher
+    private media: MediaMatcher,
+    private toastr: ToastrService
   ) {
     this.currentUserId = +this.authService.getUserId();
     this.mobileQuery = media.matchMedia('(max-width: 991px)');
@@ -505,6 +507,24 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     }
 
     this.scrollToBottom();
+  }
+
+  deleteMessage(message: MessageViewModel) {
+    if (message.id > 0) {
+      if (message.senderId != this.currentUserId) {
+        this.toastr.warning('You can`t delete messages that are not sent by you');
+        return;
+      }
+
+      this.messageService.deleteMessage(message.id).subscribe({
+        next: (response: boolean) => {
+          this.toastr.success('Deleted message successfully');
+        },
+        error: (err: HttpErrorResponse) => { },
+        complete: () => { },
+      });
+
+    }
   }
 
   setRecipient(withLoading: boolean = true): Promise<void> {

@@ -118,6 +118,15 @@ namespace ChatApp.Server.Controllers
             return result;
         }
 
+        [HttpPost("DeleteMessage")]
+        [Authorize]
+        public bool DeleteMessage(HttpRequestIdModel model)
+        {
+            var result = _messageService.DeleteMessage(model.Id);
+
+            return result;
+        }
+
         [HttpPost("GetRecentMessages")]
         [Authorize]
         public MessagesChatModel GetRecentMessages(HttpRequestIdModel model)

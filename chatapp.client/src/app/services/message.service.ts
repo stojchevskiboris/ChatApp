@@ -23,6 +23,7 @@ export class MessageService {
   private uploadMediaEndpoint = '/Messages/UploadMedia';
   private uploadGifEndpoint = '/Messages/UploadGif';
   private getSharedMediaEndpoint = '/Messages/GetSharedMedia';
+  private deleteMessageEndpoint = '/Messages/DeleteMessage';
 
   searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
     return this.dataService
@@ -77,6 +78,16 @@ export class MessageService {
   setMessageSeen(messageId: number): Observable<boolean> {
     return this.dataService
       .post<boolean>(this.setMessageSeenEndpoint, { Id: messageId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  deleteMessage(messageId: number): Observable<boolean> {
+    return this.dataService
+      .post<boolean>(this.deleteMessageEndpoint, { Id: messageId })
       .pipe(
         tap((response) => {
           return response;

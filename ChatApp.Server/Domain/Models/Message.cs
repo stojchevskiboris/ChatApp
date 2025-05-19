@@ -26,6 +26,9 @@ namespace ChatApp.Server.Domain.Models
         [Required]
         public bool IsSeen { get; set; }
 
+        [Required]
+        public bool IsDeleted { get; set; }
+
         //[ForeignKey("ParentMessageId")]
         public Message? ParentMessage { get; set; }
 
