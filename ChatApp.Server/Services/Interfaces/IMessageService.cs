@@ -6,7 +6,7 @@ namespace ChatApp.Server.Services.Interfaces
     public interface IMessageService
     {
         List<MessageViewModel> SearchMessages(MessageSearchModel model);
-        bool SendMessage(MessageViewModel model);
+        int SendMessage(MessageViewModel model);
         List<RecentChatViewModel> GetRecentChats(string searchQuery);
         bool SetMessageSeen(int messageId);
         bool DeleteMessage(int messageId);

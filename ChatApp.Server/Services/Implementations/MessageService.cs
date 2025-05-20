@@ -52,7 +52,7 @@ namespace ChatApp.Server.Services.Implementations
             return result;
         }
 
-        public bool SendMessage(MessageViewModel model)
+        public int SendMessage(MessageViewModel model)
         {
             try
             {
@@ -103,11 +103,11 @@ namespace ChatApp.Server.Services.Implementations
                     _messageRepository.Update(message);
                 }
 
-                return true;
+                return message.Id;
             }
             catch
             {
-                return false;
+                return 0;
             }
         }
 

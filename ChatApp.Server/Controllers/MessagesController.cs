@@ -34,7 +34,7 @@ namespace ChatApp.Server.Controllers
 
         [HttpPost("SendMessage")]
         [Authorize]
-        public bool SendMessage(MessageViewModel model)
+        public int SendMessage(MessageViewModel model)
         {
             var result = _messageService.SendMessage(model);
 

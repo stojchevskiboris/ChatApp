@@ -349,7 +349,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.sharedMedia.push(item);
           this.scrollToBottom(true);
           this.messageService.sendMessage(mediaMessage).subscribe({
-            next: (response: boolean) => {
+            next: (response: number) => {
+              mediaMessage.id = response;
               this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
                 // console.log('Message sent successfully via SignalR');
               })
@@ -421,8 +422,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       this.scrollToBottom(true);
       this.newMessage = '';
       this.messageService.sendMessage(textMessage).subscribe({
-        next: (response: boolean) => {
-          this.signalrService.sendMessage(this.recipientId, textMessage).then(() => {
+        next: (response: number) => {
+              textMessage.id = response;
+              this.signalrService.sendMessage(this.recipientId, textMessage).then(() => {
             // console.log('Message sent successfully via SignalR');
           })
         },
@@ -475,7 +477,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
               this.scrollToBottom(true);
               this.messageService.sendMessage(mediaMessage).subscribe({
-                next: (response: boolean) => {
+                next: (response: number) => {
+                  mediaMessage.id = response;
                   this.signalrService.sendMessage(this.recipientId, mediaMessage).then(() => {
                     // console.log('Message sent successfully via SignalR');
                   })
@@ -509,7 +512,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
     this.scrollToBottom();
   }
 
-  deleteMessage(message: MessageViewModel) {
+  deleteMessage(message: MessageViewModel, i: number) {
     if (message.id > 0) {
       if (message.senderId != this.currentUserId) {
         this.toastr.warning('You can`t delete messages that are not sent by you');
@@ -518,7 +521,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
       this.messageService.deleteMessage(message.id).subscribe({
         next: (response: boolean) => {
-          this.toastr.success('Deleted message successfully');
+          this.messages.splice(i, 1);
+          this.toastr.info('Message deleted successfully');
         },
         error: (err: HttpErrorResponse) => { },
         complete: () => { },

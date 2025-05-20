@@ -35,9 +35,9 @@ export class MessageService {
       );
   }
 
-  sendMessage(model: MessageViewModel): Observable<boolean> {
+  sendMessage(model: MessageViewModel): Observable<number> {
     return this.dataService
-      .post<boolean>(this.sendMessageEndpoint, model)
+      .post<number>(this.sendMessageEndpoint, model)
       .pipe(
         tap((response) => {
           return response;
