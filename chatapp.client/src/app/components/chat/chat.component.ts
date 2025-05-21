@@ -220,6 +220,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }
       });
 
+      connection.on('DeletedMessage', (userFromId: number, messageId: number) => {
+        if (messageId != null && messageId != 0) {
+          this.messages = this.messages.filter(message => message.id !== messageId);
+        }
+      });
+
       connection.on('OnUserTyping', (userFromId: number) => {
         if (userFromId === this.recipientId) {
           this.recipientIsTyping = true;
@@ -523,6 +529,12 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         next: (response: boolean) => {
           this.messages.splice(i, 1);
           this.toastr.info('Message deleted successfully');
+          this.signalrService.deleteMessage(this.recipientId, message.id).then(() => { })
+          if(i === this.messages.length){
+            message.hasMedia = false;
+            message.content = '*Deleted*'
+            this.emitNewSentMessage(message);
+          }
         },
         error: (err: HttpErrorResponse) => { },
         complete: () => { },

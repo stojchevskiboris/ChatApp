@@ -47,6 +47,15 @@ namespace ChatApp.Server.Hubs
             }
         }
 
+        public async Task DeleteMessage(int userFromId, int userToId, int messageId)
+        {
+            var connectionIds = _connection.Where(x => x.Value == userToId).Select(x => x.Key).ToList();
+            if (connectionIds.Any())
+            {
+                await Clients.Clients(connectionIds).SendAsync("DeletedMessage", userFromId, messageId);
+            }
+        }
+
         public async Task Typing(int userFromId, int userToId)
         {
             var connectionIds = _connection.Where(x => x.Value == userToId).Select(x => x.Key).ToList();

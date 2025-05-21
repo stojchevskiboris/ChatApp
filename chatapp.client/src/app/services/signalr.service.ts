@@ -57,9 +57,13 @@ export class SignalRService {
   async sendMessage(toUserId: number, message: MessageViewModel): Promise<void> {
     try {
       await this.hubConnection.invoke('SendMessage', +this.currentUserId, toUserId, message);
-    } catch (err) {
-    }
+    } catch (err) { }
+  }
 
+  async deleteMessage(toUserId: number, messageId: number): Promise<void> {
+    try {
+      await this.hubConnection.invoke('DeleteMessage', +this.currentUserId, toUserId, messageId);
+    } catch (err) { }
   }
 
   async onTypingEvent(toUserId: number): Promise<void> {

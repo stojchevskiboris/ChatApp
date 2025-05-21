@@ -196,6 +196,17 @@ export class HomeComponent implements OnInit, OnDestroy {
         }
       });
 
+      connection.on('DeletedMessage', (userFromId: number, messageId: number) => {
+        if (messageId != null && messageId != 0) {
+          if (this.recievedChatMessage.id == messageId){
+            var deletedMessage = {...this.recievedChatMessage}
+            deletedMessage.content = '*Deleted*'
+            deletedMessage.hasMedia = false;
+            this.recievedChatMessage = deletedMessage;
+          }
+        }
+      });
+
     })
   }
 
