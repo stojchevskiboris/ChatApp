@@ -36,9 +36,9 @@
                                             [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">Sent {{
                                             getMediaType(chatMessage.mediaType) }}</span>
                                         <span *ngIf="!chatMessage.hasMedia" class="text-secondary"
-                                            [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">{{ chatMessage.content
-                                            }}</span>
-
+                                            [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">
+                                            {{ chatMessage.content }}
+                                        </span>
                                     </span>
                                     <span matListItemLine [ngClass]="chatMessage.isSeen ? 'seen' : 'notSeen'">
                                         {{ chatMessage.createdAt | chatDate }}
