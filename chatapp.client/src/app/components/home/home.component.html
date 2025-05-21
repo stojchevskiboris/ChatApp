@@ -32,7 +32,8 @@
             (toggleChatSettings)="toggleSettings()" 
             (newSharedMedia)="updateChatSettings($event)"
             (newSentChatMessage)="updateLeftPaneChats($event)"
-            (closeChatBtnEmitter)="closeChatWindow()">
+            (closeChatBtnEmitter)="closeChatWindow()"
+            (closeChatBtnDesktopEmitter)="handleSelectedChat(-1)">
           </app-chat>
         </div>
 

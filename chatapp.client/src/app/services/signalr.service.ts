@@ -66,6 +66,12 @@ export class SignalRService {
     } catch (err) { }
   }
 
+  async setMessageSeen(toUserId: number, messageId: number): Promise<void> {
+    try {
+      await this.hubConnection.invoke('SetMessageSeen', +this.currentUserId, toUserId, messageId);
+    } catch (err) { }
+  }
+
   async onTypingEvent(toUserId: number): Promise<void> {
     try {
       await this.hubConnection.invoke('Typing', +this.currentUserId, toUserId);

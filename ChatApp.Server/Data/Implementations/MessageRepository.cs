@@ -2,6 +2,7 @@
 using ChatApp.Server.Data.Utils;
 using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace ChatApp.Server.Data.Implementations
 {
@@ -19,7 +20,7 @@ namespace ChatApp.Server.Data.Implementations
             var messages = _context.Messages
                 .Where(x => x.Recipient != null && x.Recipient.RecipientUser != null &&
                             x.Sender != null &&
-                                ((x.Sender.Id == userId) || 
+                                ((x.Sender.Id == userId) ||
                                 (x.Recipient.RecipientUser.Id == userId)) &&
                             x.IsDeleted == false)
                 .OrderByDescending(x => x.CreatedAt)
@@ -40,6 +41,19 @@ namespace ChatApp.Server.Data.Implementations
                 .ToList();
 
             return messages;
+        }
+
+        public void UpdateMessagesSeen(List<Message> messages, int seenByUserId)
+        {
+            if (messages == null || messages.Count == 0)
+            {
+                return;
+            }
+
+            _context.Messages
+                .Where(m => messages.Select(x => x.Id)
+                .Contains(m.Id) && m.Recipient.RecipientUser.Id == seenByUserId)
+                .ExecuteUpdate(m => m.SetProperty(x => x.IsSeen, true));
         }
     }
 }

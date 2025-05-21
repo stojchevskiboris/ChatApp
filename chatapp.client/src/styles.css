@@ -237,6 +237,10 @@ body {
   font-size: 20px;
 }
 
+.w-15px{
+  width: 15px !important;
+}
+
 .w30px {
   width: 30px !important;
 }

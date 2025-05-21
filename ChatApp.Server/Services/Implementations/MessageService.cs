@@ -251,8 +251,11 @@ namespace ChatApp.Server.Services.Implementations
                 return new MessagesChatModel();
             }
 
-            var result = _messageRepository
-                .GetMessagesBySenderAndRecipient(currentUserId, recipientUserId)
+            var messages = _messageRepository.GetMessagesBySenderAndRecipient(currentUserId, recipientUserId);
+
+            _messageRepository.UpdateMessagesSeen(messages, currentUserId);
+
+            var result = messages
                 .Take(30)
                 .OrderBy(x => x.CreatedAt)
                 .ToList();

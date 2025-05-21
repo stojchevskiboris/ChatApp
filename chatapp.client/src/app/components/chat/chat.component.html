@@ -7,11 +7,20 @@
   <div class="card py-2 px-3 mb-1 minH-70px">
     <div class="d-flex justify-content-between">
       <div class="d-flex">
-        <div class="me-2" *ngIf="mobileQuery.matches">
-          <button mat-mini-fab color="secondary" (click)="closeChatWindow()">
-            <mat-icon>arrow_back</mat-icon>
-          </button>
-        </div>
+        <ng-container *ngIf="mobileQuery.matches; else desktop">
+          <div class="me-2">
+            <button mat-mini-fab color="secondary" (click)="closeChatWindow()">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+          </div>
+        </ng-container>
+        <ng-template #desktop>
+          <div class="me-2">
+            <button mat-mini-fab color="secondary" (click)="closeChatWindowDesktop()">
+              <mat-icon>arrow_back</mat-icon>
+            </button>
+          </div>
+        </ng-template>
         <div>
           <img matListAvatar class="w-40px h-40px user-profile-picture me-2" [src]="recipientProfilePicture" />
           <div class="d-inline-block">
@@ -96,10 +105,26 @@
             </div>
           </ng-template>
           <div [ngClass]="{'float-right': message.senderId == currentUserId}">
+            <span *ngIf="message.senderId == currentUserId">
+
+              <span *ngIf="message.isSeen; else emptyIcon">
+                <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 16 16" fill="#777777">
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M15.62 3.596L7.815 12.81l-.728-.033L4 8.382l.754-.53 2.744 3.907L14.917 3l.703.596z" />
+                  <path fill-rule="evenodd" clip-rule="evenodd"
+                    d="M7.234 8.774l4.386-5.178L10.917 3l-4.23 4.994.547.78zm-1.55.403l.548.78-.547-.78zm-1.617 1.91l.547.78-.799.943-.728-.033L0 8.382l.754-.53 2.744 3.907.57-.672z" />
+                </svg>
+              </span>
+              <ng-template #emptyIcon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="15px" height="15px" viewBox="0 0 16 16"
+                  fill="transparent"></svg>
+              </ng-template>
+            </span>
             <span class="timestamp">
               {{ message.createdAt | timeStampLocale }}
             </span>
-            <button [matMenuTriggerFor]="contactMenu" *ngIf="message.senderId == currentUserId" class="message-settings-btn">
+            <button [matMenuTriggerFor]="contactMenu" *ngIf="message.senderId == currentUserId"
+              class="message-settings-btn">
               <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 0 24 24" fill="none">
                 <path
                   d="M12 12.5C12.2761 12.5 12.5 12.2761 12.5 12C12.5 11.7239 12.2761 11.5 12 11.5C11.7239 11.5 11.5 11.7239 11.5 12C11.5 12.2761 11.7239 12.5 12 12.5Z"
@@ -114,7 +139,7 @@
             </button>
             <mat-menu #contactMenu="matMenu">
               <button mat-menu-item class="m-0" (click)="deleteMessage(message, i)">
-                <mat-icon>delete</mat-icon> 
+                <mat-icon>delete</mat-icon>
                 Delete
               </button>
             </mat-menu>

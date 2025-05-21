@@ -33,6 +33,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
   @Output() newSentChatMessage = new EventEmitter<RecentChatViewModel>();
   @Output() newSharedMedia = new EventEmitter<MediaViewModel>();
   @Output() closeChatBtnEmitter = new EventEmitter();
+  @Output() closeChatBtnDesktopEmitter = new EventEmitter();
 
   @ViewChild(NgScrollbar) scrollable: NgScrollbar;
   @ViewChild('messageInput') messageInput: any;
@@ -186,6 +187,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             .map(msg => this.mapToMediaViewModel(msg));
           this.hasFetchedMessages = true;
           this.cdr.detectChanges();
+          var lastMessageId = this.messages.length > 0 ? this.messages[this.messages.length - 1].id : 0
+          this.signalrService.setMessageSeen(this.recipientId, lastMessageId).then(() => { })
           resolve();
         },
         error: (error: HttpErrorResponse) => {
@@ -215,6 +218,9 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             this.sharedMedia.push(media);
             this.addMediaToChatSettings(message);
           }
+          this.messageService.setMessageSeen(message.id).subscribe(data => { 
+            this.signalrService.setMessageSeen(this.recipientId, message.id).then(() => { })
+          });
           this.cdr.detectChanges();
           this.scrollToBottom();
         }
@@ -226,8 +232,20 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }
       });
 
+      connection.on('SeenMessage', (userFromId: number, messageId: number) => {
+        if (messageId != null && messageId != 0) {
+          const message = this.messages.find(m => m.id === messageId);
+          if (message) {
+            this.messages
+              .filter(m => m.id <= messageId && m.senderId === this.currentUserId)
+              .forEach(m => m.isSeen = true);
+          }
+        }
+      });
+
       connection.on('OnUserTyping', (userFromId: number) => {
         if (userFromId === this.recipientId) {
+          this.messages.forEach(m => m.isSeen = true);
           this.recipientIsTyping = true;
           this.recipientIsTypingCounter++;
           this.startTypingAnimation();
@@ -838,7 +856,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       setTimeout(() => {
         this.canLoadMessagesSemaphore = true;
       }, 500)
-
+      this.showScrollToBottom = false;
       // console.log('Reached the bottom of the message list');
     }
   }
@@ -901,6 +919,10 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   closeChatWindow() {
     this.closeChatBtnEmitter.emit();
+  }
+
+  closeChatWindowDesktop() {
+    this.closeChatBtnDesktopEmitter.emit();
   }
 
   isMoreThanSevenDays(value) {

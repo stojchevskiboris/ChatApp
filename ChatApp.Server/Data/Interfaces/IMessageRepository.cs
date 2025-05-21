@@ -7,6 +7,6 @@ namespace ChatApp.Server.Data.Interfaces
     {
         public List<Message> GetMessagesSentOrReceivedByUser(int userId);
         public List<Message> GetMessagesBySenderAndRecipient(int user1Id, int user2Id);
-
+        public void UpdateMessagesSeen(List<Message> messages, int seenByUserId);
     }
 }

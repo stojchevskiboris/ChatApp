@@ -233,6 +233,8 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.selectedChatRecipientId = recipientId;
     if (recipientId === -1 || recipientId == null) {
       this.isChatSelected = false;
+      this.selectedChatRecipientId = 0;
+      this.searchedMessageIdFromSettings = 0;
     } else {
       this.isChatSelected = true;
       if (this.mobileQuery.matches) {
