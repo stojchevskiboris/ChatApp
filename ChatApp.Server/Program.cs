@@ -11,7 +11,7 @@ using ChatApp.Server.Hubs;
 var builder = WebApplication.CreateBuilder(args);
 
 // --- Configuration Section ---
-AppParameters.ConnectionString = builder.Configuration.GetConnectionString("devDb2") ?? "";
+AppParameters.ConnectionString = builder.Configuration.GetConnectionString("prodDb") ?? "";
 builder.Services.AddDbContext<ChatAppDbContext>(options =>
     options.UseSqlServer(AppParameters.ConnectionString));
 
