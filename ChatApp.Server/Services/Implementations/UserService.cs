@@ -9,6 +9,7 @@ using ChatApp.Server.Services.Mappers;
 using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -20,15 +21,21 @@ namespace ChatApp.Server.Services.Implementations
         private readonly IUserRepository _userRepository;
         private readonly IRequestRepository _requestRepository;
         private readonly IMediaRepository _mediaRepository;
-
         private readonly AppSettings _appSettings;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public UserService(IUserRepository userRepository, IRequestRepository requestRepository, IMediaRepository mediaRepository, IOptions<AppSettings> appSettings)
+        public UserService(
+            IUserRepository userRepository,
+            IRequestRepository requestRepository,
+            IMediaRepository mediaRepository,
+            IOptions<AppSettings> appSettings,
+            IHttpContextAccessor httpContextAccessor)
         {
             _userRepository = userRepository;
             _requestRepository = requestRepository;
             _mediaRepository = mediaRepository;
             _appSettings = appSettings.Value;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public int GetS()
@@ -38,8 +45,8 @@ namespace ChatApp.Server.Services.Implementations
 
         public int GetD()
         {
-            return _userRepository.GetAll().Count(); 
-        }            
+            return _userRepository.GetAll().Count();
+        }
 
         public List<UserViewModel> GetAllUsers()
         {
@@ -116,7 +123,7 @@ namespace ChatApp.Server.Services.Implementations
                 throw new CustomException("User not existing");
             }
 
-            return _userRepository.GetContactsByUserId(currentUserId);            
+            return _userRepository.GetContactsByUserId(currentUserId);
         }
 
         public UserViewModel GetUserByUsername(string username)
@@ -400,6 +407,8 @@ namespace ChatApp.Server.Services.Implementations
 
             var token = GenerateJwtToken(user);
 
+            LogUserDetails(user.Id);
+
             return new AuthenticateResponse(user, token);
         }
 
@@ -438,6 +447,8 @@ namespace ChatApp.Server.Services.Implementations
                 // Generate a new JWT token for the response
                 var newToken = GenerateJwtToken(user);
 
+                LogUserDetails(userId);
+
                 return new AuthenticateResponse(user, newToken);
             }
             catch (Exception)
@@ -473,6 +484,12 @@ namespace ChatApp.Server.Services.Implementations
             }
 
             return user;
+        }
+
+        private void LogUserDetails(int userId)
+        {
+            var ip = _httpContextAccessor.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+            Log.Information("User authenticated, UserId: {UserId}, IP: {IP}", userId, ip ?? "Unknown");
         }
     }
 }
