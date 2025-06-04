@@ -37,6 +37,11 @@
               {
                 "glob": "**/*",
                 "input": "public"
+              },
+              {
+                "glob": "sw.js",
+                "input": "src/external",
+                "output": "./"
               }
             ],
             "styles": [
