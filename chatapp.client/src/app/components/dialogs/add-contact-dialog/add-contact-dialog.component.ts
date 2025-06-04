@@ -35,6 +35,7 @@ export class AddContactDialogComponent implements OnInit {
   }
 
   onSearch(debounce: boolean = false): void {
+      this.isLoading = true;
 
     if (debounce) {
       clearTimeout(this.searchDebounceTimeout);
@@ -43,6 +44,7 @@ export class AddContactDialogComponent implements OnInit {
     }
 
     if (this.query.trim() === '') {
+      this.isLoading = false;
       this.searchResults = [];
       return;
     }
@@ -51,6 +53,7 @@ export class AddContactDialogComponent implements OnInit {
     this.requestService.searchUsersToAdd(this.query)
       .subscribe({
         next: (data: any) => {
+          this.isLoading = false;
           this.searchResults = data;
         },
         error: () => {
