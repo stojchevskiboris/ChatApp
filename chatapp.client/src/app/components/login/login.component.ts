@@ -90,10 +90,10 @@ export class LoginComponent implements OnInit {
       this.registerModel?.firstName?.trim() === '' ||
       this.registerModel?.lastName?.trim() === '' ||
       this.registerModel?.dateOfBirth == null ||
-      this.registerModel?.phone?.trim() === '' ||
+      // this.registerModel?.phone?.trim() === '' ||
       this.registerModel?.gender == undefined
     ) {
-      this.errorMessage = 'All fields are required';
+      this.errorMessage = 'Fields marked with * are required';
       return;
     }
 

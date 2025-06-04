@@ -25,7 +25,7 @@ namespace ChatApp.Server.Domain.Models
         [Required]
         public DateTime DateOfBirth { get; set; }
 
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
         public int Gender {  get; set; }
 

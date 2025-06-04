@@ -16,7 +16,7 @@
 
         public string DateOfBirth { get; set; }
 
-        public string Phone { get; set; }
+        public string? Phone { get; set; }
 
     }
 }

@@ -42,7 +42,7 @@
 
             <mat-form-field appearance="fill" class="w-100">
                 <mat-label>Phone number</mat-label>
-                <input matInput [(ngModel)]="registerModel.phone" name="phone" required />
+                <input matInput [(ngModel)]="registerModel.phone" name="phone" />
             </mat-form-field>
 
             <div class="my-2">
@@ -58,7 +58,7 @@
             </p>
             <div *ngIf="mobileQuery.matches">
                 <span>Already An User?</span>
-                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">
+                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton text-decoration-underline" id="signIn">
                     Sign In
                 </button>
             </div>
@@ -87,7 +87,7 @@
 
             <div *ngIf="mobileQuery.matches">
                 <span>New user?</span>
-                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">
+                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton text-decoration-underline" id="signUp">
                     Sign Up
                 </button>
             </div>
@@ -100,7 +100,7 @@
             <div class="overlay-panel overlay-left py-5">
                 <h1>Already An User?</h1>
                 <p>To keep connected with us please login here</p>
-                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton" id="signIn">
+                <button (click)="navToLogin(); signInContainer.scrollTop = 0" class="ghost navButton text-decoration-underline" id="signIn">
                     Sign In
                 </button>
             </div>
@@ -109,7 +109,7 @@
             <div class="overlay-panel overlay-right py-5">
                 <h1>New User?</h1>
                 <p>Create your account and start journey with us</p>
-                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton" id="signUp">
+                <button (click)="navToRegister(); signUpContainer.scrollTop = 0" class="ghost navButton text-decoration-underline" id="signUp">
                     Sign Up
                 </button>
             </div>
