@@ -32,6 +32,10 @@
             </button>
         </div>
         <mat-menu #menu="matMenu">
+            <button mat-menu-item routerLink="/admin">
+                <mat-icon>work</mat-icon>
+                <span>Admin Panel</span>
+            </button>
             <button mat-menu-item (click)="addContacts()">
                 <mat-icon>person_add</mat-icon>
                 <span>Add Contacts</span>

@@ -4,6 +4,7 @@ import { LoginComponent } from './components/login/login.component';
 import { HomeComponent } from './components/home/home.component';
 import { AccountSettingsComponent } from './components/account-settings/account-settings.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -11,6 +12,7 @@ const routes: Routes = [
   { path: 'home', component: HomeComponent },
   { path: 'contacts', component: ContactsComponent },
   { path: 'settings', component: AccountSettingsComponent },
+  { path: 'admin', component: AdminPanelComponent },
   { path: '**', redirectTo: '/login', pathMatch: 'full' },
 ];
 

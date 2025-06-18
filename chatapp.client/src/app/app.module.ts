@@ -37,6 +37,7 @@ import { SignalRService } from './services/signalr.service';
 import { TimeStampLocalePipe } from './shared/pipes/time-stamp-locale.pipe';
 import { DateTimeLocalePipe } from './shared/pipes/date-time-locale.pipe';
 import { LinkifyPipe } from './shared/pipes/linkify.pipe';
+import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -60,7 +61,8 @@ import { LinkifyPipe } from './shared/pipes/linkify.pipe';
     MediaPreviewDialogComponent,
     TimeStampLocalePipe,
     DateTimeLocalePipe,
-    LinkifyPipe
+    LinkifyPipe,
+    AdminPanelComponent
   ],
   imports: [
     BrowserModule,
