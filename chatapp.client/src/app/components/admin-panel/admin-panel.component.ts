@@ -5,6 +5,7 @@ import { AdminService } from '../../services/admin.service';
 import { UserRoleViewModel } from '../../models/user-role-view-model';
 import { RoleEnum } from '../../models/enums/role-enum';
 import { Router } from '@angular/router';
+import { SectionEnum } from '../../models/enums/section-enum';
 
 @Component({
   selector: 'app-admin-panel',
@@ -16,7 +17,9 @@ export class AdminPanelComponent {
   currentUserRoleModel: UserRoleViewModel;
   isUserInAdminRole: boolean;
   rolesEnum: any = RoleEnum;
-
+  sectionEnum = SectionEnum;
+  selectedSection: SectionEnum = SectionEnum.Users;
+  
   constructor(
     private toastr: ToastrService,
     private adminService: AdminService,
@@ -34,7 +37,7 @@ export class AdminPanelComponent {
           this.isUserInAdminRole = this.currentUserRoleModel.role == this.rolesEnum.Admin
           if (!this.isUserInAdminRole) {
             this.toastr.error('You do not have permission to access this page');
-            this.router.navigate(['/home']);
+            // this.router.navigate(['/home']);
             return;
           }
         }
@@ -42,7 +45,9 @@ export class AdminPanelComponent {
       },
       (error) => {
         this.loading = false;
-        this.toastr.warning('An unexpected error has occurred');
+        this.toastr.warning('You do not have permission to access this page');
+        // this.router.navigate(['/home']);
+        return;
       },
       () => {
         this.loading = false;

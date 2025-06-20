@@ -279,7 +279,8 @@ body {
 
 .chat,
 .account-settings,
-.contacts-view {
+.contacts-view,
+.admin-panel {
   height: 98svh !important;
 }
 
@@ -447,6 +448,12 @@ body {
 
 .justify-items-center{
   justify-items: center !important;
+}
+
+.admin-panel .mat-mdc-nav-list .mat-mdc-list-item {
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 .fs-8 {

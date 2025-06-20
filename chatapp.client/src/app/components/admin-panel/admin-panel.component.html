@@ -1,30 +1,95 @@
-<div *ngIf="loading" class="loading-container flex-content-center">
-    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
-</div>
-
-<div class="container-fluid fadeInAnimation account-settings">
-    <div class="row mb-5">
-        <div class="col-2 d-flex justify-content-start align-items-center">
-            <button mat-mini-fab color="secondary" routerLink="/home">
-                <mat-icon>arrow_back</mat-icon>
-            </button>
-        </div>
-        <div class="col d-flex justify-content-center align-items-center text-center">
-            <h2 class="mb-0">Admin Panel</h2>
-        </div>
-        <div class="col-2 d-flex justify-content-end align-items-center">
-
-        </div>
+<div class="admin-panel">
+    <div *ngIf="loading" class="loading-container flex-content-center">
+        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
     </div>
 
-    <div class="row">
-        <mat-tab-group>
-            <mat-tab label="Users Registry">
-              <!-- <app-users-registry></app-users-registry> -->
-            </mat-tab>
-            <mat-tab label="Roles Registry">
-              <!-- <app-roles-registry></app-roles-registry> -->
-            </mat-tab>
-          </mat-tab-group>
+    <div class="container-fluid fadeInAnimation">
+        <div class="row mb-5">
+            <div class="col-2 d-flex justify-content-start align-items-center">
+                <button mat-mini-fab color="secondary" routerLink="/home">
+                    <mat-icon>arrow_back</mat-icon>
+                </button>
+            </div>
+            <div class="col d-flex justify-content-center align-items-center text-center">
+                <h2 class="mb-0">Admin Panel</h2>
+            </div>
+            <div class="col-2 d-flex justify-content-end align-items-center"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <mat-nav-list>
+                    <mat-list-item (click)="selectedSection = sectionEnum.Users"
+                        [class.selected]="selectedSection === sectionEnum.Users">
+                        <mat-icon matListIcon>group</mat-icon>
+                        <span matLine>Users</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Roles"
+                        [class.selected]="selectedSection === sectionEnum.Roles">
+                        <mat-icon matListIcon>security</mat-icon>
+                        <span matLine>Roles</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Groups"
+                        [class.selected]="selectedSection === sectionEnum.Groups">
+                        <mat-icon matListIcon>groups</mat-icon>
+                        <span matLine>Groups</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.GroupUsers"
+                        [class.selected]="selectedSection === sectionEnum.GroupUsers">
+                        <mat-icon matListIcon>person_add</mat-icon>
+                        <span matLine>Group Users</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Messages"
+                        [class.selected]="selectedSection === sectionEnum.Messages">
+                        <mat-icon matListIcon>chat</mat-icon>
+                        <span matLine>Messages</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Media"
+                        [class.selected]="selectedSection === sectionEnum.Media">
+                        <mat-icon matListIcon>perm_media</mat-icon>
+                        <span matLine>Media</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Recipients"
+                        [class.selected]="selectedSection === sectionEnum.Recipients">
+                        <mat-icon matListIcon>mail</mat-icon>
+                        <span matLine>Recipients</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.Requests"
+                        [class.selected]="selectedSection === sectionEnum.Requests">
+                        <mat-icon matListIcon>inbox</mat-icon>
+                        <span matLine>Requests</span>
+                    </mat-list-item>
+
+                    <mat-list-item (click)="selectedSection = sectionEnum.QueryEditor"
+                        [class.selected]="selectedSection === sectionEnum.QueryEditor">
+                        <mat-icon matListIcon>terminal</mat-icon>
+                        <span matLine>Query Editor</span>
+                    </mat-list-item>
+                </mat-nav-list>
+            </div>
+
+            <div class="col-md-9">
+                <ng-container [ngSwitch]="selectedSection">
+                    <app-users-registry *ngSwitchCase="sectionEnum.Users"></app-users-registry>
+                    <app-roles-registry *ngSwitchCase="sectionEnum.Roles"></app-roles-registry>
+                    <app-groups-registry *ngSwitchCase="sectionEnum.Groups"></app-groups-registry>
+                    <app-group-users-registry *ngSwitchCase="sectionEnum.GroupUsers"></app-group-users-registry>
+                    <app-messages-registry *ngSwitchCase="sectionEnum.Messages"></app-messages-registry>
+                    <app-media-registry *ngSwitchCase="sectionEnum.Media"></app-media-registry>
+                    <app-recipients-registry *ngSwitchCase="sectionEnum.Recipients"></app-recipients-registry>
+                    <app-requests-registry *ngSwitchCase="sectionEnum.Requests"></app-requests-registry>
+                    <app-query-editor *ngSwitchCase="sectionEnum.QueryEditor"></app-query-editor>
+                    <p *ngSwitchDefault>Select a registry from the left pane.</p>
+                </ng-container>
+            </div>
+        </div>
+
     </div>
 </div>

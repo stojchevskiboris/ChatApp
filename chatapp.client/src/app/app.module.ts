@@ -38,6 +38,15 @@ import { TimeStampLocalePipe } from './shared/pipes/time-stamp-locale.pipe';
 import { DateTimeLocalePipe } from './shared/pipes/date-time-locale.pipe';
 import { LinkifyPipe } from './shared/pipes/linkify.pipe';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
+import { UsersRegistryComponent } from './components/admin-panel/registries/users-registry/users-registry.component';
+import { RolesRegistryComponent } from './components/admin-panel/registries/roles-registry/roles-registry.component';
+import { GroupsRegistryComponent } from './components/admin-panel/registries/groups-registry/groups-registry.component';
+import { GroupUsersRegistryComponent } from './components/admin-panel/registries/group-users-registry/group-users-registry.component';
+import { MessagesRegistryComponent } from './components/admin-panel/registries/messages-registry/messages-registry.component';
+import { MediaRegistryComponent } from './components/admin-panel/registries/media-registry/media-registry.component';
+import { RecipientsRegistryComponent } from './components/admin-panel/registries/recipients-registry/recipients-registry.component';
+import { RequestsRegistryComponent } from './components/admin-panel/registries/requests-registry/requests-registry.component';
+import { QueryEditorComponent } from './components/admin-panel/registries/query-editor/query-editor.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -62,7 +71,16 @@ import { AdminPanelComponent } from './components/admin-panel/admin-panel.compon
     TimeStampLocalePipe,
     DateTimeLocalePipe,
     LinkifyPipe,
-    AdminPanelComponent
+    AdminPanelComponent,
+    UsersRegistryComponent,
+    RolesRegistryComponent,
+    GroupsRegistryComponent,
+    GroupUsersRegistryComponent,
+    MessagesRegistryComponent,
+    MediaRegistryComponent,
+    RecipientsRegistryComponent,
+    RequestsRegistryComponent,
+    QueryEditorComponent
   ],
   imports: [
     BrowserModule,
