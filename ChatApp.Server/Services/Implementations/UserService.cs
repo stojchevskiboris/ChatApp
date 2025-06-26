@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Common.Exceptions;
+﻿using ChatApp.Server.Common.Constants;
+using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Common.Helpers;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Configs.Authentication.Models;
@@ -6,7 +7,9 @@ using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
+using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Users;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -36,6 +39,33 @@ namespace ChatApp.Server.Services.Implementations
             _mediaRepository = mediaRepository;
             _appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
+        }
+        public SqlQueryResult ExecuteQuery(string sql)
+        {
+            using var connection = new SqlConnection(AppParameters.ConnectionString);
+            connection.Open();
+
+            using var command = new SqlCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            var result = new SqlQueryResult();
+            var schema = reader.GetColumnSchema();
+            result.Columns = schema.Select(c => c.ColumnName).ToList();
+
+            var rows = new List<List<object>>();
+            while (reader.Read())
+            {
+                var row = new List<object>();
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    row.Add(reader[i]);
+                }
+                rows.Add(row);
+            }
+
+            result.Rows = rows;
+            result.Message = $"{rows.Count} row(s) returned";
+            return result;
         }
 
         public int GetS()

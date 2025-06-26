@@ -1,6 +1,7 @@
 ﻿using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.Interfaces;
+using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,20 @@ namespace ChatApp.Server.Controllers
             _userService = userService;
             _logger = logger;
             _firebaseStorageService = firebaseStorageService;
+        }
+
+        [HttpPost("RunSql")]
+        public IActionResult RunSql(SqlQueryRequest request)
+        {
+            try
+            {
+                var result = _userService.ExecuteQuery(request.Query);
+                return Ok(new { success = true, message = result.Message, columns = result.Columns, rows = result.Rows });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
         }
 
         [HttpGet("GetC")]

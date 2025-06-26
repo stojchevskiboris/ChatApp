@@ -1,10 +1,12 @@
 ﻿using ChatApp.Server.Configs.Authentication;
+using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Users;
 
 namespace ChatApp.Server.Services.Interfaces
 {
     public interface IUserService
     {
+        SqlQueryResult ExecuteQuery(string query);
         int GetS();
         int GetD();
         #region UserServices
