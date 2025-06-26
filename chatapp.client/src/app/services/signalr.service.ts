@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { HubConnection, HubConnectionBuilder, HttpTransportType } from '@microsoft/signalr'
 import { AuthService } from './auth.service';
 import { MessageViewModel } from '../models/message-view-model';
-import { environment } from '../../environments/environment';
+import { environment } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'

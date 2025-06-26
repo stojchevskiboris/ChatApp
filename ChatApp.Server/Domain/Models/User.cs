@@ -35,6 +35,8 @@ namespace ChatApp.Server.Domain.Models
 
         public DateTime LastActive { get; set; }
 
+        public int Role { get; set; }
+
         [Required]
         public DateTime CreatedAt { get; set; }
 
