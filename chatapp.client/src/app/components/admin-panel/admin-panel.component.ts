@@ -37,7 +37,7 @@ export class AdminPanelComponent {
           this.isUserInAdminRole = this.currentUserRoleModel.role == this.rolesEnum.Admin
           if (!this.isUserInAdminRole) {
             this.toastr.error('You do not have permission to access this page');
-            // this.router.navigate(['/home']);
+            this.router.navigate(['/home']);
             return;
           }
         }

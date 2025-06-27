@@ -40,33 +40,7 @@ namespace ChatApp.Server.Services.Implementations
             _appSettings = appSettings.Value;
             _httpContextAccessor = httpContextAccessor;
         }
-        public SqlQueryResult ExecuteQuery(string sql)
-        {
-            using var connection = new SqlConnection(AppParameters.ConnectionString);
-            connection.Open();
 
-            using var command = new SqlCommand(sql, connection);
-            using var reader = command.ExecuteReader();
-
-            var result = new SqlQueryResult();
-            var schema = reader.GetColumnSchema();
-            result.Columns = schema.Select(c => c.ColumnName).ToList();
-
-            var rows = new List<List<object>>();
-            while (reader.Read())
-            {
-                var row = new List<object>();
-                for (int i = 0; i < reader.FieldCount; i++)
-                {
-                    row.Add(reader[i]);
-                }
-                rows.Add(row);
-            }
-
-            result.Rows = rows;
-            result.Message = $"{rows.Count} row(s) returned";
-            return result;
-        }
 
         public int GetS()
         {

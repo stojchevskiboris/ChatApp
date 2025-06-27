@@ -42,6 +42,33 @@ namespace ChatApp.Server.Services.Mappers
             return users.Select(x => x.MapToViewModel()).ToList();
         }
 
+        public static UserAdminModel MapToAdminModel(this User user)
+        {
+            if (user == null)
+                return null;
+
+            var model = new UserAdminModel
+            {
+                Id = user.Id,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
+                Username = user.Username,
+                Phone = user.Phone,
+                Gender = user.Gender,
+                DateOfBirth = user.DateOfBirth,
+                LastActive = user.LastActive,
+                CreatedAt = user.CreatedAt,
+                ModifiedAt = user.ModifiedAt,
+                Role = user.Role,
+            };
+
+            if (user.ProfilePicture != null)
+            {
+                model.ProfilePicture = user.ProfilePicture.Url;
+            }
+            return model;
+        }
+
         public static AddUserModel MapToAddUserModel(this User user)
         {
             if (user == null)

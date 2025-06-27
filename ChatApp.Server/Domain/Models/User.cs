@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using ChatApp.Server.Domain.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace ChatApp.Server.Domain.Models
 {

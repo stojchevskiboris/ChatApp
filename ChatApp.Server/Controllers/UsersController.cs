@@ -23,20 +23,6 @@ namespace ChatApp.Server.Controllers
             _firebaseStorageService = firebaseStorageService;
         }
 
-        [HttpPost("RunSql")]
-        public IActionResult RunSql(SqlQueryRequest request)
-        {
-            try
-            {
-                var result = _userService.ExecuteQuery(request.Query);
-                return Ok(new { success = true, message = result.Message, columns = result.Columns, rows = result.Rows });
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { success = false, message = ex.Message });
-            }
-        }
-
         [HttpGet("GetC")]
         public int GetC()
         {

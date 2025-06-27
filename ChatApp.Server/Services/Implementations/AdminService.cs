@@ -1,4 +1,5 @@
-﻿using ChatApp.Server.Common.Exceptions;
+﻿using ChatApp.Server.Common.Constants;
+using ChatApp.Server.Common.Exceptions;
 using ChatApp.Server.Common.Helpers;
 using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Configs.Authentication.Models;
@@ -6,7 +7,9 @@ using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Models;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.Mappers;
+using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Users;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Serilog;
@@ -29,9 +32,44 @@ namespace ChatApp.Server.Services.Implementations
             _adminRepository = adminRepository;
         }
 
+        public SqlQueryResult ExecuteQuery(string sql)
+        {
+            using var connection = new SqlConnection(AppParameters.ConnectionString);
+            connection.Open();
+
+            using var command = new SqlCommand(sql, connection);
+            using var reader = command.ExecuteReader();
+
+            var result = new SqlQueryResult();
+            var schema = reader.GetColumnSchema();
+            result.Columns = schema.Select(c => c.ColumnName).ToList();
+
+            var rows = new List<List<object>>();
+            while (reader.Read())
+            {
+                var row = new List<object>();
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    row.Add(reader[i]);
+                }
+                rows.Add(row);
+            }
+
+            result.Rows = rows;
+            result.Message = $"{rows.Count} row(s) returned";
+            return result;
+        }
+
         public UserRoleViewModel GetCurrentUserRole()
         {
-            throw new NotImplementedException();
+            var currentUserId = Context.GetCurrentUserId();
+            var user = _userRepository.Get(currentUserId);
+
+            if (user == null)
+            {
+                throw new CustomException("User not found");
+            }
+            return user.MapToUserRoleViewModel();
         }
 
         #region Users
@@ -57,7 +95,7 @@ namespace ChatApp.Server.Services.Implementations
             return user.MapToViewModel();
         }
 
-        public UserViewModel CreateOrUpdateUser(UserAdminModel userModel)
+        public UserAdminModel CreateOrUpdateUser(UserAdminModel userModel)
         {
             if (userModel == null)
             {
@@ -72,20 +110,31 @@ namespace ChatApp.Server.Services.Implementations
                     FirstName = userModel.FirstName,
                     LastName = userModel.LastName,
                     Username = userModel.Username,
+                    Phone = userModel.Phone,
+                    Gender = userModel.Gender,
+                    DateOfBirth = userModel.DateOfBirth,
+                    Role = userModel.Role,
+                    CreatedAt = DateTime.UtcNow,
+                    ModifiedAt = DateTime.UtcNow,
                     Password = PasswordHelper.HashPassword(PasswordHelper.DecryptString(userModel.Password)),
+                };
 
-
-            };
+                _userRepository.Create(newUser);
+                return newUser.MapToAdminModel();
             }
             else
             {
                 user.FirstName = userModel.FirstName;
                 user.LastName = userModel.LastName;
                 user.Username = userModel.Username;
-                user.DateOfBirth = userModel.DateOfBirth;
-                user.Gender = userModel.Gender;
                 user.Phone = userModel.Phone;
-
+                user.Gender = userModel.Gender;
+                user.DateOfBirth = userModel.DateOfBirth;
+                user.Role = userModel.Role;
+                user.ModifiedAt = DateTime.UtcNow;
+                user.Password = PasswordHelper.HashPassword(PasswordHelper.DecryptString(userModel.Password));
+                _userRepository.Update(user);
+                return user.MapToAdminModel();
             }
 
         }

@@ -6,7 +6,6 @@ namespace ChatApp.Server.Services.Interfaces
 {
     public interface IUserService
     {
-        SqlQueryResult ExecuteQuery(string query);
         int GetS();
         int GetD();
         #region UserServices

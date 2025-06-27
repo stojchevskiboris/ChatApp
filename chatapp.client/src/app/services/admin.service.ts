@@ -10,7 +10,7 @@ import { SqlResultModel } from '../models/sql-result-model';
 })
 export class AdminService {
   private getCurrentUserRoleEndpoint = '/Admin/GetCurrentUserRole';
-  private runSqlEndpoint = '/Users/RunSql';
+  private runSqlEndpoint = '/Admin/RunSql';
 
   constructor(private dataService: DataService) {}
 
