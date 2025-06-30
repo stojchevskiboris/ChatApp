@@ -1,5 +1,9 @@
-﻿using ChatApp.Server.Services.Interfaces;
+﻿using ChatApp.Server.Common.Exceptions;
+using ChatApp.Server.Services.Implementations;
+using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Admin;
+using ChatApp.Server.Services.ViewModels.Common;
+using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ChatApp.Server.Controllers
@@ -17,6 +21,7 @@ namespace ChatApp.Server.Controllers
             _logger = logger;
         }
 
+        #region Users
         [HttpGet("GetCurrentUserRole")]
         public IActionResult GetCurrentUserRole()
         {
@@ -31,6 +36,73 @@ namespace ChatApp.Server.Controllers
             }
         }
 
+        [HttpPost("SearchUsers")]
+        public IActionResult SearchUsers([FromBody] UserSearchModel model)
+        {
+            try
+            {
+                var result = _adminService.SearchUsers(model);
+                return Ok(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("SaveOrUpdateUser")]
+        public IActionResult SaveOrUpdateUser([FromBody] UserRegisterModel model)
+        {
+            try
+            {
+
+                var result = _adminService.SaveOrUpdateUser(model);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("GetUserById")]
+        public IActionResult GetUserById([FromBody] HttpRequestIdModel model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    throw new CustomException("Invalid parameters");
+                }
+                var result = _adminService.GetUserById(model.Id);
+                return Ok(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("DeleteUser")]
+        public IActionResult DeleteUser([FromBody] HttpRequestIdModel model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    throw new CustomException("Invalid parameters");
+                }
+                var result = _adminService.DeleteUser(model.Id);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
+        #region QueryEditor
         [HttpPost("RunSql")]
         public IActionResult RunSql(SqlQueryRequest request)
         {
@@ -44,6 +116,7 @@ namespace ChatApp.Server.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
+        #endregion
 
     }
 }

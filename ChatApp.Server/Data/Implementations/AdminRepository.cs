@@ -15,12 +15,17 @@ namespace ChatApp.Server.Data.Implementations
 
         public User GetUserById(int userId)
         {
-            throw new NotImplementedException();
+            return _context.Users.FirstOrDefault(x => x.Id == userId);
         }
 
         public List<User> SearchUsers(UserSearchModel searchModel)
         {
             throw new NotImplementedException();
+        }
+
+        public IQueryable<User> UsersQueryable()
+        {
+            return _context.Users.AsQueryable();
         }
     }
 }

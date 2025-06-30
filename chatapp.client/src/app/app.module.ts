@@ -47,6 +47,11 @@ import { MediaRegistryComponent } from './components/admin-panel/registries/medi
 import { RecipientsRegistryComponent } from './components/admin-panel/registries/recipients-registry/recipients-registry.component';
 import { RequestsRegistryComponent } from './components/admin-panel/registries/requests-registry/requests-registry.component';
 import { QueryEditorComponent } from './components/admin-panel/registries/query-editor/query-editor.component';
+import { NgxPaginationModule } from 'ngx-pagination';
+import { SortArrowComponent } from './components/shared/sort-arrow.component';
+import { RemoveItemDialogComponent } from './components/shared/remove-item-dialog';
+import { SaveUserModalComponent } from './components/admin-panel/registries/users-registry/save-user-modal/save-user-modal.component';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -80,7 +85,10 @@ import { QueryEditorComponent } from './components/admin-panel/registries/query-
     MediaRegistryComponent,
     RecipientsRegistryComponent,
     RequestsRegistryComponent,
-    QueryEditorComponent
+    QueryEditorComponent,
+    SortArrowComponent,
+    RemoveItemDialogComponent,
+    SaveUserModalComponent
   ],
   imports: [
     BrowserModule,
@@ -92,6 +100,7 @@ import { QueryEditorComponent } from './components/admin-panel/registries/query-
     BrowserAnimationsModule,
     MatIconModule,
     NgScrollbarModule,
+    NgxPaginationModule,
     ToastrModule.forRoot(),
   ],
   providers: [

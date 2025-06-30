@@ -1,5 +1,6 @@
 ﻿using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.ViewModels.Admin;
+using ChatApp.Server.Services.ViewModels.Common;
 using ChatApp.Server.Services.ViewModels.Users;
 
 namespace ChatApp.Server.Services.Interfaces
@@ -8,6 +9,11 @@ namespace ChatApp.Server.Services.Interfaces
     {
         #region Users
         UserRoleViewModel GetCurrentUserRole();
+        PagedResult<UserViewModel> SearchUsers(UserSearchModel model);
+        UserViewModel GetUserById(int userId);
+        UserViewModel SaveOrUpdateUser(UserRegisterModel model);
+        bool DeleteUser(int userId);
+
         #endregion
 
         #region QueryEditor

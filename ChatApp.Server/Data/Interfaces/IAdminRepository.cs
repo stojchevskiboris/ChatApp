@@ -9,6 +9,7 @@ namespace ChatApp.Server.Data.Interfaces
         #region Users
         User GetUserById(int userId);
         List<User> SearchUsers(UserSearchModel searchModel);
+        IQueryable<User> UsersQueryable();
         #endregion
 
 

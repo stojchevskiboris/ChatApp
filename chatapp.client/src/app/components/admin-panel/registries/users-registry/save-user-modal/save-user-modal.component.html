@@ -1,0 +1,41 @@
+<h2 mat-dialog-title>{{ isEdit ? 'Edit User' : 'Add User' }}</h2>
+<div mat-dialog-content *ngIf="!loading; else loadingTpl">
+    <form>
+        <div class="mb-3">
+            <label class="form-label">First Name</label>
+            <input class="form-control" [(ngModel)]="user.firstName" name="firstName">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Last Name</label>
+            <input class="form-control" [(ngModel)]="user.lastName" name="lastName">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input class="form-control" [(ngModel)]="user.username" name="username">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Phone</label>
+            <input class="form-control" [(ngModel)]="user.phone" name="phone">
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Gender</label>
+            <select class="form-select" [(ngModel)]="user.gender" name="gender">
+                <option [value]="1">Female</option>
+                <option [value]="0">Male</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Date of Birth</label>
+            <input type="date" class="form-control" [(ngModel)]="user.dateOfBirth" name="dateOfBirth">
+        </div>
+    </form>
+</div>
+<ng-template #loadingTpl>
+    <div class="text-center p-4">
+        <mat-spinner></mat-spinner>
+    </div>
+</ng-template>
+<div mat-dialog-actions class="justify-content-end">
+    <button mat-button (click)="onCancel()">Cancel</button>
+    <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+</div>

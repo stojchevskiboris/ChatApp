@@ -1,1 +1,144 @@
-<p>users-registry works!</p>
+    <div *ngIf="loading" class="loading-container flex-content-center">
+        <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+    </div>
+
+<div class="mt-4">
+  <h2>User Registry</h2>
+
+  <div class="row g-3 mb-3">
+    <div class="col-md-4">
+      <label class="form-label">First Name</label>
+      <input type="text" [(ngModel)]="searchModel.firstName" name="firstName" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Last Name</label>
+      <input type="text" [(ngModel)]="searchModel.lastName" name="lastName" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Username</label>
+      <input type="text" [(ngModel)]="searchModel.username" name="username" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Phone</label>
+      <input type="text" [(ngModel)]="searchModel.phone" name="phone" class="form-control" (keyup.enter)="search()"
+        (change)="search()">
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Gender</label>
+      <select [(ngModel)]="searchModel.gender" name="gender" class="form-select" (change)="search()">
+        <option [ngValue]="undefined">-- All --</option>
+        <option [value]="'1'">Female</option>
+        <option [value]="'2'">Male</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Last Active</label>
+      <input type="date" [(ngModel)]="searchModel.lastActive" name="lastActive" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+
+    <div class="col-12 d-flex justify-content-between">
+      <div>
+        <button type="submit" class="btn btn-primary me-2" (click)="search()">Search</button>
+        <button type="button" class="btn btn-secondary" (click)="resetFilters()">Reset Filters</button>
+      </div>
+      <div>
+        <button class="btn btn-outline-primary" (click)="addUser()">
+          Add User
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th class="cursor-pointer" (click)="setSort('id')">
+          ID
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'id'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('firstName')">
+          First Name
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'firstName'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('lastName')">
+          Last Name
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'lastName'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('username')">
+          Username
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'username'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('dateOfBirth')">
+          Date of Birth
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'dateOfBirth'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('phone')">
+          Phone
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'phone'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('gender')">
+          Gender
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'gender'"></app-sort-arrow>
+        </th>
+        <th>
+          Profile Picture
+        </th>
+        <th class="cursor-pointer" (click)="setSort('contacts')">
+          Contacts
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'contacts'"></app-sort-arrow>
+        </th>
+        <th class="cursor-pointer" (click)="setSort('lastActive')">
+          Last Active
+          <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'lastActive'"></app-sort-arrow>
+        </th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of pagedResult?.items; let i = index">
+        <td>{{ i+1 }}</td>
+        <td>{{ user.id }}</td>
+        <td>{{ user.firstName }}</td>
+        <td>{{ user.lastName }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.dateOfBirth | date:'short' }}</td>
+        <td>{{ user.phone }}</td>
+        <td>{{ user.gender === 0 ? 'Male' : 'Female' }}</td>
+        <td>
+          <ng-container *ngIf="user.profilePicture; else noProfilePicture">
+            <a [href]="user.profilePicture" target="_blank">
+              <img [src]="user.profilePicture" alt="Profile Picture" class="img-thumbnail"
+                style="width: 50px; height: 50px;">
+            </a>
+          </ng-container>
+          <ng-template #noProfilePicture>
+            <span class="text-secondary">No Picture</span>
+          </ng-template>
+        </td>
+        <td>{{ user.contactsId?.length || 0}}</td>
+        <td>{{ user.lastActive | date:'short' }}</td>
+        <td>
+          <button class="btn btn-outline-secondary btn-sm me-2" (click)="editUser(user.id)">
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button class="btn btn-outline-danger btn-sm" (click)="deleteUser(user.id)">
+            <mat-icon>delete</mat-icon>
+          </button>
+      </tr>
+    </tbody>
+  </table>
+
+  <mat-paginator [length]="pagedResult?.totalCount || 0" [pageSize]="searchModel.size"
+    [pageSizeOptions]="[ 10, 20, 50, 100]" [showFirstLastButtons]="true" (page)="pageChanged($event)">
+  </mat-paginator>
+
+</div>

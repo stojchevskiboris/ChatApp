@@ -17,7 +17,7 @@
         </div>
 
         <div class="row" *ngIf="isUserInAdminRole">
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <mat-nav-list>
                     <mat-list-item (click)="selectedSection = sectionEnum.Users"
                         [class.selected]="selectedSection === sectionEnum.Users">
@@ -75,7 +75,7 @@
                 </mat-nav-list>
             </div>
 
-            <div class="col-md-9">
+            <div class="col-md-10">
                 <ng-container [ngSwitch]="selectedSection">
                     <app-users-registry *ngSwitchCase="sectionEnum.Users"></app-users-registry>
                     <app-roles-registry *ngSwitchCase="sectionEnum.Roles"></app-roles-registry>

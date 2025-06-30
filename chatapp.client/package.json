@@ -29,6 +29,7 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "jest-editor-support": "*",
+    "ngx-pagination": "^6.0.3",
     "ngx-scrollbar": "^16.0.0",
     "ngx-toastr": "^19.0.0",
     "run-script-os": "*",
