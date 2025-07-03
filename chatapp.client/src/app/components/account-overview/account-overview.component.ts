@@ -9,6 +9,9 @@ import { RequestService } from '../../services/request.service';
 import { UserService } from '../../services/user.service';
 import { ToastrService } from 'ngx-toastr';
 import { SignalRService } from '../../services/signalr.service';
+import { RoleEnum } from '../../models/enums/role-enum';
+import { UserRoleViewModel } from '../../models/user-role-view-model';
+import { AdminService } from '../../services/admin.service';
 
 @Component({
   selector: 'app-account-overview',
@@ -17,6 +20,7 @@ import { SignalRService } from '../../services/signalr.service';
 })
 export class AccountOverviewComponent {
   constructor(
+    private adminService: AdminService,
     private authService: AuthService,
     private userService: UserService,
     private toastr: ToastrService,
@@ -35,6 +39,9 @@ export class AccountOverviewComponent {
   profilePicture: string = 'assets/img/default-avatar.png';
   hasProfilePicture: boolean = false;
   requestsCount: number = 0;
+  rolesEnum: any = RoleEnum;
+  currentUserRoleModel: UserRoleViewModel;
+  isUserInAdminRole: boolean = false;
 
   ngOnInit(): void {
     var currentUserStr = this.userService.getCurrentUser();
@@ -43,29 +50,30 @@ export class AccountOverviewComponent {
       this.router.navigate(['/']);
     }
     else {
+      this.checkUserRole();
       this.currentUser = JSON.parse(currentUserStr);
       this.userInitials = this.currentUser.firstName.charAt(0) + this.currentUser.lastName.charAt(0);
       this.userService.getCurrentUserDetails()
-      .subscribe(
-        (response: UserViewModel) => {
-          if (response) {
-            this.currentUser = response;
-            if (response.profilePicture) {
-              this.profilePicture = response.profilePicture;
-              this.hasProfilePicture = true;
+        .subscribe(
+          (response: UserViewModel) => {
+            if (response) {
+              this.currentUser = response;
+              if (response.profilePicture) {
+                this.profilePicture = response.profilePicture;
+                this.hasProfilePicture = true;
+              }
             }
+            this.loading = false;
+          },
+          (error) => {
+            // console.error('Error loading user data:', error);
+            this.loading = false;
+            this.toastr.warning('An unexpected error has occurred');
+          },
+          () => {
+            this.loading = false;
           }
-          this.loading = false;
-        },
-        (error) => {
-          // console.error('Error loading user data:', error);
-          this.loading = false;
-          this.toastr.warning('An unexpected error has occurred');
-        },
-        () => {
-          this.loading = false;
-        }
-      );
+        );
     }
 
     this.getRequestsCount();
@@ -74,22 +82,36 @@ export class AccountOverviewComponent {
   }
 
   connectSignalR() {
-      var connection = this.signalrService.getHubConnection();
-      connection.on('OnNewRequest', () => {
-        this.getRequestsCount();
-      });
+    var connection = this.signalrService.getHubConnection();
+    connection.on('OnNewRequest', () => {
+      this.getRequestsCount();
+    });
   }
 
   getRequestsCount() {
     this.requestService.getRequestsCount().subscribe({
-          next: (count: number) => {
-            this.requestsCount = count
-            this.hasRequests = count>0;
-          },
-          error: (err: any) => {
-            // console.log(err);
+      next: (count: number) => {
+        this.requestsCount = count
+        this.hasRequests = count > 0;
+      },
+      error: (err: any) => {
+        // console.log(err);
+      }
+    })
+  }
+
+  checkUserRole(): void {
+    this.adminService.getCurrentUserRole()
+      .subscribe(
+        (response: UserRoleViewModel) => {
+          if (response) {
+            this.currentUserRoleModel = response;
+            this.isUserInAdminRole = this.currentUserRoleModel.role == this.rolesEnum.Admin
           }
-        })
+        },
+        () => { },
+        () => { }
+      );
   }
 
   resetChats() {

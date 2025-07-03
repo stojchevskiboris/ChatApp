@@ -32,7 +32,7 @@
             </button>
         </div>
         <mat-menu #menu="matMenu">
-            <button mat-menu-item routerLink="/admin">
+            <button mat-menu-item routerLink="/admin" *ngIf="isUserInAdminRole">
                 <mat-icon>work</mat-icon>
                 <span>Admin Panel</span>
             </button>

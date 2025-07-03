@@ -5,11 +5,13 @@ import { DataService } from './data.service';
 import { UserRoleViewModel } from '../models/user-role-view-model';
 import { SqlResultModel } from '../models/sql-result-model';
 import { UserSearchModel } from '../models/user-search-model';
+import { ChangePasswordAdminModel } from '../models/change-password-admin-model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AdminService {
+
   private getCurrentUserRoleEndpoint = '/Admin/GetCurrentUserRole';
   private runSqlEndpoint = '/Admin/RunSql';
   private searchUsersEndpoint = '/Admin/SearchUsers';
@@ -52,6 +54,36 @@ export class AdminService {
   saveOrUpdateUser(user: any): Observable<any> {
     return this.dataService
       .post<any>(this.saveOrUpdateUserEndpoint, user)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  changeUserPassword(model: ChangePasswordAdminModel) {
+    return this.dataService
+      .post<any>('/Admin/ChangeUserPassword', model)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  uploadUserProfilePicture(file: FormData): Observable<any> {
+    return this.dataService
+      .post<any>('/Admin/UploadUserProfilePicture', file)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  removeUserProfilePicture(userId: number): Observable<any> {
+    return this.dataService
+      .post<any>('/Admin/RemoveUserProfilePicture', { userId })
       .pipe(
         tap((response) => {
           return response;

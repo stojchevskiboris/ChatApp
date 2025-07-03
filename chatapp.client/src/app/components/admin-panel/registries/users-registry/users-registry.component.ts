@@ -89,6 +89,7 @@ export class UsersRegistryComponent {
   addUser(): void {
     const dialogRef = this.dialog.open(SaveUserModalComponent, {
       width: '500px',
+      height: '700px',
       data: {}
     });
     dialogRef.afterClosed().subscribe(result => {
