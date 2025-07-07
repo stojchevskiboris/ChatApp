@@ -100,6 +100,20 @@ namespace ChatApp.Server.Controllers
                 return BadRequest(new { success = false, message = ex.Message });
             }
         }
+
+        [HttpPost("ExportUsers")]
+        public IActionResult ExportUsers([FromBody] UserSearchModel model)
+        {
+            try
+            {
+                var result = _adminService.ExportUsers(model);
+                return Ok(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
         #endregion
 
         #region QueryEditor

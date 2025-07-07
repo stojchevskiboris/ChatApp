@@ -46,7 +46,10 @@
     <div class="col-12 d-flex justify-content-between">
       <div>
         <button type="submit" class="btn btn-outline-primary me-2" (click)="search()">Search</button>
-        <button type="button" class="btn btn-outline-secondary" (click)="resetFilters()">Reset Filters</button>
+        <button type="button" class="btn btn-outline-secondary me-2" (click)="resetFilters()">Reset Filters</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="exportToCsv()">
+          Export
+        </button>
       </div>
       <div>
         <button class="btn btn-primary" (click)="addUser()">

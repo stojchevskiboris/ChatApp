@@ -10,6 +10,7 @@ namespace ChatApp.Server.Data.Interfaces
         User GetUserById(int userId);
         List<User> SearchUsers(UserSearchModel searchModel);
         IQueryable<User> UsersQueryable();
+        byte[] ExportUsers(UserSearchModel model);
         #endregion
 
 

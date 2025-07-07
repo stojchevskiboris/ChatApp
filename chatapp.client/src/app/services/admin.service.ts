@@ -18,6 +18,7 @@ export class AdminService {
   private getUserByIdEndpoint = '/Admin/GetUserById';
   private saveOrUpdateUserEndpoint = '/Admin/SaveOrUpdateUser';
   private deleteUserEndpoint = '/Admin/DeleteUser';
+  private exportUsersEndpoint = '/Admin/ExportUsers';
 
   constructor(private dataService: DataService) { }
 
@@ -31,6 +32,7 @@ export class AdminService {
       );
   }
 
+  //#region Users
   searchUsers(searchModel: UserSearchModel): Observable<any> {
     return this.dataService
       .post<any>(this.searchUsersEndpoint, searchModel )
@@ -100,7 +102,18 @@ export class AdminService {
         })
       );
   }
+  exportUsers(searchModel: UserSearchModel): Observable<any> {
+    return this.dataService
+      .post<any>(this.exportUsersEndpoint, searchModel)
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+  //#endregion
 
+  //#region SQL
   executeSql(query): Observable<SqlResultModel> {
     return this.dataService
       .post<SqlResultModel>(this.runSqlEndpoint, { query })
@@ -110,6 +123,7 @@ export class AdminService {
         })
       );
   }
+  //#endregion
 
   getCurrentUser(): string {
     return localStorage.getItem('currentUser');

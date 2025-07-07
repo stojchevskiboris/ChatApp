@@ -13,7 +13,7 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel GetUserById(int userId);
         UserViewModel SaveOrUpdateUser(UserRegisterModel model);
         bool DeleteUser(int userId);
-
+        byte[] ExportUsers(UserSearchModel model);
         #endregion
 
         #region QueryEditor

@@ -197,6 +197,12 @@ namespace ChatApp.Server.Services.Implementations
 
             return _userRepository.Delete(userId);
         }
+
+        public byte[] ExportUsers(UserSearchModel model)
+        {
+            AuthorizeAdmin();
+            return _adminRepository.ExportUsers(model);
+        }
         #endregion
 
 
