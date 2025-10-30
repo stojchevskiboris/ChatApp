@@ -1,1 +1,214 @@
-<p>messages-registry works!</p>
+<div *ngIf="loading" class="loading-container flex-content-center">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div class="mt-4">
+    <h2>Messages Registry</h2>
+
+    <div class="row bg-secondary-subtle p-3 g-3 mb-3 mt-3 rounded">
+        <div class="col-md-4">
+            <label class="form-label" for="senderUsername">Sender Username</label>
+            <input type="text" [(ngModel)]="searchModel.senderUsername" name="senderUsername" class="form-control"
+                (keyup.enter)="search()" (change)="search()">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="senderId">Sender Id</label>
+            <input type="number" [(ngModel)]="searchModel.senderId" name="senderId" class="form-control"
+                (keyup.enter)="search()" (change)="search()">
+        </div>
+        <div class="col-md-4">
+            <label class="form-label" for="recipientUsername">Recipient Username</label>
+            <input type="text" [(ngModel)]="searchModel.recipientUsername" name="recipientUsername" class="form-control"
+                (keyup.enter)="search()" (change)="search()">
+        </div>
+        <div class="col-md-2">
+            <label class="form-label" for="recipientId">Recipient Id</label>
+            <input type="number" [(ngModel)]="searchModel.recipientId" name="recipientId" class="form-control"
+                (keyup.enter)="search()" (change)="search()">
+        </div>        
+
+        <div class="col-md-4">
+            <label class="form-label">Seen status</label>
+            <select [(ngModel)]="searchModel.seenStatus" name="seenStatus" class="form-select" (change)="search()">
+                <option [ngValue]="undefined">-- All --</option>
+                <option [value]="'1'">Seen</option>
+                <option [value]="'2'">Not seen</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Deleted Status</label>
+            <select [(ngModel)]="searchModel.deletedStatus" name="deletedStatus" class="form-select"
+                (change)="search()">
+                <option [ngValue]="undefined">-- All --</option>
+                <option [value]="'1'">Deleted</option>
+                <option [value]="'2'">Not deleted</option>
+            </select>
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">Has Media Status</label>
+            <select [(ngModel)]="searchModel.hasMediaStatus" name="hasMediaStatus" class="form-select"
+                (change)="search()">
+                <option [ngValue]="undefined">-- All --</option>
+                <option [value]="'1'">Has Media</option>
+                <option [value]="'2'">No Media</option>
+            </select>
+        </div>
+
+        <div class="col-md-12">
+            <label class="form-label" for="content">Message Content</label>
+            <input type="text" [(ngModel)]="searchModel.content" name="content" class="form-control"
+                (keyup.enter)="search()" (change)="search()">
+        </div>
+
+        <div class="col-12 d-flex justify-content-between">
+            <div>
+                <button type="submit" class="btn btn-outline-primary me-2" (click)="search()">Search</button>
+                <button type="button" class="btn btn-outline-secondary me-2" (click)="resetFilters()">
+                    Reset Filters
+                </button>
+                <button type="button" class="btn btn-outline-secondary" (click)="exportToCsv()">Export</button>
+            </div>
+            <div>
+                <button class="btn btn-primary" (click)="addMessage()">
+                    Add Message
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped w-100 mb-0">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+              
+                      <th class="cursor-pointer" (click)="setSort('id')">
+                        ID
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'id'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('senderUsername')">
+                        Sender Username
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'senderUsername'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('senderId')">
+                        Sender ID
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'senderId'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('recipientUsername')">
+                        Recipient Username
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'recipientUsername'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('recipientId')">
+                        Recipient ID
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'recipientId'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('content')">
+                        Content
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'content'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('hasMedia')">
+                        Has Media
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'hasMedia'"></app-sort-arrow>
+                      </th>
+              
+                      <th>Media Preview</th>
+              
+                      <th class="cursor-pointer" (click)="setSort('isSeen')">
+                        Seen
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'isSeen'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('isDeleted')">
+                        Deleted
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'isDeleted'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('parentMessage')">
+                        Parent Message
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'parentMessage'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('createdAt')">
+                        Created At
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'createdAt'"></app-sort-arrow>
+                      </th>
+              
+                      <th class="cursor-pointer" (click)="setSort('modifiedAt')">
+                        Modified At
+                        <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'modifiedAt'"></app-sort-arrow>
+                      </th>
+              
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+              
+                  <tbody>
+                    <tr *ngFor="let msg of pagedResult?.items; let i = index">
+                      <td>{{ (searchModel.page * searchModel.size) + (i + 1) }}</td>
+                      <td>{{ msg.id }}</td>
+                      <td>{{ msg.senderUsername }}</td>
+                      <td>{{ msg.senderId }}</td>
+                      <td>{{ msg.recipientUsername }}</td>
+                      <td>{{ msg.recipientId }}</td>
+                      <td class="text-truncate" style="max-width: 250px;">{{ msg.content }}</td>
+                      <td>
+                        <span [class.text-success]="msg.hasMedia" [class.text-danger]="!msg.hasMedia">
+                          {{ msg.hasMedia ? 'Yes' : 'No' }}
+                        </span>
+                      </td>
+                      <td>
+                        <ng-container *ngIf="msg.hasMedia && msg.media; else noMedia">
+                          <a [href]="msg.media.url" target="_blank">
+                            <img [src]="msg.media.url" alt="Media" class="img-thumbnail" style="width: 50px; height: 50px;">
+                          </a>
+                        </ng-container>
+                        <ng-template #noMedia>
+                          <span class="text-secondary">No Media</span>
+                        </ng-template>
+                      </td>
+                      <td>
+                        <span [class.text-success]="msg.isSeen" [class.text-danger]="!msg.isSeen">
+                          {{ msg.isSeen ? 'Seen' : 'Not Seen' }}
+                        </span>
+                      </td>
+                      <td>
+                        <span [class.text-danger]="msg.isDeleted" [class.text-success]="!msg.isDeleted">
+                          {{ msg.isDeleted ? 'Deleted' : 'Not deleted' }}
+                        </span>
+                      </td>
+                      <td>{{ msg.parentMessageId || '-' }}</td>
+                      <td>{{ msg.createdAt | date:'short' }}</td>
+                      <td>{{ msg.modifiedAt | date:'short' }}</td>
+              
+                      <td>
+                        <button class="btn btn-outline-secondary btn-sm me-2" (click)="editMessage(msg.id)">
+                          <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="btn btn-outline-danger btn-sm" (click)="deleteMessage(msg.id)">
+                          <mat-icon>delete</mat-icon>
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+              
+              <mat-paginator
+                [length]="pagedResult?.totalCount || 0"
+                [pageSize]="searchModel.size"
+                [pageSizeOptions]="[10, 20, 50, 100]"
+                [showFirstLastButtons]="true"
+                (page)="pageChanged($event)">
+              </mat-paginator>              
+        </div>
+    </div>
+
+</div>

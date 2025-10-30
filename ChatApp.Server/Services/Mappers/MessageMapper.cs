@@ -59,5 +59,34 @@ namespace ChatApp.Server.Services.Mappers
         {
             return messages.Select(x => x.MapToViewModel()).ToList();
         }
+
+        public static MessageAdminViewModel MapToAdminViewModel(this Message message)
+        {
+            if (message == null)
+                return null;
+
+            var model = new MessageAdminViewModel
+            {
+                Id = message.Id,
+                RecipientId = message.Recipient?.RecipientUser?.Id ?? 0,
+                RecipientUsername = message.Recipient?.RecipientUser?.Username ?? "",
+                SenderId = message.Sender?.Id ?? 0,
+                SenderUsername = message.Sender?.Username ?? "",
+                Content = message.Content ?? "",
+                HasMedia = message.HasMedia,
+                Media = message.MediaContent?.MapToViewModel(),
+                IsSeen = message.IsSeen,
+                ParentMessageId = message.ParentMessage?.Id,
+                CreatedAt = message.CreatedAt,
+                ModifiedAt = message.ModifiedAt
+            };
+
+            return model;
+        }
+
+        public static List<MessageAdminViewModel> MapToAdminViewModelList(this List<Message> messages)
+        {
+            return messages.Select(x => x.MapToAdminViewModel()).ToList();
+        }
     }
 }

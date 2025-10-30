@@ -1,6 +1,7 @@
 ﻿using ChatApp.Server.Configs.Authentication;
 using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Common;
+using ChatApp.Server.Services.ViewModels.Messages;
 using ChatApp.Server.Services.ViewModels.Users;
 
 namespace ChatApp.Server.Services.Interfaces
@@ -14,6 +15,14 @@ namespace ChatApp.Server.Services.Interfaces
         UserViewModel SaveOrUpdateUser(UserRegisterModel model);
         bool DeleteUser(int userId);
         byte[] ExportUsers(UserSearchModel model);
+        #endregion
+
+        #region Messages
+        PagedResult<MessageAdminViewModel> SearchMessages(MessageAdminSearchModel model);
+        MessageAdminViewModel GetMessageById(int userId);
+        MessageAdminViewModel SaveOrUpdateMessage(MessageViewModel model);
+        bool DeleteMessage(int messageId);
+        byte[] ExportMessages(MessageAdminSearchModel model);
         #endregion
 
         #region QueryEditor

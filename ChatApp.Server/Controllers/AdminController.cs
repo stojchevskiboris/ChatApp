@@ -3,6 +3,7 @@ using ChatApp.Server.Services.Implementations;
 using ChatApp.Server.Services.Interfaces;
 using ChatApp.Server.Services.ViewModels.Admin;
 using ChatApp.Server.Services.ViewModels.Common;
+using ChatApp.Server.Services.ViewModels.Messages;
 using ChatApp.Server.Services.ViewModels.Users;
 using Microsoft.AspNetCore.Mvc;
 
@@ -115,6 +116,88 @@ namespace ChatApp.Server.Controllers
             }
         }
         #endregion
+
+        #region Messages
+        [HttpPost("SearchMessages")]
+        public IActionResult SearchMessages([FromBody] MessageAdminSearchModel model)
+        {
+            try
+            {
+                var result = _adminService.SearchMessages(model);
+                return Ok(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("SaveOrUpdateMessage")]
+        public IActionResult SaveOrUpdateMessage([FromBody] MessageViewModel model)
+        {
+            try
+            {
+
+                var result = _adminService.SaveOrUpdateMessage(model);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("GetMessageById")]
+        public IActionResult GetMessageById([FromBody] HttpRequestIdModel model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    throw new CustomException("Invalid parameters");
+                }
+                var result = _adminService.GetMessageById(model.Id);
+                return Ok(new { data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("DeleteMessage")]
+        public IActionResult DeleteMessage([FromBody] HttpRequestIdModel model)
+        {
+            try
+            {
+                if (model.Id == 0)
+                {
+                    throw new CustomException("Invalid parameters");
+                }
+                var result = _adminService.DeleteMessage(model.Id);
+                return Ok(new { success = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+
+        [HttpPost("ExportMessages")]
+        public IActionResult ExportMessages([FromBody] MessageAdminSearchModel model)
+        {
+            try
+            {
+                var result = _adminService.ExportMessages(model);
+                return Ok(new { success = true, data = result });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { success = false, message = ex.Message });
+            }
+        }
+        #endregion
+
 
         #region QueryEditor
         [HttpPost("RunSql")]

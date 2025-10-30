@@ -1,0 +1,88 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+    <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+  </div>
+  
+  <h2 mat-dialog-title>{{ isEdit ? 'Edit Message' : 'Add Message' }}</h2>
+  
+  <div mat-dialog-content class="mx-2">
+    <div class="tab-group-container flex-grow-1 overflow-hidden">
+      <mat-tab-group>
+        <mat-tab label="General">
+          <form>
+            <div class="mb-3">
+              <label class="form-label">Sender Username</label>
+              <input class="form-control" [(ngModel)]="message.senderUsername" name="senderUsername">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Sender ID</label>
+              <input type="number" class="form-control" [(ngModel)]="message.senderId" name="senderId">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Recipient Username</label>
+              <input class="form-control" [(ngModel)]="message.recipientUsername" name="recipientUsername">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Recipient ID</label>
+              <input type="number" class="form-control" [(ngModel)]="message.recipientId" name="recipientId">
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Content</label>
+              <textarea rows="3" class="form-control" [(ngModel)]="message.content" name="content"></textarea>
+            </div>
+  
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="hasMedia" [(ngModel)]="message.hasMedia" name="hasMedia">
+              <label class="form-check-label" for="hasMedia">Has Media</label>
+            </div>
+  
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="isSeen" [(ngModel)]="message.isSeen" name="isSeen">
+              <label class="form-check-label" for="isSeen">Seen</label>
+            </div>
+  
+            <div class="mb-3 form-check">
+              <input type="checkbox" class="form-check-input" id="isDeleted" [(ngModel)]="message.isDeleted" name="isDeleted">
+              <label class="form-check-label" for="isDeleted">Deleted</label>
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Parent Message ID</label>
+              <input type="number" class="form-control" [(ngModel)]="message.parentMessageId" name="parentMessageId">
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Created At</label>
+              <input type="datetime-local" class="form-control" [(ngModel)]="message.createdAt" name="createdAt">
+            </div>
+  
+            <div class="mb-3">
+              <label class="form-label">Modified At</label>
+              <input type="datetime-local" class="form-control" [(ngModel)]="message.modifiedAt" name="modifiedAt">
+            </div>
+          </form>
+        </mat-tab>
+  
+        <mat-tab label="Media">
+          <div class="d-flex flex-column align-items-center mb-3">
+            <div *ngIf="message.media?.url" class="mb-3">
+              <img *ngIf="message.media.fileType.startsWith('image')" [src]="message.media.url" alt="Media Preview"
+                   class="rounded shadow-sm" style="max-width: 200px; max-height: 200px;">
+              <video *ngIf="message.media.fileType.startsWith('video')" controls style="max-width: 250px;">
+                <source [src]="message.media.url" [type]="message.media.fileType">
+              </video>
+            </div>
+  
+            <button mat-raised-button color="primary" (click)="fileInput.click()">Upload Media</button>
+            <input type="file" hidden #fileInput (change)="onMediaSelected($event)" accept="image/*,video/*">
+            <button *ngIf="message.media" mat-raised-button color="warn" class="mt-2" (click)="removeMedia()">Remove Media</button>
+          </div>
+        </mat-tab>
+      </mat-tab-group>
+  
+      <div class="mt-3 d-flex justify-content-end">
+        <button mat-button (click)="onCancel()">Cancel</button>
+        <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+      </div>
+    </div>
+  </div>
+  

@@ -137,34 +137,34 @@ export class UsersRegistryComponent {
     });
   }
 
-exportToCsv(): void {
-  this.adminService.exportUsers(this.searchModel)
-    .subscribe(result => {
-      if (result && result.success && result.data) {
+  exportToCsv(): void {
+    this.adminService.exportUsers(this.searchModel)
+      .subscribe(result => {
+        if (result && result.success && result.data) {
 
-        // Decode base64 string to binary data
-        const byteCharacters = atob(result.data);
-        const byteNumbers = new Array(byteCharacters.length);
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
+          // Decode base64 string to binary data
+          const byteCharacters = atob(result.data);
+          const byteNumbers = new Array(byteCharacters.length);
+          for (let i = 0; i < byteCharacters.length; i++) {
+            byteNumbers[i] = byteCharacters.charCodeAt(i);
+          }
+          const byteArray = new Uint8Array(byteNumbers);
+
+          // Create and download Blob
+          const blob = new Blob([byteArray], { type: 'text/csv;charset=utf-8;' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = 'users.csv';
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+
+        } else {
+          this.toastr.error('Failed to export users');
         }
-        const byteArray = new Uint8Array(byteNumbers);
-
-        // Create and download Blob
-        const blob = new Blob([byteArray], { type: 'text/csv;charset=utf-8;' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'users.csv';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-
-      } else {
+      }, error => {
         this.toastr.error('Failed to export users');
-      }
-    }, error => {
-      this.toastr.error('Failed to export users');
-    });
-}
+      });
+  }
 }

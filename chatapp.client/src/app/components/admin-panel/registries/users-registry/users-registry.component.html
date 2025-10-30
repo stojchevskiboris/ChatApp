@@ -110,7 +110,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let user of pagedResult?.items; let i = index">
-              <td>{{ i+1 }}</td>
+              <td>{{ (searchModel.page * searchModel.size) + (i + 1) }}</td>
               <td>{{ user.id }}</td>
               <td>{{ user.firstName }}</td>
               <td>{{ user.lastName }}</td>
@@ -143,8 +143,12 @@
         </table>
       </div>
 
-      <mat-paginator [length]="pagedResult?.totalCount || 0" [pageSize]="searchModel.size"
-        [pageSizeOptions]="[ 10, 20, 50, 100]" [showFirstLastButtons]="true" (page)="pageChanged($event)">
+      <mat-paginator 
+        [length]="pagedResult?.totalCount || 0" 
+        [pageSize]="searchModel.size"
+        [pageSizeOptions]="[ 10, 20, 50, 100]" 
+        [showFirstLastButtons]="true" 
+        (page)="pageChanged($event)">
       </mat-paginator>
     </div>
   </div>
