@@ -2,7 +2,7 @@
 <p align="center"> <a href="https://github.com/stojchevskiboris/ChatApp"><kbd> <img src="chatapp.client/public/favicon.ico" alt="Chat Interface"> </kbd> </a> <h3 align="center">ChatApp - Real-time Chat Application</h3> <p align="center"> A real-time messaging application built with .NET Core, Angular, and SignalR. 
   <br/> <br/> 
   <a href="https://dotnet.microsoft.com/"><strong>Explore the docs »</strong></a> <br/> <br/> 
-  <a href="https://chatsmk.azurewebsites.net/"><strong>Try ChatApp »</strong></a> </p> </p>
+  <a href="https://chats.runasp.net/"><strong>Try ChatApp »</strong></a> </p> </p>
 
 ## About The Project
 ChatApp is a real-time chat application that allows users to communicate seamlessly. With the combination of Angular for the frontend, .NET Core 8 for the backend, and SignalR for real-time communication, ChatApp provides an engaging chat experience.
@@ -35,6 +35,18 @@ This project is built using the following technologies:
 <a href='https://getbootstrap.com/'>Bootstrap 5</a> (Styling)
 
 <a href='https://material.angular.io/'>Angular Material</a> (UI Components)
+
+
+## ✅ Supported Node / NPM Versions
+
+| Requirement          | Version |
+|----------------------|---------|
+| **Node.js**          | `>= 18.x` (20.x is recommended for Angular 18) |
+| **Angular CLI**      | `>= 18.x` |
+
+> ⚠️ Using older Node/npm versions may cause dependency or build issues.
+
+---
 
 ## Getting Started
 
