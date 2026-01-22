@@ -1,7 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
 
 @Pipe({
-  name: 'lastActive',
+    name: 'lastActive',
+    standalone: false
 })
 export class LastActivePipe implements PipeTransform {
   transform(value: Date | any): string | null {

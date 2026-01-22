@@ -11,9 +11,10 @@ import { MediaViewModel } from '../../models/media-view-model';
 import { MediaMatcher } from '@angular/cdk/layout';
 
 @Component({
-  selector: 'app-chat-settings',
-  templateUrl: './chat-settings.component.html',
-  styleUrl: './chat-settings.component.css'
+    selector: 'app-chat-settings',
+    templateUrl: './chat-settings.component.html',
+    styleUrl: './chat-settings.component.css',
+    standalone: false
 })
 export class ChatSettingsComponent {
 

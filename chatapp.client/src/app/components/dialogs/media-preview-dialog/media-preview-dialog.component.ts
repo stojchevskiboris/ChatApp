@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MediaViewModel } from '../../../models/media-view-model';
 
 @Component({
-  selector: 'app-media-preview-dialog',
-  templateUrl: './media-preview-dialog.component.html',
-  styleUrl: './media-preview-dialog.component.css'
+    selector: 'app-media-preview-dialog',
+    templateUrl: './media-preview-dialog.component.html',
+    styleUrl: './media-preview-dialog.component.css',
+    standalone: false
 })
 export class MediaPreviewDialogComponent {
   constructor(

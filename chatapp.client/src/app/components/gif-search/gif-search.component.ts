@@ -3,9 +3,10 @@ import { GiphyService } from '../../services/giphy.service';
 import { GifViewModel } from '../../models/gif-view-model';
 
 @Component({
-  selector: 'app-gif-search',
-  templateUrl: './gif-search.component.html',
-  styleUrls: ['./gif-search.component.css']
+    selector: 'app-gif-search',
+    templateUrl: './gif-search.component.html',
+    styleUrls: ['./gif-search.component.css'],
+    standalone: false
 })
 export class GifSearchComponent {
   searchQuery = '';

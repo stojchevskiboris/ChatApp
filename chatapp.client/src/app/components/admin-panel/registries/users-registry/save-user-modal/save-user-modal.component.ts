@@ -6,9 +6,10 @@ import { UserViewModel } from '../../../../../models/user-view-model';
 import { ChangePasswordAdminModel } from '../../../../../models/change-password-admin-model';
 
 @Component({
-  selector: 'app-save-user-modal',
-  templateUrl: './save-user-modal.component.html',
-  styleUrls: ['./save-user-modal.component.css']
+    selector: 'app-save-user-modal',
+    templateUrl: './save-user-modal.component.html',
+    styleUrls: ['./save-user-modal.component.css'],
+    standalone: false
 })
 export class SaveUserModalComponent implements OnInit {
   user: any = {

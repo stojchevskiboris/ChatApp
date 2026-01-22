@@ -10,9 +10,10 @@ import { MessageAdminViewModel } from '../../../../models/message-admin-view-mod
 import { SaveMessageModalComponent } from './save-message-modal/save-message-modal.component';
 
 @Component({
-  selector: 'app-messages-registry',
-  templateUrl: './messages-registry.component.html',
-  styleUrl: './messages-registry.component.css'
+    selector: 'app-messages-registry',
+    templateUrl: './messages-registry.component.html',
+    styleUrl: './messages-registry.component.css',
+    standalone: false
 })
 export class MessagesRegistryComponent {
   searchModel: MessageSearchModel = {

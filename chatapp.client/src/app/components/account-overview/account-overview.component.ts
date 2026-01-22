@@ -14,9 +14,10 @@ import { UserRoleViewModel } from '../../models/user-role-view-model';
 import { AdminService } from '../../services/admin.service';
 
 @Component({
-  selector: 'app-account-overview',
-  templateUrl: './account-overview.component.html',
-  styleUrl: './account-overview.component.css'
+    selector: 'app-account-overview',
+    templateUrl: './account-overview.component.html',
+    styleUrl: './account-overview.component.css',
+    standalone: false
 })
 export class AccountOverviewComponent {
   constructor(

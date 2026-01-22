@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { SqlResultModel } from '../../../../models/sql-result-model';
 
 @Component({
-  selector: 'app-query-editor',
-  templateUrl: './query-editor.component.html',
-  styleUrl: './query-editor.component.css'
+    selector: 'app-query-editor',
+    templateUrl: './query-editor.component.html',
+    styleUrl: './query-editor.component.css',
+    standalone: false
 })
 export class QueryEditorComponent {
   query = '';

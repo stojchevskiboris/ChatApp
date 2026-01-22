@@ -8,9 +8,10 @@ import { Router } from '@angular/router';
 import { SectionEnum } from '../../models/enums/section-enum';
 
 @Component({
-  selector: 'app-admin-panel',
-  templateUrl: './admin-panel.component.html',
-  styleUrl: './admin-panel.component.css'
+    selector: 'app-admin-panel',
+    templateUrl: './admin-panel.component.html',
+    styleUrl: './admin-panel.component.css',
+    standalone: false
 })
 export class AdminPanelComponent {
   loading: boolean = true;

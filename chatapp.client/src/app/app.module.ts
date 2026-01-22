@@ -98,8 +98,6 @@ import { SaveMessageModalComponent } from './components/admin-panel/registries/m
     HttpClientModule,
     AppRoutingModule,
     MaterialModule,
-    BrowserAnimationsModule,
-    MatIconModule,
     NgScrollbarModule,
     ToastrModule.forRoot(),
   ],

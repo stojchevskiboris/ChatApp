@@ -2,7 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { format } from 'date-fns';
 
 @Pipe({
-  name: 'messageDate'
+    name: 'messageDate',
+    standalone: false
 })
 export class MessageDatePipe implements PipeTransform {
 

@@ -9,9 +9,10 @@ import { RemoveMediaDialogComponent } from '../dialogs/remove-media-dialog/remov
 import { EncryptDecryptService } from '../../services/encrypt-decrypt.service';
 
 @Component({
-  selector: 'app-account-settings',
-  templateUrl: './account-settings.component.html',
-  styleUrl: './account-settings.component.css'
+    selector: 'app-account-settings',
+    templateUrl: './account-settings.component.html',
+    styleUrl: './account-settings.component.css',
+    standalone: false
 })
 export class AccountSettingsComponent {
 

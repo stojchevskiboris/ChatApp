@@ -3,9 +3,10 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { UserViewModel } from '../../../models/user-view-model';
 
 @Component({
-  selector: 'app-remove-contact-dialog',
-  templateUrl: './remove-contact-dialog.component.html',
-  styleUrl: './remove-contact-dialog.component.css'
+    selector: 'app-remove-contact-dialog',
+    templateUrl: './remove-contact-dialog.component.html',
+    styleUrl: './remove-contact-dialog.component.css',
+    standalone: false
 })
 export class RemoveContactDialogComponent {
   constructor(

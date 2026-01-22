@@ -21,9 +21,10 @@ import { MediaMatcher } from '@angular/cdk/layout';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrl: './chat.component.css'
+    selector: 'app-chat',
+    templateUrl: './chat.component.html',
+    styleUrl: './chat.component.css',
+    standalone: false
 })
 export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
 

@@ -10,9 +10,10 @@ import { ToastrService } from 'ngx-toastr';
 import { SaveUserModalComponent } from './save-user-modal/save-user-modal.component';
 
 @Component({
-  selector: 'app-users-registry',
-  templateUrl: './users-registry.component.html',
-  styleUrl: './users-registry.component.css'
+    selector: 'app-users-registry',
+    templateUrl: './users-registry.component.html',
+    styleUrl: './users-registry.component.css',
+    standalone: false
 })
 export class UsersRegistryComponent {
   searchModel: UserSearchModel = {

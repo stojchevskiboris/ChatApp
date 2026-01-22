@@ -4,9 +4,10 @@ import { AdminService } from '../../../../../services/admin.service';
 import { ToastrService } from 'ngx-toastr';
 
 @Component({
-  selector: 'app-save-message-modal',
-  templateUrl: './save-message-modal.component.html',
-  styleUrl: './save-message-modal.component.css'
+    selector: 'app-save-message-modal',
+    templateUrl: './save-message-modal.component.html',
+    styleUrl: './save-message-modal.component.css',
+    standalone: false
 })
 export class SaveMessageModalComponent {
   message: any = {
