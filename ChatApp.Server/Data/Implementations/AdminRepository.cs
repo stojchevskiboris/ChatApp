@@ -1,4 +1,4 @@
-﻿using ChatApp.Server.Common.Helpers;
+using ChatApp.Server.Common.Helpers;
 using ChatApp.Server.Data.Interfaces;
 using ChatApp.Server.Domain.Enums;
 using ChatApp.Server.Domain.Models;
@@ -38,8 +38,6 @@ namespace ChatApp.Server.Data.Implementations
             var orderByColumn = "Id";
             var direction = model.SortDirection?.ToUpper() == "DESC" ? "DESC" : "ASC";
 
-            // Sanitize/whitelist the column name to prevent SQL injection
-            if (!string.IsNullOrWhiteSpace(model.SortColumn))
             {
                 switch (model.SortColumn.ToLower())
                 {
@@ -73,25 +71,21 @@ namespace ChatApp.Server.Data.Implementations
                     WHERE 1=1
             ");
 
-            if (!string.IsNullOrWhiteSpace(model.FirstName))
             {
                 sql.AppendLine("AND FirstName LIKE @FirstName");
                 parameters.Add(new SqlParameter("@FirstName", $"%{model.FirstName}%"));
             }
 
-            if (!string.IsNullOrWhiteSpace(model.LastName))
             {
                 sql.AppendLine("AND LastName LIKE @LastName");
                 parameters.Add(new SqlParameter("@LastName", $"%{model.LastName}%"));
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Username))
             {
                 sql.AppendLine("AND Username LIKE @Username");
                 parameters.Add(new SqlParameter("@Username", $"%{model.Username}%"));
             }
 
-            if (!string.IsNullOrWhiteSpace(model.Phone))
             {
                 sql.AppendLine("AND Phone LIKE @Phone");
                 parameters.Add(new SqlParameter("@Phone", $"%{model.Phone}%"));
@@ -110,9 +104,7 @@ namespace ChatApp.Server.Data.Implementations
             }
 
             sql.AppendLine(@") AS UsersWithRowNum");
-            //sql.AppendLine("ORDER BY RowNum");
 
-            // Now execute and return result
             var users = _context.Users
                 .FromSqlRaw(sql.ToString(), parameters.ToArray())
                 .AsNoTracking()
@@ -128,5 +120,85 @@ namespace ChatApp.Server.Data.Implementations
 
             return Encoding.UTF8.GetBytes(csv.ToString());
         }
+
+        #region Groups
+        public IQueryable<Group> GroupsQueryable() => _context.Groups.AsQueryable();
+        public Group GetGroupById(int id) => _context.Groups.FirstOrDefault(x => x.Id == id);
+        public bool DeleteGroup(int id)
+        {
+            var group = _context.Groups.FirstOrDefault(x => x.Id == id);
+            if (group == null) return false;
+            _context.Groups.Remove(group);
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region GroupUsers
+        public IQueryable<GroupUser> GroupUsersQueryable() => _context.GroupUsers.AsQueryable();
+        public GroupUser GetGroupUserById(int id) => _context.GroupUsers.FirstOrDefault(x => x.Id == id);
+        public bool DeleteGroupUser(int id)
+        {
+            var groupUser = _context.GroupUsers.FirstOrDefault(x => x.Id == id);
+            if (groupUser == null) return false;
+            _context.GroupUsers.Remove(groupUser);
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region Messages
+        public IQueryable<Message> MessagesQueryable() => _context.Messages.AsQueryable();
+        public Message GetMessageById(int id) => _context.Messages.FirstOrDefault(x => x.Id == id);
+        public bool DeleteMessage(int id)
+        {
+            var message = _context.Messages.FirstOrDefault(x => x.Id == id);
+            if (message == null) return false;
+            message.IsDeleted = true;
+            message.ModifiedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region Media
+        public IQueryable<Media> MediaQueryable() => _context.Media.AsQueryable();
+        public Media GetMediaById(int id) => _context.Media.FirstOrDefault(x => x.Id == id);
+        public bool DeleteMedia(int id)
+        {
+            var media = _context.Media.FirstOrDefault(x => x.Id == id);
+            if (media == null) return false;
+            _context.Media.Remove(media);
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region Recipients
+        public IQueryable<Recipient> RecipientsQueryable() => _context.Recipients.AsQueryable();
+        public Recipient GetRecipientById(int id) => _context.Recipients.FirstOrDefault(x => x.Id == id);
+        public bool DeleteRecipient(int id)
+        {
+            var recipient = _context.Recipients.FirstOrDefault(x => x.Id == id);
+            if (recipient == null) return false;
+            _context.Recipients.Remove(recipient);
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
+
+        #region Requests
+        public IQueryable<Request> RequestsQueryable() => _context.Requests.AsQueryable();
+        public Request GetRequestById(int id) => _context.Requests.FirstOrDefault(x => x.Id == id);
+        public bool DeleteRequest(int id)
+        {
+            var request = _context.Requests.FirstOrDefault(x => x.Id == id);
+            if (request == null) return false;
+            request.IsDeleted = true;
+            request.ModifiedAt = DateTime.UtcNow;
+            _context.SaveChanges();
+            return true;
+        }
+        #endregion
     }
 }
