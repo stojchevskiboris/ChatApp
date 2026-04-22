@@ -245,6 +245,10 @@ namespace ChatApp.Server.Services.Implementations
         public GroupUserViewModel SaveGroupUser(SaveGroupUserModel model)
         {
             if (model == null) throw new CustomException("Invalid model");
+
+            var group = _adminRepository.GetGroupById(model.GroupId);
+            if (group == null) throw new CustomException("Group not found");
+
             var groupUser = new GroupUser
             {
                 GroupId = model.GroupId,

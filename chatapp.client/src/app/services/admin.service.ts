@@ -46,7 +46,7 @@ export class AdminService {
   //#region Users
   searchUsers(searchModel: UserSearchModel): Observable<any> {
     return this.dataService
-      .post<any>(this.searchUsersEndpoint, searchModel )
+      .post<any>(this.searchUsersEndpoint, searchModel)
       .pipe(
         tap((response) => {
           return response.data;
@@ -122,8 +122,6 @@ export class AdminService {
         })
       );
   }
-  //#endregion
-
   //#endregion
 
   //#region Groups
