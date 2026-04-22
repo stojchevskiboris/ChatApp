@@ -1,0 +1,21 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<h2 mat-dialog-title>Add Group User</h2>
+<div mat-dialog-content class="mx-2">
+  <form>
+    <div class="mb-3">
+      <label class="form-label">Group ID</label>
+      <input type="number" class="form-control" [(ngModel)]="model.groupId" name="groupId" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">User ID</label>
+      <input type="number" class="form-control" [(ngModel)]="model.userId" name="userId" required>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+</div>

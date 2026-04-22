@@ -1,1 +1,76 @@
-<p>media-registry works!</p>
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div class="mt-4">
+  <h2>Media Registry</h2>
+
+  <div class="row bg-secondary-subtle p-3 g-3 mb-3 mt-3 rounded">
+    <div class="col-md-4">
+      <label class="form-label">Message ID</label>
+      <input type="number" [(ngModel)]="searchModel.messageId" name="messageId" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">File Type</label>
+      <input type="text" [(ngModel)]="searchModel.fileType" name="fileType" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-12 d-flex justify-content-start">
+      <button type="submit" class="btn btn-outline-primary me-2" (click)="search()">Search</button>
+      <button type="button" class="btn btn-outline-secondary" (click)="resetFilters()">Reset Filters</button>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped w-100 mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="cursor-pointer" (click)="setSort('id')">
+                ID <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'id'"></app-sort-arrow>
+              </th>
+              <th>Message ID</th>
+              <th>URL</th>
+              <th class="cursor-pointer" (click)="setSort('filetype')">
+                File Type <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'filetype'"></app-sort-arrow>
+              </th>
+              <th class="cursor-pointer" (click)="setSort('filesize')">
+                File Size (KB) <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'filesize'"></app-sort-arrow>
+              </th>
+              <th class="cursor-pointer" (click)="setSort('createdat')">
+                Created At <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'createdat'"></app-sort-arrow>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let media of pagedResult?.items; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ media.id }}</td>
+              <td>{{ media.messageId }}</td>
+              <td>
+                <a [href]="media.url" target="_blank" *ngIf="media.url">View</a>
+                <span *ngIf="!media.url">—</span>
+              </td>
+              <td>{{ media.fileType }}</td>
+              <td>{{ (media.fileSize / 1024) | number:'1.1-1' }}</td>
+              <td>{{ media.createdAt | date:'short' }}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteMedia(media.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <mat-paginator [length]="pagedResult?.totalCount || 0" [pageSize]="searchModel.size"
+        [pageSizeOptions]="[10, 20, 50, 100]" [showFirstLastButtons]="true" (page)="pageChanged($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+

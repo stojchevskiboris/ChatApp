@@ -1,0 +1,23 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<h2 mat-dialog-title>Update Request Status</h2>
+<div mat-dialog-content class="mx-2">
+  <form>
+    <div class="mb-3">
+      <label class="form-label">Request ID</label>
+      <input class="form-control" [value]="model.id" disabled>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Status</label>
+      <select [(ngModel)]="model.requestStatus" name="requestStatus" class="form-select">
+        <option *ngFor="let s of requestStatuses" [value]="s.value">{{ s.label }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+</div>

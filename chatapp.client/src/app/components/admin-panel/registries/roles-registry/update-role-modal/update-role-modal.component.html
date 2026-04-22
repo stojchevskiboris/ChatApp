@@ -1,0 +1,23 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<h2 mat-dialog-title>Update User Role</h2>
+<div mat-dialog-content class="mx-2">
+  <form>
+    <div class="mb-3">
+      <label class="form-label">User</label>
+      <input class="form-control" [value]="data.user.username + ' (' + data.user.firstName + ' ' + data.user.lastName + ')'" disabled>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Role</label>
+      <select [(ngModel)]="model.role" name="role" class="form-select">
+        <option *ngFor="let r of roles" [value]="r.value">{{ r.label }}</option>
+      </select>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+</div>

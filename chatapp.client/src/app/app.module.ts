@@ -51,6 +51,10 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { SortArrowComponent } from './components/shared/sort-arrow.component';
 import { RemoveItemDialogComponent } from './components/shared/remove-item-dialog';
 import { SaveUserModalComponent } from './components/admin-panel/registries/users-registry/save-user-modal/save-user-modal.component';
+import { SaveGroupModalComponent } from './components/admin-panel/registries/groups-registry/save-group-modal/save-group-modal.component';
+import { SaveGroupUserModalComponent } from './components/admin-panel/registries/group-users-registry/save-group-user-modal/save-group-user-modal.component';
+import { UpdateRequestModalComponent } from './components/admin-panel/registries/requests-registry/update-request-modal/update-request-modal.component';
+import { UpdateRoleModalComponent } from './components/admin-panel/registries/roles-registry/update-role-modal/update-role-modal.component';
 
 @NgModule({
   declarations: [
@@ -88,7 +92,11 @@ import { SaveUserModalComponent } from './components/admin-panel/registries/user
     QueryEditorComponent,
     SortArrowComponent,
     RemoveItemDialogComponent,
-    SaveUserModalComponent
+    SaveUserModalComponent,
+    SaveGroupModalComponent,
+    SaveGroupUserModalComponent,
+    UpdateRequestModalComponent,
+    UpdateRoleModalComponent
   ],
   imports: [
     BrowserModule,

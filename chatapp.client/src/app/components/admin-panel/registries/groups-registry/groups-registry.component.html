@@ -1,1 +1,77 @@
-<p>groups-registry works!</p>
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div class="mt-4">
+  <h2>Groups Registry</h2>
+
+  <div class="row bg-secondary-subtle p-3 g-3 mb-3 mt-3 rounded">
+    <div class="col-md-4">
+      <label class="form-label">Name</label>
+      <input type="text" [(ngModel)]="searchModel.name" name="name" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Created By User ID</label>
+      <input type="number" [(ngModel)]="searchModel.createdByUserId" name="createdByUserId" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-12 d-flex justify-content-between">
+      <div>
+        <button type="submit" class="btn btn-outline-primary me-2" (click)="search()">Search</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="resetFilters()">Reset Filters</button>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="addGroup()">Add Group</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped w-100 mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="cursor-pointer" (click)="setSort('id')">
+                ID <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'id'"></app-sort-arrow>
+              </th>
+              <th class="cursor-pointer" (click)="setSort('name')">
+                Name <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'name'"></app-sort-arrow>
+              </th>
+              <th>Created By</th>
+              <th>Members</th>
+              <th class="cursor-pointer" (click)="setSort('createdat')">
+                Created At <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'createdat'"></app-sort-arrow>
+              </th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let group of pagedResult?.items; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ group.id }}</td>
+              <td>{{ group.name }}</td>
+              <td>{{ group.createdByUser?.username || group.createdByUser?.id }}</td>
+              <td>{{ group.groupUsersId?.length || 0 }}</td>
+              <td>{{ group.createdAt | date:'short' }}</td>
+              <td>
+                <button class="btn btn-outline-secondary btn-sm me-2" (click)="editGroup(group.id)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteGroup(group.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <mat-paginator [length]="pagedResult?.totalCount || 0" [pageSize]="searchModel.size"
+        [pageSizeOptions]="[10, 20, 50, 100]" [showFirstLastButtons]="true" (page)="pageChanged($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+

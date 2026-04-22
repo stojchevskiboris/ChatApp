@@ -1,1 +1,68 @@
-<p>group-users-registry works!</p>
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<div class="mt-4">
+  <h2>Group Users Registry</h2>
+
+  <div class="row bg-secondary-subtle p-3 g-3 mb-3 mt-3 rounded">
+    <div class="col-md-4">
+      <label class="form-label">Group ID</label>
+      <input type="number" [(ngModel)]="searchModel.groupId" name="groupId" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">User ID</label>
+      <input type="number" [(ngModel)]="searchModel.userId" name="userId" class="form-control"
+        (keyup.enter)="search()" (change)="search()">
+    </div>
+    <div class="col-12 d-flex justify-content-between">
+      <div>
+        <button type="submit" class="btn btn-outline-primary me-2" (click)="search()">Search</button>
+        <button type="button" class="btn btn-outline-secondary" (click)="resetFilters()">Reset Filters</button>
+      </div>
+      <div>
+        <button class="btn btn-primary" (click)="addGroupUser()">Add Group User</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="table-responsive">
+        <table class="table table-bordered table-striped w-100 mb-0">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th class="cursor-pointer" (click)="setSort('id')">
+                ID <app-sort-arrow [isAsc]="isAsc" *ngIf="searchModel.sortColumn === 'id'"></app-sort-arrow>
+              </th>
+              <th>Group ID</th>
+              <th>User ID</th>
+              <th>Created At</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gu of pagedResult?.items; let i = index">
+              <td>{{ i + 1 }}</td>
+              <td>{{ gu.id }}</td>
+              <td>{{ gu.groupId }}</td>
+              <td>{{ gu.userId }}</td>
+              <td>{{ gu.createdAt | date:'short' }}</td>
+              <td>
+                <button class="btn btn-outline-danger btn-sm" (click)="deleteGroupUser(gu.id)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <mat-paginator [length]="pagedResult?.totalCount || 0" [pageSize]="searchModel.size"
+        [pageSizeOptions]="[10, 20, 50, 100]" [showFirstLastButtons]="true" (page)="pageChanged($event)">
+      </mat-paginator>
+    </div>
+  </div>
+</div>
+
