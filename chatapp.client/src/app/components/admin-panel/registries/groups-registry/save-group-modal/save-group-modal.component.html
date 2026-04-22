@@ -1,0 +1,17 @@
+<div *ngIf="loading" class="loading-container flex-content-center">
+  <mat-progress-spinner color="primary" mode="indeterminate"></mat-progress-spinner>
+</div>
+
+<h2 mat-dialog-title>{{ isEdit ? 'Edit Group' : 'Add Group' }}</h2>
+<div mat-dialog-content class="mx-2">
+  <form>
+    <div class="mb-3">
+      <label class="form-label">Name</label>
+      <input class="form-control" [(ngModel)]="group.name" name="name" required>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-flat-button color="primary" (click)="onSave()" [disabled]="loading">Save</button>
+</div>
