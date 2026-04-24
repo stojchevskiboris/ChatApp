@@ -10,24 +10,24 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Data\Mappings\**" />
-	  <Compile Remove="Services\SearchModels\**" />
-	  <Content Remove="Data\Mappings\**" />
-	  <Content Remove="Services\SearchModels\**" />
-	  <EmbeddedResource Remove="Data\Mappings\**" />
-	  <EmbeddedResource Remove="Services\SearchModels\**" />
-	  <None Remove="Data\Mappings\**" />
-	  <None Remove="Services\SearchModels\**" />
+		<Compile Remove="Data\Mappings\**" />
+		<Compile Remove="Services\SearchModels\**" />
+		<Content Remove="Data\Mappings\**" />
+		<Content Remove="Services\SearchModels\**" />
+		<EmbeddedResource Remove="Data\Mappings\**" />
+		<EmbeddedResource Remove="Services\SearchModels\**" />
+		<None Remove="Data\Mappings\**" />
+		<None Remove="Services\SearchModels\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="Configs\Firebase\chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json" />
+		<Content Remove="Configs\Firebase\chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <EmbeddedResource Include="Configs\Firebase\chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </EmbeddedResource>
+		<EmbeddedResource Include="Configs\Firebase\chatapp-7864e-firebase-adminsdk-5p04q-48e2ddcca1.json">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
 	</ItemGroup>
 
 	<ItemGroup>
@@ -69,5 +69,13 @@
 	<ItemGroup>
 		<Folder Include="Migrations\" />
 	</ItemGroup>
+
+	<Target Name="BuildClientOnPublish" BeforeTargets="Publish">
+		<Exec WorkingDirectory="$(SpaRoot)"
+					Command="if not exist node_modules npm install" />
+
+		<Exec WorkingDirectory="$(SpaRoot)"
+					Command="npm run build -- --configuration production" />
+	</Target>
 
 </Project>
