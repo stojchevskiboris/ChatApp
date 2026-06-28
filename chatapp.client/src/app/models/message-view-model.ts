@@ -4,6 +4,7 @@ export class MessageViewModel {
     id: number = 0;
     senderId: number = 0;
     recipientId: number = 0;
+    isGroup: boolean = false;
     content: string = '';
     media: MessageMediaViewModel | null = null;
     type: string = '';

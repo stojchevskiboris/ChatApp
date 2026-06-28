@@ -60,21 +60,21 @@ export class SignalRService {
     } catch (err) { }
   }
 
-  async deleteMessage(toUserId: number, messageId: number): Promise<void> {
+  async deleteMessage(toUserId: number, messageId: number, isGroup: boolean = false): Promise<void> {
     try {
-      await this.hubConnection.invoke('DeleteMessage', +this.currentUserId, toUserId, messageId);
+      await this.hubConnection.invoke('DeleteMessage', +this.currentUserId, toUserId, messageId, isGroup);
     } catch (err) { }
   }
 
-  async setMessageSeen(toUserId: number, messageId: number): Promise<void> {
+  async setMessageSeen(toUserId: number, messageId: number, isGroup: boolean = false): Promise<void> {
     try {
-      await this.hubConnection.invoke('SetMessageSeen', +this.currentUserId, toUserId, messageId);
+      await this.hubConnection.invoke('SetMessageSeen', +this.currentUserId, toUserId, messageId, isGroup);
     } catch (err) { }
   }
 
-  async onTypingEvent(toUserId: number): Promise<void> {
+  async onTypingEvent(toUserId: number, isGroup: boolean = false): Promise<void> {
     try {
-      await this.hubConnection.invoke('Typing', +this.currentUserId, toUserId);
+      await this.hubConnection.invoke('Typing', +this.currentUserId, toUserId, isGroup);
     } catch (err) {
     }
   }

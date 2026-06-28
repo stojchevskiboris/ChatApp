@@ -25,9 +25,9 @@ export class MessageService {
   private getSharedMediaEndpoint = '/Messages/GetSharedMedia';
   private deleteMessageEndpoint = '/Messages/DeleteMessage';
 
-  searchMessages(recipientId: number, query: string): Observable<MessageViewModel[]> {
+  searchMessages(recipientId: number, query: string, isGroup: boolean = false): Observable<MessageViewModel[]> {
     return this.dataService
-      .post<MessageViewModel[]>(this.searchMessagesEndpoint, { recipientId, query })
+      .post<MessageViewModel[]>(this.searchMessagesEndpoint, { recipientId, query, isGroup })
       .pipe(
         tap((response) => {
           return response;
@@ -95,9 +95,9 @@ export class MessageService {
       );
   }
 
-  getRecentMessages(recipientId: number): Observable<MessagesChatModel> {
+  getRecentMessages(recipientId: number, isGroup: boolean = false): Observable<MessagesChatModel> {
     return this.dataService
-      .post<MessagesChatModel>(this.getRecentMessagesEndpoint, { Id: recipientId })
+      .post<MessagesChatModel>(this.getRecentMessagesEndpoint, { recipientId, isGroup })
       .pipe(
         tap((response) => {
           return response;
@@ -105,9 +105,9 @@ export class MessageService {
       );
   }
 
-  fetchOlderMessages(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
+  fetchOlderMessages(oldestMessageId: number, recipientId: number, isGroup: boolean = false): Observable<MessagesChatModel> {
     return this.dataService
-      .post<MessagesChatModel>(this.fetchOlderMessagesEndpoint, { oldestMessageId, recipientId })
+      .post<MessagesChatModel>(this.fetchOlderMessagesEndpoint, { oldestMessageId, recipientId, isGroup })
       .pipe(
         tap((response) => {
           return response;
@@ -115,9 +115,9 @@ export class MessageService {
       );
   }
 
-  fetchMessagesNewerThanMessageId(oldestMessageId: number, recipientId: number): Observable<MessagesChatModel> {
+  fetchMessagesNewerThanMessageId(oldestMessageId: number, recipientId: number, isGroup: boolean = false): Observable<MessagesChatModel> {
     return this.dataService
-      .post<MessagesChatModel>(this.fetchMessagesNewerThanMessageIdEndpoint, { oldestMessageId, recipientId })
+      .post<MessagesChatModel>(this.fetchMessagesNewerThanMessageIdEndpoint, { oldestMessageId, recipientId, isGroup })
       .pipe(
         tap((response) => {
           return response;
@@ -125,9 +125,9 @@ export class MessageService {
       );
   }
 
-  getSharedMedia(recipientId): Observable<MediaViewModel[]> {
+  getSharedMedia(recipientId: number, isGroup: boolean = false): Observable<MediaViewModel[]> {
     return this.dataService
-      .post<MediaViewModel[]>(this.getSharedMediaEndpoint, { Id: recipientId })
+      .post<MediaViewModel[]>(this.getSharedMediaEndpoint, { recipientId, isGroup })
       .pipe(
         tap((response) => {
           return response;
