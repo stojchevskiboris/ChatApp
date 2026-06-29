@@ -1,0 +1,14 @@
+<<<<<<< SEARCH
+import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
+=======
+import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
+import { CreateGroupDialogComponent } from './components/dialogs/create-group-dialog/create-group-dialog.component';
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+    AddContactDialogComponent,
+    SignOutDialogComponent,
+=======
+    AddContactDialogComponent,
+    SignOutDialogComponent,
+    CreateGroupDialogComponent,
+>>>>>>> REPLACE

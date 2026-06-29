@@ -1,0 +1,38 @@
+<<<<<<< SEARCH
+  addContacts() {
+    const dialogRef = this.dialog.open(AddContactDialogComponent, {
+      width: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getContacts();
+      // console.log(`Dialog result: ${result}`);
+    });
+
+  }
+=======
+  addContacts() {
+    const dialogRef = this.dialog.open(AddContactDialogComponent, {
+      width: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getContacts();
+      // console.log(`Dialog result: ${result}`);
+    });
+
+  }
+
+  createGroup() {
+    const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
+      width: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getGroups();
+        this.getRecentChats();
+      }
+    });
+  }
+>>>>>>> REPLACE

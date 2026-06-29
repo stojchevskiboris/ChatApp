@@ -102,6 +102,17 @@ namespace ChatApp.Server.Services.Implementations
         }
 
 
+        public List<GroupViewModel> GetGroupsByUserId(int userId)
+        {
+            var userGroups = _groupUserService.GetByUserId(userId);
+            var groupIds = userGroups.Select(x => x.GroupId).ToList();
+
+            return _groupRepository.GetAll()
+                .Where(g => groupIds.Contains(g.Id))
+                .ToList()
+                .MapToViewModelList();
+        }
+
         private Group GetGroupDomainById(int id)
         {
             var group = _groupRepository.Get(id);

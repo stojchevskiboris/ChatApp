@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component, ElementRef, EventEmitter, inject, Input, OnDestroy, OnInit, Output, SimpleChange, ViewChild } from '@angular/core';
 import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import { CreateGroupDialogComponent } from '../dialogs/create-group-dialog/create-group-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { UserViewModel } from '../../models/user-view-model';
 import { UserService } from '../../services/user.service';
@@ -19,12 +20,13 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   dialog = inject(MatDialog);
   @ViewChild('searchInput') searchInput: ElementRef;
   searchQuery: string = '';
-  @Output() selectedChat = new EventEmitter<number>();
+  @Output() selectedChat = new EventEmitter<any>();
   @Input() startChat: any;
   @Input() updateActiveContact: number;
   @Input() newChatMessage: RecentChatViewModel;
   @Input() closedChatWindow: number;
   selectedChatId: number = null;
+  selectedChatIsGroup: boolean = false;
   private searchDebounceTimeout: any;
 
   prevScrollPosMessages = 0;
@@ -34,6 +36,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   chatList: RecentChatViewModel[] = [];
   contactsList: UserViewModel[] = [];
+  groupsList: any[] = [];
   fetchedContacts: UserViewModel[] = [];
   selectedTabIndex: number = 0;
 
@@ -50,6 +53,7 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getContacts();
     this.getRecentChats();
+    this.getGroups();
     this.updateLastActiveSubscription = interval(60000).subscribe(x => {
       this.updateContactsLastActive();
     });
@@ -215,12 +219,13 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
     if (!message.isSentMessage) {
       this.messageService.setMessageSeen(message.id).subscribe(data => { });
     }
-    this.openChat(message.recipientId);
+    this.openChat(message.recipientId, message.isGroup);
   }
 
-  openChat(recipientId: number) {
-    this.selectedChat.emit(recipientId);
+  openChat(recipientId: number, isGroup: boolean = false) {
+    this.selectedChat.emit({id: recipientId, isGroup: isGroup});
     this.selectedChatId = recipientId;
+    this.selectedChatIsGroup = isGroup;
   }
 
   handleSelectedChat(event: number) {
@@ -246,6 +251,19 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
 
   }
 
+  createGroup() {
+    const dialogRef = this.dialog.open(CreateGroupDialogComponent, {
+      width: '90%',
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.getGroups();
+        this.getRecentChats();
+      }
+    });
+  }
+
   getRecentChats() {
     var setFlag: boolean = true;
     setTimeout(() => {
@@ -268,6 +286,15 @@ export class LeftPaneComponent implements OnInit, OnDestroy {
         this.hasMessagesLoaded = true;
       }
     })
+  }
+
+  getGroups() {
+    const userId = +localStorage.getItem('userId');
+    this.userService.getGroupsByUserId(userId).subscribe({
+      next: (groups: any[]) => {
+        this.groupsList = groups;
+      }
+    });
   }
 
   getContacts() {

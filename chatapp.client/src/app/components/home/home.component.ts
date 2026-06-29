@@ -21,6 +21,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   isChatSelected: boolean = false;
   selectedChatRecipientId: number = 0;
+  selectedChatIsGroup: boolean = false;
   searchedMessageIdFromSettings: number = 0;
   userId: string = '';
   currentUser: UserViewModel = new UserViewModel();
@@ -121,6 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.showChat = false;
     this.isChatSelected = false;
     this.selectedChatRecipientId = 0;
+    this.selectedChatIsGroup = false;
   }
 
   closeChatSettings(resetMessage: boolean = true) {
@@ -178,7 +180,7 @@ export class HomeComponent implements OnInit, OnDestroy {
         if (message != null) {
           const newRecentChat: RecentChatViewModel = {
             id: message.id,
-            recipientId: userFromId,
+            recipientId: message.isGroup ? message.recipientId : userFromId,
             recipientUsername: '',
             recipientFirstName: '',
             recipientLastName: '',
@@ -190,7 +192,8 @@ export class HomeComponent implements OnInit, OnDestroy {
             isSentMessage: false,
             parentMessageId: message.parentMessageId,
             createdAt: message.createdAt ? new Date(message.createdAt) : null,
-            modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
+            modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null,
+            isGroup: message.isGroup
           };
           this.recievedChatMessage = newRecentChat;
         }
@@ -198,7 +201,7 @@ export class HomeComponent implements OnInit, OnDestroy {
 
       connection.on('DeletedMessage', (userFromId: number, messageId: number) => {
         if (messageId != null && messageId != 0) {
-          if (this.recievedChatMessage.id == messageId){
+          if (this.recievedChatMessage && this.recievedChatMessage.id == messageId){
             var deletedMessage = {...this.recievedChatMessage}
             deletedMessage.content = '*Deleted*'
             deletedMessage.hasMedia = false;
@@ -229,11 +232,26 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.startChatEvent = !this.startChatEvent;
   }
 
-  handleSelectedChat(recipientId: number) {
+  handleSelectedChat(event: any) {
+    let recipientId: number;
+    let isGroup: boolean = false;
+
+    if (typeof event === 'number') {
+      recipientId = event;
+    } else if (event && typeof event === 'object') {
+      recipientId = event.id;
+      isGroup = event.isGroup;
+    } else {
+      recipientId = event;
+    }
+
     this.selectedChatRecipientId = recipientId;
+    this.selectedChatIsGroup = isGroup;
+
     if (recipientId === -1 || recipientId == null) {
       this.isChatSelected = false;
       this.selectedChatRecipientId = 0;
+      this.selectedChatIsGroup = false;
       this.searchedMessageIdFromSettings = 0;
     } else {
       this.isChatSelected = true;

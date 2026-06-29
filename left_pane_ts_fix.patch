@@ -1,0 +1,37 @@
+<<<<<<< SEARCH
+  selectedChatId: number = null;
+  private searchDebounceTimeout: any;
+=======
+  selectedChatId: number = null;
+  selectedChatIsGroup: boolean = false;
+  private searchDebounceTimeout: any;
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+  openChat(recipientId: number) {
+    this.selectedChat.emit(recipientId);
+    this.selectedChatId = recipientId;
+  }
+=======
+  openChat(recipientId: number, isGroup: boolean = false) {
+    this.selectedChat.emit({id: recipientId, isGroup: isGroup});
+    this.selectedChatId = recipientId;
+    this.selectedChatIsGroup = isGroup;
+  }
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+  openChatFromMessages(message: RecentChatViewModel) {
+    message.isSeen = true;
+    if (!message.isSentMessage) {
+      this.messageService.setMessageSeen(message.id).subscribe(data => { });
+    }
+    this.openChat(message.recipientId);
+  }
+=======
+  openChatFromMessages(message: RecentChatViewModel) {
+    message.isSeen = true;
+    if (!message.isSentMessage) {
+      this.messageService.setMessageSeen(message.id).subscribe(data => { });
+    }
+    this.openChat(message.recipientId, message.isGroup);
+  }
+>>>>>>> REPLACE

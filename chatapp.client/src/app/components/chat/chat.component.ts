@@ -28,6 +28,7 @@ import { ToastrService } from 'ngx-toastr';
 export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewInit, AfterViewChecked {
 
   @Input() recipientId: number | null = null;
+  @Input() isGroup: boolean = false;
   @Input() searchedMessageId: number = -1;
   @Output() toggleChatSettings = new EventEmitter();
   @Output() newSentChatMessage = new EventEmitter<RecentChatViewModel>();
@@ -42,7 +43,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   currentUserId: number = 0;
   currentUser: UserViewModel;
-  recipient: UserViewModel = null;
+  recipient: any = null;
   messages: MessageViewModel[] = [];
 
   hasScrolledToBottom: boolean = false;
@@ -174,7 +175,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   getRecentMessages(): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.messageService.getRecentMessages(this.recipientId).subscribe({
+      this.messageService.getRecentMessages(this.recipientId, this.isGroup).subscribe({
         next: (result: MessagesChatModel) => {
           var messages: MessageViewModel[] = result.messages;
           this.oldestMessageId = result.oldestMessageId;
@@ -188,7 +189,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           this.hasFetchedMessages = true;
           this.cdr.detectChanges();
           var lastMessageId = this.messages.length > 0 ? this.messages[this.messages.length - 1].id : 0
-          this.signalrService.setMessageSeen(this.recipientId, lastMessageId).then(() => { })
+          this.signalrService.setMessageSeen(this.recipientId, lastMessageId, this.isGroup).then(() => { })
           resolve();
         },
         error: (error: HttpErrorResponse) => {
@@ -210,7 +211,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
       var connection = this.signalrService.getHubConnection();
       connection.on('ReceiveMessage', (userFromId: number, message: MessageViewModel) => {
-        if (userFromId === this.recipientId) {
+        if ((!this.isGroup && userFromId === this.recipientId && !message.isGroup) || (this.isGroup && message.isGroup && message.recipientId === this.recipientId)) {
           this.recipientIsTyping = false;
           this.messages.push(message);
           if (message.hasMedia) {
@@ -219,7 +220,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
             this.addMediaToChatSettings(message);
           }
           this.messageService.setMessageSeen(message.id).subscribe(data => { 
-            this.signalrService.setMessageSeen(this.recipientId, message.id).then(() => { })
+            this.signalrService.setMessageSeen(this.recipientId, message.id, this.isGroup).then(() => { })
           });
           this.cdr.detectChanges();
           this.scrollToBottom();
@@ -243,8 +244,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         }
       });
 
-      connection.on('OnUserTyping', (userFromId: number) => {
-        if (userFromId === this.recipientId) {
+      connection.on('OnUserTyping', (userFromId: number, isGroup: boolean) => {
+        if ((!this.isGroup && userFromId === this.recipientId && !isGroup) || (this.isGroup && isGroup && userFromId !== this.currentUserId)) {
           this.messages.forEach(m => m.isSeen = true);
           this.recipientIsTyping = true;
           this.recipientIsTypingCounter++;
@@ -266,7 +267,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
 
   typing() {
     if (this.newMessage != "") {
-      this.signalrService.onTypingEvent(this.recipientId).then(() => { })
+      this.signalrService.onTypingEvent(this.recipientId, this.isGroup).then(() => { })
     }
   }
 
@@ -353,7 +354,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
           const mediaMessage: MessageViewModel = {
             id: -5,
             senderId: this.currentUserId,
-            recipientId: this.recipient?.id || 0,
+            recipientId: this.recipient?.id || 0, isGroup: this.isGroup,
             content: uploadResponse.url,
             type: 'image/gif',
             media: media,
@@ -430,7 +431,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       const textMessage: MessageViewModel = {
         id: -5,
         senderId: this.currentUserId,
-        recipientId: this.recipient?.id || 0,
+        recipientId: this.recipient?.id || 0, isGroup: this.isGroup,
         content: this.newMessage.trim(),
         hasMedia: false,
         type: 'text',
@@ -480,7 +481,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
               const mediaMessage: MessageViewModel = {
                 id: -5,
                 senderId: this.currentUserId,
-                recipientId: this.recipient?.id || 0,
+                recipientId: this.recipient?.id || 0, isGroup: this.isGroup,
                 content: uploadResponse.url,
                 type: media.fileType,
                 media: media,
@@ -547,7 +548,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
         next: (response: boolean) => {
           this.messages.splice(i, 1);
           this.toastr.info('Message deleted successfully');
-          this.signalrService.deleteMessage(this.recipientId, message.id).then(() => { })
+          this.signalrService.deleteMessage(this.recipientId, message.id, this.isGroup).then(() => { })
           if(i === this.messages.length){
             message.hasMedia = false;
             message.content = '*Deleted*'
@@ -633,7 +634,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       return;
     }
 
-    this.messageService.fetchMessagesNewerThanMessageId(this.searchedMessageId, this.recipientId).subscribe({
+    this.messageService.fetchMessagesNewerThanMessageId(this.searchedMessageId, this.recipientId, this.isGroup).subscribe({
       next: (result: MessagesChatModel) => {
         var fetchedMessages: MessageViewModel[] = result.messages;
         this.oldestMessageId = result.oldestMessageId;
@@ -675,8 +676,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       id: message.id,
       recipientId: this.recipientId,
       recipientUsername: this.recipient?.username ?? '',
-      recipientFirstName: this.recipient?.firstName ?? '',
-      recipientLastName: this.recipient?.lastName ?? '',
+      recipientFirstName: this.isGroup ? (this.recipient?.name || "") : (this.recipient?.firstName ?? ""),
+      recipientLastName: this.isGroup ? "" : (this.recipient?.lastName ?? ""),
       recipientProfilePicture: this.recipient?.profilePicture,
       content: message.content,
       hasMedia: message.hasMedia,
@@ -685,7 +686,8 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       isSentMessage: true,
       parentMessageId: message.parentMessageId,
       createdAt: message.createdAt ? new Date(message.createdAt) : null,
-      modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null
+      modifiedAt: message.modifiedAt ? new Date(message.modifiedAt) : null,
+      isGroup: this.isGroup
     };
     this.newSentChatMessage.emit(newRecentChat);
   }
@@ -886,7 +888,7 @@ export class ChatComponent implements OnInit, OnChanges, OnDestroy, AfterViewIni
       return;
     }
 
-    this.messageService.fetchOlderMessages(this.oldestMessageId, this.recipientId).subscribe({
+    this.messageService.fetchOlderMessages(this.oldestMessageId, this.recipientId, this.isGroup).subscribe({
       next: (result: MessagesChatModel) => {
         var fetchedMessages: MessageViewModel[] = result.messages;
         this.oldestMessageId = result.oldestMessageId;
