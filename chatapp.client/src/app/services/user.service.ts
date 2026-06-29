@@ -34,6 +34,26 @@ export class UserService {
       );
   }
 
+  getGroupDetails(id: number): Observable<any> {
+    return this.dataService
+      .post<any>('/Groups/GetGroupById', { id: id })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
+  getGroupsByUserId(userId: number): Observable<any[]> {
+    return this.dataService
+      .get<any[]>('/Groups/GetGroupsByUserId', { userId: userId })
+      .pipe(
+        tap((response) => {
+          return response;
+        })
+      );
+  }
+
   getCurrentUserDetails(): Observable<UserViewModel>{
     return this.dataService
       .get<any>(this.getCurrentUserDetailsEndpoint)

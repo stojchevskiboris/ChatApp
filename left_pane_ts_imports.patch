@@ -1,0 +1,6 @@
+<<<<<<< SEARCH
+import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+=======
+import { AddContactDialogComponent } from '../dialogs/add-contact-dialog/add-contact-dialog.component';
+import { CreateGroupDialogComponent } from '../dialogs/create-group-dialog/create-group-dialog.component';
+>>>>>>> REPLACE

@@ -25,6 +25,7 @@ import { LastActivePipe } from './shared/pipes/last-active.pipe';
 import { NgScrollbarModule, provideScrollbarOptions } from 'ngx-scrollbar';
 import { GifSearchComponent } from './components/gif-search/gif-search.component';
 import { AddContactDialogComponent } from './components/dialogs/add-contact-dialog/add-contact-dialog.component';
+import { CreateGroupDialogComponent } from "./components/dialogs/create-group-dialog/create-group-dialog.component";
 import { SignOutDialogComponent } from './components/dialogs/sign-out-dialog/sign-out-dialog.component';
 import { ContactsComponent } from './components/contacts/contacts.component';
 import { provideToastr, ToastrModule } from 'ngx-toastr';
@@ -72,6 +73,7 @@ import { UpdateRoleModalComponent } from './components/admin-panel/registries/ro
     GifSearchComponent,
     AddContactDialogComponent,
     SignOutDialogComponent,
+    CreateGroupDialogComponent,
     ContactsComponent,
     RemoveContactDialogComponent,
     RemoveMediaDialogComponent,

@@ -1,0 +1,18 @@
+<h2 mat-dialog-title>{{ isAddMemberMode ? 'Add Members' : 'Create New Group' }}</h2>
+<mat-dialog-content>
+  <mat-form-field class="w-100" *ngIf="!isAddMemberMode">
+    <mat-label>Group Name</mat-label>
+    <input matInput [(ngModel)]="groupName" required>
+  </mat-form-field>
+
+  <h3>Select Contacts</h3>
+  <mat-selection-list>
+    <mat-list-option *ngFor="let contact of contacts" (click)="toggleContact(contact.id)">
+      {{contact.firstName}} {{contact.lastName}}
+    </mat-list-option>
+  </mat-selection-list>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" [disabled]="!isAddMemberMode && !groupName" (click)="submit()">{{ isAddMemberMode ? 'Add' : 'Create' }}</button>
+</mat-dialog-actions>

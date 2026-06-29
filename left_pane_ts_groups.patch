@@ -1,0 +1,36 @@
+<<<<<<< SEARCH
+  chatList: RecentChatViewModel[] = [];
+  contactsList: UserViewModel[] = [];
+  fetchedContacts: UserViewModel[] = [];
+=======
+  chatList: RecentChatViewModel[] = [];
+  contactsList: UserViewModel[] = [];
+  groupsList: any[] = [];
+  fetchedContacts: UserViewModel[] = [];
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+  ngOnInit(): void {
+    this.getContacts();
+    this.getRecentChats();
+    this.updateLastActiveSubscription = interval(60000).subscribe(x => {
+=======
+  ngOnInit(): void {
+    this.getContacts();
+    this.getRecentChats();
+    this.getGroups();
+    this.updateLastActiveSubscription = interval(60000).subscribe(x => {
+>>>>>>> REPLACE
+<<<<<<< SEARCH
+  getContacts() {
+=======
+  getGroups() {
+    const userId = +localStorage.getItem('userId');
+    this.userService.getGroupsByUserId(userId).subscribe({
+      next: (groups: any[]) => {
+        this.groupsList = groups;
+      }
+    });
+  }
+
+  getContacts() {
+>>>>>>> REPLACE

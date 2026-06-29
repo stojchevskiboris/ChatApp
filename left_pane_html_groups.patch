@@ -1,0 +1,35 @@
+<<<<<<< SEARCH
+            <mat-tab label="Contacts">
+=======
+            <mat-tab label="Groups">
+                <div class="p-3">
+                    <button mat-raised-button color="primary" class="w-100 mb-3" (click)="createGroup()">
+                        <mat-icon>group_add</mat-icon> Create Group
+                    </button>
+                </div>
+                <ng-scrollbar *ngIf="groupsList.length > 0; else noGroupsPage">
+                    <mat-selection-list>
+                        <mat-list-item *ngFor="let group of groupsList" class="contacts-list"
+                            [ngClass]="{'selected': group.id==selectedChatId && selectedChatIsGroup}" (click)="openChat(group.id, true)">
+                            <mat-card class="contact-card bg-none">
+                                <mat-card-header>
+                                    <div mat-card-avatar>
+                                        <img matListAvatar class="w-40px h-40px user-profile-picture"
+                                            [src]="group.profilePicture || 'img/default-group.png'" />
+                                    </div>
+                                    <mat-card-title>{{group.name}}</mat-card-title>
+                                    <mat-card-subtitle>{{group.groupUsersId?.length}} members</mat-card-subtitle>
+                                </mat-card-header>
+                            </mat-card>
+                        </mat-list-item>
+                    </mat-selection-list>
+                </ng-scrollbar>
+                <ng-template #noGroupsPage>
+                    <div class="text-center mt-3 mb-3">
+                        <span>No groups found</span>
+                    </div>
+                </ng-template>
+            </mat-tab>
+
+            <mat-tab label="Contacts">
+>>>>>>> REPLACE
